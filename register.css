@@ -215,7 +215,7 @@ body {
     flex: 1;
     background: white;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 48px 40px;
     overflow-y: auto;
