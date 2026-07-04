@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topshiriq.uz — Atrofingizdagi vazifalar xaritasi</title>
+    <link rel="stylesheet" href="map.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="auth.js"></script>
+  <script>(async()=>{ await requireAuth(); })();</script>
+</head>
+
+<body>
+
+    <div class="map-wrapper">
+
+        <div id="main-leaflet-map"></div>
+
+        <div class="top-search-overlay">
+            <a href="vazifa.html" class="ctrl-btn" title="Orqaga" style="text-decoration:none; flex-shrink:0;">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="map-search-input" placeholder="Manzil yoki topshiriq qidirish">
+                <i class="fas fa-microphone mic-icon"></i>
+            </div>
+            <button class="tune-button" id="filter-toggle-btn">
+                <i class="fas fa-sliders-h"></i>
+            </button>
+        </div>
+
+        <div class="map-tags-container">
+            <button class="tag-link active" data-category="all">Hammasi</button>
+            <button class="tag-link" data-category="xarid"><i class="fas fa-basket-shopping"></i> Xarid</button>
+            <button class="tag-link" data-category="tamirlash"><i class="fas fa-wrench"></i> Tamirlash</button>
+            <button class="tag-link" data-category="yetkazish"><i class="fas fa-motorcycle"></i> Yetkazish</button>
+            <button class="tag-link" data-category="tozalash"><i class="fas fa-broom"></i> Tozalash</button>
+        </div>
+
+        <div class="map-controls-right">
+            <button class="ctrl-btn" id="locate-me-btn" title="Mening real joylashuvim">
+                <i class="fas fa-crosshairs"></i>
+            </button>
+            <button class="ctrl-btn" id="zoom-in-btn" title="Yaqinlashtirish"><i class="fas fa-plus"></i></button>
+            <button class="ctrl-btn" id="zoom-out-btn" title="Uzoqlashtirish"><i class="fas fa-minus"></i></button>
+        </div>
+
+        <div class="bottom-sheet" id="taskSheet">
+            <div class="sheet-drag-area" id="sheetDragArea">
+                <div class="sheet-handle" id="sheetHandle"></div>
+            </div>
+
+            <div class="sheet-header">
+                <h3>Atrofingizda <span class="green-count" id="total-tasks-count">...</span> vazifa</h3>
+                <a href="#" class="view-list-link" id="list-toggle-alert">Ro'yxat ko'rinishi <i
+                        class="fas fa-chevron-right"></i></a>
+            </div>
+
+            <div class="tasks-scroll-area">
+                <div class="loading-more-box">
+                    <i class="fas fa-spinner fa-spin"></i> Yuklanmoqda...
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="map.js"></script>
+</body>
+
+</html>

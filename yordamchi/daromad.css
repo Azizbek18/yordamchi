@@ -1,0 +1,640 @@
+
+/* STRUKTURA VA ASOSIY SOZLAMALAR */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+:root {
+    --bg-page: #eafaf4;
+    /* Yumshoq och yashil-havorang fon */
+    --primary-teal: #006653;
+    /* Asosiy brend rangi */
+    --primary-dark: #004d3f;
+    --text-dark: #2d3748;
+    --text-muted: #718096;
+    --border-color: #e2e8f0;
+    --white: #ffffff;
+}
+
+::selection {
+    background: var(--primary-teal);
+    color: white;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--primary-teal);
+    outline-offset: 2px;
+}
+
+body {
+    background-color: var(--bg-page);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 60px;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-teal);
+    text-decoration: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-muted);
+    margin: 0 16px;
+    font-weight: 500;
+}
+
+.user-profile-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.notification-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--primary-teal);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.notification-btn:active {
+    transform: scale(0.97);
+}
+
+.avatar-nav {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #004d3f;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* MAIN CONTAINER */
+.main-container {
+    max-width: 1140px;
+    width: 100%;
+    margin: 30px auto;
+    padding: 0 40px;
+}
+
+/* INCOME HERO BANNER */
+.income-banner {
+    background: #ffa726;
+    background: linear-gradient(90deg, #ffa726 0%, #ffb74d 100%);
+    border-radius: 16px;
+    padding: 30px;
+    color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(255, 167, 38, 0.15), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.banner-left .label {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.banner-left .amount {
+    font-size: 36px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.banner-right {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 12px 20px;
+    text-align: right;
+    backdrop-filter: blur(5px);
+}
+
+.banner-right .trend-label {
+    font-size: 11px;
+    opacity: 0.8;
+    font-weight: 600;
+}
+
+.banner-right .trend-value {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* GRID LAYOUT */
+.layout-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+/* CONTENT CARDS COMMON */
+.content-card {
+    background-color: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.content-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.06);
+}
+
+/* BALANS DETALLARI */
+.balance-card-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.balance-title {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.balance-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-top: 4px;
+}
+
+.balance-subtext {
+    font-size: 12px;
+    color: #38a169;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+}
+
+.btn-withdraw {
+    background-color: var(--primary-teal);
+    color: var(--white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.btn-withdraw:hover {
+    background-color: var(--primary-dark);
+    box-shadow: 0 4px 12px rgba(0,102,83,0.2);
+    transform: translateY(-2px);
+}
+
+.btn-withdraw:active {
+    transform: scale(0.97);
+}
+
+/* DIAGRAMMA (CHART) EFFEKTLARI */
+.card-header-alt {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.select-period {
+    background-color: #f7fafc;
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    outline: none;
+    cursor: pointer;
+}
+
+.chart-placeholder {
+    height: 180px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 10px 20px 20px 20px;
+    border-bottom: 1px solid #f7fafc;
+}
+
+.chart-bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.chart-bar {
+    width: 30px;
+    background-color: #e6f4f0;
+    border-radius: 6px 6px 0 0;
+    transition: background 0.3s, height 0.6s cubic-bezier(0.4,0,0.2,1);
+    cursor: pointer;
+}
+
+.chart-bar:hover,
+.chart-bar.active {
+    background-color: var(--primary-teal);
+}
+
+.chart-bar.active {
+    box-shadow: 0 0 8px rgba(0,102,83,0.3);
+}
+
+.chart-day {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+/* TRANZAKSIYALAR RO'YXATI */
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f7fafc;
+    transition: background 0.15s;
+}
+
+.transaction-item:hover {
+    background: rgba(0,102,83,0.02);
+}
+
+.transaction-item:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.tx-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.tx-icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.bg-light-teal {
+    background-color: #e6f7f2;
+    color: #006653;
+}
+
+.bg-light-red {
+    background-color: #fff5f5;
+    color: #e53e3e;
+}
+
+.tx-details h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.tx-details p {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.tx-amount {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.tx-positive {
+    color: #38a169;
+}
+
+.tx-negative {
+    color: #e53e3e;
+}
+
+.see-all-btn {
+    display: block;
+    text-align: center;
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--primary-teal);
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 16px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.see-all-btn:active {
+    transform: scale(0.97);
+}
+
+/* O'NG USTUN (SIDEBAR KARTALARI) */
+.sidebar-card {
+    background-color: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 24px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.sidebar-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.invite-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 8px;
+}
+
+.invite-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.referral-box {
+    display: flex;
+    background-color: #f7fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 14px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.referral-code {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary-teal);
+    letter-spacing: 0.5px;
+}
+
+.copy-icon {
+    color: var(--text-muted);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 16px;
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.copy-icon:active {
+    transform: scale(0.97);
+}
+
+.share-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.btn-share {
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.btn-share:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-share:active {
+    transform: scale(0.97);
+}
+
+.btn-telegram {
+    background-color: #2ea6da;
+}
+
+.btn-whatsapp {
+    background-color: #25d366;
+}
+
+/* MAHALLA QAHRAMONI REYTINGI */
+.hero-badge-section {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.hero-icon-circle {
+    width: 54px;
+    height: 54px;
+    background-color: #fef3e6;
+    color: #dd6b20;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 12px auto;
+}
+
+.hero-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 6px;
+}
+
+.hero-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.progress-bar-container {
+    background-color: #edf2f7;
+    border-radius: 10px;
+    height: 8px;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.progress-fill {
+    background-color: #ffa000;
+    height: 100%;
+    width: 80%;
+    /* Progress ulushi (12 tadan 15 tagacha) */
+    border-radius: 10px;
+}
+
+.progress-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* KO'MAK / TEXNIK SUPORT BOX */
+.support-card {
+    border-radius: 16px;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.support-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.support-title {
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.support-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.support-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--primary-teal);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+/* FOOTER */
+.footer {
+    background-color: #ffffff;
+    padding: 24px 60px;
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-inside {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-brand p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    margin-left: 24px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .navbar{padding:14px 24px}
+    .main-container{padding:0 20px}
+    .income-banner{flex-direction:column;align-items:flex-start;padding:20px}
+    .banner-right{margin-top:12px;text-align:left}
+}
+
+@media (max-width:768px){
+    .navbar{padding:12px 16px}
+    .logo{font-size:18px}
+    .balance-value{font-size:22px}
+    .chart-placeholder{height:150px}
+    .footer{padding:20px}
+}
+
+@media (max-width:480px){
+    .navbar{padding:10px 12px}
+    .income-banner{padding:16px}
+    .balance-value{font-size:18px}
+    .footer-inside{flex-direction:column;gap:12px}
+}

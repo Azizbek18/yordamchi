@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topshiriq.uz - Daromadlar</title>
+    <link rel="stylesheet" href="daromad.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="auth.js"></script>
+  <script>(async()=>{ await requireAuth(); })();</script>
+  <link rel="stylesheet" href="header.css">
+<link rel="stylesheet" href="enhancements.css">
+</head>
+
+<body>
+
+      <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fas fa-handshake"></i></span> Topshiriq.uz
+      </a>
+      <nav class="nav-menu">
+        <a href="mahallam.html" id="nav-mahallam">Mahallam</a>
+        <a href="vazifa.html" id="nav-vazifalar">Vazifalar</a>
+        <a href="yordam.html" id="nav-yordam">Yordam</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="bildirishnoma.html" style="text-decoration:none;">
+          <button class="notification-btn" aria-label="Bildirishnomalar">
+            <i class="far fa-bell"></i>
+          </button>
+        </a>
+        <a href="profil.html" style="text-decoration:none;">
+          <div class="avatar-nav">A</div>
+        </a>
+        <button class="hamburger-btn" id="hamburger-btn" aria-label="Menyu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+    <main class="main-container">
+
+        <section class="income-banner">
+            <div class="banner-left">
+                <div class="label">Mening daromadlarim</div>
+                <div class="amount">Bu oy: 640,000 so'm</div>
+            </div>
+            <div class="banner-right">
+                <div class="trend-label">O'sish sur'ati</div>
+                <div class="trend-value">+12% o'tgan oydan</div>
+            </div>
+        </section>
+
+        <div class="layout-grid">
+
+            <div class="left-column">
+
+                <div class="content-card">
+                    <div class="balance-card-inner">
+                        <div>
+                            <div class="balance-title">Asosiy balans</div>
+                            <div class="balance-value">2,450,000 so'm</div>
+                            <div class="balance-subtext">
+                                <i class="fa-solid fa-circle-check"></i> Yechib olish uchun mavjud
+                            </div>
+                        </div>
+                        <button class="btn-withdraw">
+                            <i class="fa-solid fa-money-bill-transfer"></i> Pul yechib olish
+                        </button>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header-alt">
+                        <h3 class="card-title">Haftalik daromad</h3>
+                        <select class="select-period">
+                            <option>Oxirgi 7 kun</option>
+                            <option>Oxirgi 30 kun</option>
+                        </select>
+                    </div>
+
+                    <div class="chart-placeholder">
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 40px;"></div>
+                            <span class="chart-day">Du</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 80px;"></div>
+                            <span class="chart-day">Se</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 50px;"></div>
+                            <span class="chart-day">Ch</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 110px;"></div>
+                            <span class="chart-day">Pa</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar active" style="height: 140px;"></div>
+                            <span class="chart-day">Ju</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 30px;"></div>
+                            <span class="chart-day">Sha</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 20px;"></div>
+                            <span class="chart-day">Yak</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header-alt">
+                        <h3 class="card-title">Tranzaksiyalar tarixi</h3>
+                    </div>
+
+                    <div class="transaction-list">
+                        <div class="transaction-item">
+                            <div class="tx-left">
+                                <div class="tx-icon-box bg-light-teal"><i class="fa-solid fa-broom"></i></div>
+                                <div class="tx-details">
+                                    <h4>Xonadonni tozalash</h4>
+                                    <p>Tozalash • 12 Yanvar, 14:20</p>
+                                </div>
+                            </div>
+                            <div class="tx-amount tx-positive">+120,000 so'm</div>
+                        </div>
+
+                        <div class="transaction-item">
+                            <div class="tx-left">
+                                <div class="tx-icon-box bg-light-red"><i class="fa-solid fa-percentage"></i></div>
+                                <div class="tx-details">
+                                    <h4>Xizmat haqi (Komissiya)</h4>
+                                    <p>Xizmat • 12 Yanvar, 14:21</p>
+                                </div>
+                            </div>
+                            <div class="tx-amount tx-negative">-6,000 so'm</div>
+                        </div>
+
+                        <div class="transaction-item">
+                            <div class="tx-left">
+                                <div class="tx-icon-box bg-light-teal"><i class="fa-solid fa-wrench"></i></div>
+                                <div class="tx-details">
+                                    <h4>Kran almashtirish</h4>
+                                    <p>Ta'mirlash • 11 Yanvar, 10:45</p>
+                                </div>
+                            </div>
+                            <div class="tx-amount tx-positive">+85,000 so'm</div>
+                        </div>
+                    </div>
+
+                    <button class="see-all-btn" id="btn-see-all">Barchasini ko'rish</button>
+                </div>
+
+            </div>
+
+            <div class="right-column">
+
+                <div class="sidebar-card">
+                    <h3 class="invite-title">Do'stingizni taklif qiling</h3>
+                    <p class="invite-text">Har bir yangi ro'yxatdan o'tgan do'stingiz uchun 50,000 so'm bonusga ega
+                        bo'ling.</p>
+
+                    <div class="referral-box">
+                        <span class="referral-code" id="ref-code">JASUR2025</span>
+                        <button class="copy-icon" id="btn-copy" title="Nusxalash"><i
+                                class="fa-regular fa-copy"></i></button>
+                    </div>
+
+                    <div class="share-buttons">
+                        <button class="btn-share btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram</button>
+                        <button class="btn-share btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <div class="hero-badge-section">
+                        <div class="hero-icon-circle">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <h3 class="hero-title">Mahalla Qahramoni</h3>
+                        <p class="hero-subtitle">Siz ushbu oydagi eng faol yordamchilar orasidasiz! Yana 3 ta topshiriq
+                            va sizga "Oltin" statusi beriladi.</p>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div class="progress-text">12/15 topshiriq bajarilgan</div>
+                    </div>
+                </div>
+
+                <div class="support-card">
+                    <h4 class="support-title"><i class="fa-regular fa-circle-question"></i> Yordam kerakmi?</h4>
+                    <p class="support-text">Pul yechish yoki daromadlar bo'yicha savollaringiz bo'lsa, biz bilan
+                        bog'laning.</p>
+                    <a href="#" class="support-link" id="link-support">Qo'llab-quvvatlash xizmati &rarr;</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inside">
+            <div class="footer-brand">
+                <p>Mahalliy hamjamiyat o'rtasida ishonch va ko'mak ko'prigi.</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html">Biz haqimizda</a>
+                <a href="yordam.html">Xavfsizlik</a>
+                <a href="yordam.html">Qoidalar</a>
+                <a href="yordam.html">Bog'lanish</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="daromad.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="enhancements.js"></script>
+</body>
+
+</html>

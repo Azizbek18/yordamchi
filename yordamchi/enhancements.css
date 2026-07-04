@@ -1,0 +1,692 @@
+/* ============================================
+   Eras Demi ITC - Global Webfont Face & Overrides
+   ============================================ */
+@font-face {
+    font-family: "Eras Demi";
+    src: local("Eras Demi ITC"), local("Eras Demi"), local("Eras Demi ITC Regular"), local("ErasDemiITC"), local("Eras Bold ITC");
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: "Eras Demi", "Eras Demi ITC", "Eras Bold ITC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* Restore font-family for FontAwesome icon fonts */
+i, 
+.fa, 
+.fas, 
+.far, 
+.fab, 
+.fa-solid, 
+.fa-regular, 
+.fa-brands,
+[class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", "Font Awesome 5 Free", "Font Awesome 5 Brands", "FontAwesome" !important;
+}
+
+/* ============================================
+   YANGI MO'JIZA — Enhancements Layer
+   Professional polish without changing colors
+   ============================================ */
+
+:root {
+    /* Premium layered shadows (use original palette tints) */
+    --xm-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 1px rgba(15, 23, 42, 0.03);
+    --xm-shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.02);
+    --xm-shadow-md: 0 6px 12px -2px rgba(15, 23, 42, 0.06), 0 4px 8px -2px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(15, 23, 42, 0.02);
+    --xm-shadow-lg: 0 16px 32px -8px rgba(15, 23, 42, 0.10), 0 8px 16px -8px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.02);
+    --xm-shadow-xl: 0 32px 64px -16px rgba(15, 23, 42, 0.14), 0 16px 32px -12px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.02);
+    --xm-shadow-2xl: 0 50px 100px -20px rgba(15, 23, 42, 0.20), 0 24px 48px -16px rgba(15, 23, 42, 0.10);
+
+    /* Colored glows using project's teal & orange */
+    --xm-glow-teal: 0 12px 32px -8px rgba(0, 102, 83, 0.30), 0 4px 12px -4px rgba(0, 102, 83, 0.20);
+    --xm-glow-orange: 0 12px 32px -8px rgba(245, 166, 35, 0.30), 0 4px 12px -4px rgba(245, 166, 35, 0.20);
+    --xm-glow-mint: 0 12px 32px -8px rgba(46, 196, 182, 0.30), 0 4px 12px -4px rgba(46, 196, 182, 0.20);
+
+    /* Premium easing curves */
+    --xm-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --xm-ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+    --xm-ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
+    --xm-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --xm-radius-lg: 20px;
+    --xm-radius-xl: 28px;
+}
+
+/* ============================================
+   1. SMOOTH SCROLLBAR & SELECTION
+   ============================================ */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 102, 83, 0.18);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.2s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 102, 83, 0.35);
+    background-clip: padding-box;
+}
+
+::selection {
+    background: rgba(0, 102, 83, 0.18);
+    color: inherit;
+    text-shadow: none;
+}
+
+/* ============================================
+   2. PREMIUM SHADOW UPGRADES (override existing)
+   ============================================ */
+
+/* Buttons get layered colored shadow on hover */
+.btn-primary,
+.btn-action-link,
+.btn-login,
+.btn-dark,
+.btn-outline {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform 0.25s var(--xm-ease-out-expo),
+                box-shadow 0.35s var(--xm-ease-out-expo),
+                background-color 0.25s ease,
+                border-color 0.25s ease,
+                color 0.25s ease;
+    will-change: transform, box-shadow;
+}
+
+.btn-primary:hover,
+.btn-action-link:hover {
+    box-shadow: var(--xm-glow-teal), var(--xm-shadow-md);
+    transform: translateY(-2px);
+}
+
+.btn-dark:hover {
+    box-shadow: var(--xm-shadow-lg);
+    transform: translateY(-2px);
+}
+
+.btn-outline:hover,
+.btn-login:hover {
+    box-shadow: var(--xm-shadow-sm);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active,
+.btn-action-link:active,
+.btn-dark:active,
+.btn-outline:active,
+.btn-login:active {
+    transform: translateY(0) scale(0.97);
+    transition-duration: 0.08s;
+}
+
+/* Ripple effect base */
+.btn-primary::after,
+.btn-action-link::after,
+.btn-dark::after,
+.btn-outline::after,
+.btn-login::after,
+.see-all::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--xm-ripple-x, 50%) var(--xm-ripple-y, 50%),
+                rgba(255, 255, 255, 0.35) 0%,
+                transparent 60%);
+    opacity: 0;
+    transition: opacity 0.6s var(--xm-ease-out-expo);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.btn-primary:active::after,
+.btn-action-link:active::after,
+.btn-dark:active::after,
+.btn-outline:active::after,
+.btn-login:active::after {
+    opacity: 1;
+    transition: opacity 0s;
+}
+
+/* ============================================
+   3. NAVBAR — FROSTED GLASS + SCROLL SHADOW
+   ============================================ */
+.navbar,
+.header,
+.topbar,
+.app-header {
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    background: rgba(255, 255, 255, 0.82) !important;
+    transition: box-shadow 0.35s var(--xm-ease-out-expo),
+                background-color 0.35s ease,
+                border-color 0.35s ease;
+}
+
+/* When scrolled, navbar gets a soft elevation */
+.navbar.is-scrolled,
+.header.is-scrolled,
+.topbar.is-scrolled,
+.app-header.is-scrolled {
+    box-shadow: var(--xm-shadow-sm);
+    border-bottom-color: rgba(226, 224, 220, 0.6) !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+}
+
+.nav-menu a {
+    position: relative;
+    transition: color 0.25s var(--xm-ease-out-expo),
+                background-color 0.25s var(--xm-ease-out-expo),
+                transform 0.25s var(--xm-ease-out-expo);
+}
+
+.nav-menu a:hover {
+    transform: translateY(-1px);
+}
+
+/* Animated underline on nav links */
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 2px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--teal, #006653);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.35s var(--xm-ease-out-expo);
+}
+
+.nav-menu a:hover::after,
+.nav-menu a.active::after {
+    transform: scaleX(1);
+}
+
+/* ============================================
+   4. LOGO — SUBTLE GLOW
+   ============================================ */
+.logo-icon,
+.logo {
+    transition: transform 0.4s var(--xm-ease-spring),
+                box-shadow 0.4s var(--xm-ease-out-expo),
+                filter 0.4s ease;
+}
+
+.logo:hover .logo-icon,
+.logo:hover {
+    transform: scale(1.04);
+}
+
+.logo-icon {
+    box-shadow: 0 4px 12px rgba(0, 102, 83, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.logo:hover .logo-icon {
+    box-shadow: 0 6px 20px rgba(0, 102, 83, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   5. CARDS — DEEPER, LAYERED SHADOWS ON HOVER
+   ============================================ */
+.task-card,
+.safety-item,
+.category-item,
+.step-card,
+.mock-card,
+.phone-mockup,
+.card,
+.stat-card,
+.info-card,
+.notification-item,
+.listing-card,
+.helper-card,
+.profile-card,
+.baholash-card,
+.kuzatish-card,
+.poster-card,
+.daromad-card,
+.chat-item,
+.muammo-card,
+.natija-card,
+.onboarding-card,
+.bildirishnoma-card {
+    transition: transform 0.4s var(--xm-ease-out-expo),
+                box-shadow 0.45s var(--xm-ease-out-expo),
+                border-color 0.3s ease,
+                background-color 0.3s ease !important;
+    will-change: transform, box-shadow;
+}
+
+/* Card hover state — premium lift with colored glow */
+.task-card:hover,
+.safety-item:hover,
+.category-item:hover,
+.listing-card:hover,
+.helper-card:hover,
+.baholash-card:hover,
+.kuzatish-card:hover,
+.poster-card:hover,
+.daromad-card:hover,
+.muammo-card:hover,
+.natija-card:hover,
+.onboarding-card:hover,
+.bildirishnoma-card:hover,
+.chat-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--xm-shadow-lg) !important;
+}
+
+/* ============================================
+   6. PHONE MOCKUP — FLOATING ANIMATION
+   ============================================ */
+.phone-mockup {
+    animation: xm-float 6s ease-in-out infinite;
+}
+
+@keyframes xm-float {
+    0%, 100% { transform: rotateY(-3deg) rotateX(2deg) translateY(0); }
+    50% { transform: rotateY(-3deg) rotateX(2deg) translateY(-10px); }
+}
+
+.phone-mockup:hover {
+    animation-play-state: paused;
+}
+
+/* ============================================
+   7. SAFETY ICON — PULSING GLOW
+   ============================================ */
+.safety-icon {
+    position: relative;
+    animation: xm-safety-glow 3s ease-in-out infinite;
+}
+
+@keyframes xm-safety-glow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(0, 102, 83, 0.25),
+                    0 8px 20px -8px rgba(0, 102, 83, 0.20);
+    }
+    50% {
+        box-shadow: 0 0 0 12px rgba(0, 102, 83, 0),
+                    0 12px 28px -8px rgba(0, 102, 83, 0.30);
+    }
+}
+
+/* ============================================
+   8. STAT NUMBERS — COUNT-UP READY
+   ============================================ */
+.metric-item h3,
+.stat-meta h4,
+.stat-value,
+.counter {
+    background: linear-gradient(135deg, currentColor 0%, currentColor 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* ============================================
+   9. SCROLL-REVEAL ANIMATIONS
+   Elements with [data-reveal] start hidden & animate in
+   ============================================ */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s var(--xm-ease-out-expo),
+                transform 0.7s var(--xm-ease-out-expo);
+    transition-delay: var(--xm-reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+
+[data-reveal].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-reveal="fade"] {
+    transform: none;
+}
+
+[data-reveal="scale"] {
+    transform: scale(0.94);
+}
+
+[data-reveal="scale"].is-visible {
+    transform: scale(1);
+}
+
+[data-reveal="left"] {
+    transform: translateX(-32px);
+}
+
+[data-reveal="left"].is-visible {
+    transform: translateX(0);
+}
+
+[data-reveal="right"] {
+    transform: translateX(32px);
+}
+
+[data-reveal="right"].is-visible {
+    transform: translateX(0);
+}
+
+/* ============================================
+   10. INPUT FIELDS — PREMIUM FOCUS
+   ============================================ */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+textarea,
+select,
+.form-input,
+.form-control {
+    transition: border-color 0.25s var(--xm-ease-out-expo),
+                box-shadow 0.25s var(--xm-ease-out-expo),
+                background-color 0.25s ease !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus,
+.form-input:focus,
+.form-control:focus {
+    outline: none !important;
+    border-color: #006653 !important;
+    box-shadow: 0 0 0 3px rgba(0, 102, 83, 0.18) !important;
+}
+
+/* Prevent double focus outline/shadow inside wrapped layout input containers */
+.input-phone input:focus,
+.input-email input:focus,
+.input-password input:focus,
+.select-wrap select:focus,
+.edit-phone-wrap input:focus,
+.edit-password-wrap input:focus,
+.search-bar input:focus,
+.search-box input:focus {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background: transparent !important;
+}
+
+/* ============================================
+   11. SHIMMER LOADING
+   ============================================ */
+.xm-shimmer {
+    position: relative;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.xm-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.55) 50%,
+        transparent 100%
+    );
+    animation: xm-shimmer 1.6s infinite;
+}
+
+@keyframes xm-shimmer {
+    100% { transform: translateX(100%); }
+}
+
+/* ============================================
+   12. LINKS — SMOOTH UNDERLINE
+   ============================================ */
+.footer-links a {
+    transition: color 0.25s var(--xm-ease-out-expo),
+                transform 0.25s var(--xm-ease-out-expo);
+}
+
+.footer-links a:hover {
+    transform: translateX(3px);
+}
+
+.see-all {
+    transition: gap 0.3s var(--xm-ease-out-expo),
+                color 0.25s ease,
+                transform 0.25s var(--xm-ease-out-expo);
+}
+
+.see-all:hover {
+    transform: translateX(2px);
+}
+
+/* ============================================
+   13. SIDEBAR (ADMIN) — PREMIUM POLISH
+   ============================================ */
+.dashboard-container .sidebar {
+    box-shadow: var(--xm-shadow-xl),
+                4px 0 20px rgba(0, 0, 0, 0.15) !important;
+    background: linear-gradient(180deg, #041d16 0%, #062e22 100%) !important;
+}
+
+.sidebar-brand h2 {
+    background: linear-gradient(135deg, #ffffff 0%, #2ec4b6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.01em;
+}
+
+.menu-item,
+.sidebar-menu a {
+    position: relative;
+    transition: background-color 0.3s var(--xm-ease-out-expo),
+                color 0.3s var(--xm-ease-out-expo),
+                transform 0.3s var(--xm-ease-out-expo),
+                padding-left 0.3s var(--xm-ease-out-expo) !important;
+}
+
+.menu-item:hover,
+.sidebar-menu a:hover {
+    transform: translateX(2px);
+}
+
+.menu-item.active,
+.sidebar-menu a.active {
+    box-shadow: inset 3px 0 0 var(--accent-mint, #2ec4b6),
+                0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ============================================
+   14. BADGES — SUBTLE PULSE FOR URGENT
+   ============================================ */
+.task-badge-urgent,
+.badge-red,
+.badge-orange {
+    animation: xm-badge-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes xm-badge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(230, 57, 70, 0); }
+}
+
+.badge-orange {
+    animation-name: xm-badge-pulse-orange;
+}
+
+@keyframes xm-badge-pulse-orange {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 159, 28, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(255, 159, 28, 0); }
+}
+
+/* ============================================
+   15. METRICS RIBBON — GRADIENT SHINE
+   ============================================ */
+.metrics-ribbon {
+    background: linear-gradient(135deg, #006653 0%, #00796b 50%, #004d3f 100%) !important;
+    position: relative;
+}
+
+.metrics-ribbon::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        transparent 100%
+    );
+    animation: xm-shine 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes xm-shine {
+    0% { left: -100%; }
+    50%, 100% { left: 200%; }
+}
+
+.metric-item h3 {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   16. AVATARS — RING ANIMATION
+   ============================================ */
+.avatar-nav,
+.avatar-group img,
+.avatar-more {
+    transition: transform 0.3s var(--xm-ease-spring),
+                box-shadow 0.3s var(--xm-ease-out-expo) !important;
+}
+
+.avatar-nav:hover,
+.avatar-group img:hover,
+.avatar-more:hover {
+    transform: scale(1.08);
+    z-index: 10;
+}
+
+.avatar-nav:hover {
+    box-shadow: 0 0 0 4px rgba(0, 102, 83, 0.20),
+                var(--xm-shadow-md) !important;
+}
+
+/* ============================================
+   17. NOTIFICATION BUTTON — BELL WIGGLE
+   ============================================ */
+.notification-btn {
+    transition: transform 0.3s var(--xm-ease-spring),
+                background-color 0.3s ease,
+                box-shadow 0.3s ease !important;
+}
+
+.notification-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--xm-shadow-sm);
+}
+
+.notification-btn:hover i {
+    animation: xm-bell-wiggle 0.6s ease-in-out;
+}
+
+@keyframes xm-bell-wiggle {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-12deg); }
+    50% { transform: rotate(10deg); }
+    75% { transform: rotate(-6deg); }
+}
+
+/* ============================================
+   18. PAGE LOAD — FADE IN
+   ============================================ */
+body {
+    animation: xm-page-fade 0.5s var(--xm-ease-out-expo);
+}
+
+@keyframes xm-page-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================
+   19. STAGGERED GRID CHILDREN
+   ============================================ */
+.tasks-grid > *,
+.categories-grid > *,
+.safety-grid > *,
+.metrics-grid > *,
+.steps-grid > *,
+.footer-grid > * {
+    transition-delay: var(--xm-stagger-delay, 0ms);
+}
+
+/* ============================================
+   20. HERO SECTION — PREMIUM BACKGROUND
+   ============================================ */
+.hero-section {
+    background: linear-gradient(135deg,
+                rgba(230, 247, 242, 1) 0%,
+                rgba(244, 247, 246, 1) 50%,
+                rgba(255, 255, 255, 1) 100%) !important;
+    position: relative;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: -120px;
+    left: -80px;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 166, 35, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* ============================================
+   21. REDUCED MOTION — ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .phone-mockup {
+        animation: none !important;
+    }
+
+    [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}

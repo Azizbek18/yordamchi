@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topshiriq.uz - Moderatsiya Markazi</title>
+    <link rel="stylesheet" href="muammo.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="auth.js"></script>
+  <script>(async()=>{ await requireAuth(); })();</script>
+  <link rel="stylesheet" href="header.css">
+<link rel="stylesheet" href="enhancements.css">
+</head>
+<body>
+
+      <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fas fa-handshake"></i></span> Topshiriq.uz
+      </a>
+      <nav class="nav-menu">
+        <a href="mahallam.html" id="nav-mahallam">Mahallam</a>
+        <a href="vazifa.html" id="nav-vazifalar">Vazifalar</a>
+        <a href="yordam.html" id="nav-yordam">Yordam</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="bildirishnoma.html" style="text-decoration:none;">
+          <button class="notification-btn" aria-label="Bildirishnomalar">
+            <i class="far fa-bell"></i>
+          </button>
+        </a>
+        <a href="profil.html" style="text-decoration:none;">
+          <div class="avatar-nav">A</div>
+        </a>
+        <button class="hamburger-btn" id="hamburger-btn" aria-label="Menyu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+    <main class="main-container">
+        
+        <section class="center-content">
+            <h1 class="page-title">Moderatsiya Markazi</h1>
+            <p class="page-subtitle">Sizning xavfsizligingiz va adolatli hamjamiyat bizning ustuvorligimizdir.</p>
+
+            <div class="moderation-tabs">
+                <button class="mod-tab active">Shikoyat berish</button>
+                <button class="mod-tab">Nizoni hal qilish</button>
+                <button class="mod-tab">Tarix</button>
+            </div>
+
+            <div class="category-grid">
+                <div class="category-card" data-category="odobsizlik">
+                    <div class="icon-wrapper red-text"><i class="fa-solid fa-user-slash"></i></div>
+                    <span>Odobsizlik</span>
+                </div>
+                <div class="category-card" data-category="tolov">
+                    <div class="icon-wrapper orange-text"><i class="fa-solid fa-money-bill-wave"></i></div>
+                    <span>To'lov muammosi</span>
+                </div>
+                <div class="category-card active" data-category="firibgarlik">
+                    <div class="icon-wrapper bright-red-text"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <span>Firibgarlik</span>
+                </div>
+                <div class="category-card" data-category="boshqa">
+                    <div class="icon-wrapper gray-text"><i class="fa-solid fa-ellipsis"></i></div>
+                    <span>Boshqa</span>
+                </div>
+            </div>
+
+            <div class="form-panel">
+                <div class="form-group">
+                    <label class="form-label">Vazifani tanlang</label>
+                    <div class="custom-select-wrapper">
+                        <select id="taskSelect">
+                            <option value="T-4921">Dorixonadan dori (T-4921)</option>
+                            <option value="T-5022">Mebel ko'chirish (T-5022)</option>
+                            <option value="T-3112">Kran ta'mirlash (T-3112)</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Isbotlar (Rasm yoki video)</label>
+                    <div class="dropzone" id="dropzone">
+                        <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                        <p class="dropzone-text">Fayllarni bu yerga tashlang yoki tanlang</p>
+                        <span class="dropzone-subtext">Maksimal 10MB, JPG, PNG, MP4</span>
+                        <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display: none;">
+                        <div id="filePreviewContainer" class="preview-container"></div>
+                    </div>
+                </div>
+
+                <button class="btn-submit" id="submitComplaint">Shikoyatni yuborish</button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-logo-section">
+                <h3>Topshiriq.uz</h3>
+                <p>© 2024 Topshiriq.uz - Mahalliy hamjamiyat</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html">Biz haqimizda</a>
+                <a href="yordam.html">Xavfsizlik</a>
+                <a href="yordam.html">Qoidalar</a>
+                <a href="yordam.html">Bog'lanish</a>
+            </div>
+            <div class="footer-socials">
+                <button class="social-btn"><i class="fa-solid fa-globe"></i></button>
+                <button class="social-btn"><i class="fa-solid fa-share-nodes"></i></button>
+            </div>
+        </div>
+    </footer>
+    <script src="./muammo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="enhancements.js"></script>
+</body>
+</html>

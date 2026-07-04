@@ -1,0 +1,335 @@
+/* ═══════════════════════════════════════════
+   responsive.css — kuzatish.html responsive fix
+   Sidebar, grid, nav, footer mobile uchun
+   ═══════════════════════════════════════════ */
+
+/* ── TABLET (max-width: 900px) ── */
+@media (max-width: 900px) {
+    /* Page grid: sidebar pastda turadi */
+    .page-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Sidebar to'liq kenglikda, ustma-ust joylashadi */
+    .sidebar {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    /* Sidebar ichidagi kartalar to'liq kenglikni oladi */
+    .sidebar .card,
+    .sidebar .contractor-card,
+    .sidebar .safe-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Steps + Map grid: bitta ustun */
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Task header moslashadi */
+    .task-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 20px 22px;
+    }
+
+    .task-header-left h1 {
+        font-size: 1.2rem;
+    }
+
+    .price-badge {
+        align-self: flex-start;
+    }
+
+    /* Feed items moslashadi */
+    .feed-item {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .feed-text {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    /* Footer moslashadi */
+    footer {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        padding: 20px 16px;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 20px;
+    }
+}
+
+/* ── MOBILE (max-width: 600px) ── */
+@media (max-width: 600px) {
+    /* Asosiy padding kamaytiriladi */
+    main {
+        padding: 16px 12px;
+    }
+
+    /* Task header kichik ekranda */
+    .task-header {
+        padding: 18px 16px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+
+    .task-header-left h1 {
+        font-size: 1.05rem;
+        gap: 6px;
+    }
+
+    .task-header-left p {
+        font-size: .82rem;
+    }
+
+    .price-badge {
+        font-size: .9rem;
+        padding: 8px 16px;
+    }
+
+    /* Kartalar kichik padding */
+    .card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    /* Steps kichik ekranda */
+    .step {
+        gap: 10px;
+        padding-bottom: 16px;
+    }
+
+    .step-dot {
+        width: 24px;
+        height: 24px;
+        font-size: .7rem;
+    }
+
+    .step-line {
+        left: 11px;
+        top: 24px;
+    }
+
+    .step-info h4 {
+        font-size: .83rem;
+    }
+
+    .step-info span {
+        font-size: .73rem;
+    }
+
+    /* ── SIDEBAR MOBILE FIX ── */
+    .sidebar {
+        gap: 12px;
+    }
+
+    .contractor-card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .contractor-top {
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .c-avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+    }
+
+    .c-name {
+        font-size: .9rem;
+    }
+
+    .c-stars {
+        font-size: .75rem;
+    }
+
+    .c-meta {
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .c-meta-row {
+        font-size: .78rem;
+        gap: 6px;
+    }
+
+    .c-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn-chat,
+    .btn-call {
+        padding: 10px;
+        font-size: .83rem;
+    }
+
+    .note-box {
+        padding: 12px;
+        margin-top: 12px;
+        font-size: .78rem;
+        border-radius: 8px;
+    }
+
+    .safe-card {
+        padding: 14px 16px;
+        border-radius: 12px;
+        gap: 12px;
+    }
+
+    .safe-icon {
+        font-size: 1.3rem;
+    }
+
+    .safe-text h4 {
+        font-size: .85rem;
+    }
+
+    .safe-text p {
+        font-size: .75rem;
+    }
+
+    /* Map card */
+    .map-header {
+        padding: 10px 14px;
+    }
+
+    .map-header span {
+        font-size: .8rem;
+    }
+
+    /* Feed card */
+    .feed-card {
+        padding: 14px;
+    }
+
+    .feed-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .feed-icon {
+        font-size: 1.2rem;
+    }
+
+    .feed-text h4 {
+        font-size: .85rem;
+    }
+
+    .feed-text p {
+        font-size: .78rem;
+    }
+
+    .feed-time {
+        font-size: .7rem;
+    }
+
+    /* Modal */
+    .modal {
+        padding: 24px 20px;
+        border-radius: 14px;
+        width: 94%;
+    }
+
+    .modal h2 {
+        font-size: 1.05rem;
+    }
+
+    .modal p {
+        font-size: .82rem;
+    }
+
+    /* Chat modal */
+    .chat-body {
+        height: 180px;
+        padding: 14px;
+    }
+
+    .chat-msg {
+        font-size: .8rem;
+        max-width: 85%;
+    }
+
+    .chat-input-row {
+        padding: 10px 14px;
+    }
+
+    .chat-input-row input {
+        font-size: .83rem;
+        padding: 8px 12px;
+    }
+
+    .chat-send {
+        padding: 8px 14px;
+        font-size: .83rem;
+    }
+
+    /* Footer */
+    footer {
+        padding: 16px 12px;
+    }
+
+    .footer-links {
+        gap: 10px 16px;
+    }
+
+    .footer-links a {
+        font-size: .78rem;
+    }
+}
+
+/* ── KICHIK MOBILE (max-width: 380px) ── */
+@media (max-width: 380px) {
+    main {
+        padding: 12px 8px;
+    }
+
+    .task-header {
+        padding: 14px 12px;
+    }
+
+    .task-header-left h1 {
+        font-size: .95rem;
+    }
+
+    .card {
+        padding: 12px;
+    }
+
+    .contractor-card {
+        padding: 12px;
+    }
+
+    .contractor-top {
+        gap: 10px;
+    }
+
+    .c-avatar {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .c-actions {
+        flex-direction: row;
+        gap: 8px;
+    }
+}

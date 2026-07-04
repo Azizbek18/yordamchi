@@ -1,0 +1,482 @@
+
+/* DESIGN REVOLUTION & SYSTEM VARIABLES */
+:root {
+    --primary-teal: #00796b;
+    --primary-dark: #004d40;
+    --dark-green: #041d16;
+    --text-main: #2d3748;
+    --text-muted: #718096;
+    --border-light: #edf2f7;
+    --shadow-blur: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body,
+html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #f0f4f2;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+    background: #00796b;
+    color: white;
+}
+
+.map-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* HAQIQIY XARITA ELEMENTI */
+#main-leaflet-map {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* TEPADAGI QIDIRUV HUDUDI */
+.top-search-overlay {
+    position: absolute;
+    top: 25px;
+    left: 20px;
+    right: 20px;
+    z-index: 10;
+    display: flex;
+    gap: 12px;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.search-box {
+    background: white;
+    flex-grow: 1;
+    height: 54px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 22px;
+    box-shadow: var(--shadow-blur);
+    transition: box-shadow 0.2s;
+}
+
+.search-box:focus-within {
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.search-icon,
+.mic-icon {
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+.search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 0 12px;
+    font-size: 15px;
+    color: var(--text-main);
+    background-color: #fff;
+}
+
+.tune-button {
+    width: 54px;
+    height: 54px;
+    background: var(--primary-teal);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-blur);
+    transition: all 0.2s;
+}
+
+.tune-button:hover {
+    background-color: var(--primary-dark);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* FILTR TEG REYTINGI */
+.map-tags-container {
+    position: absolute;
+    top: 95px;
+    left: 20px;
+    right: 20px;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 4px 0;
+}
+
+.map-tags-container::-webkit-scrollbar {
+    display: none;
+}
+
+.tag-link {
+    background: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-main);
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tag-link:hover {
+    background-color: #f7fafc;
+}
+
+.tag-link.active {
+    background: var(--primary-teal);
+    color: white;
+}
+
+/* O'NG TOMONDAGI NAVIGATSIYA TUGMALARI */
+.map-controls-right {
+    position: absolute;
+    right: 20px;
+    top: 45%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ctrl-btn {
+    width: 48px;
+    height: 48px;
+    background: white;
+    border: none;
+    border-radius: 14px;
+    box-shadow: var(--shadow-blur);
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.ctrl-btn:hover {
+    background: #e2e8f0;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* PASTKI PANEL (PULL-UP BOTTOM SHEET) */
+.bottom-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
+    z-index: 10;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.1);
+    padding: 12px 24px 24px 24px;
+    max-width: 840px;
+    margin: 0 auto;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.sheet-handle {
+    width: 50px;
+    height: 5px;
+    background: #cbd5e0;
+    border-radius: 3px;
+    margin: 0 auto 15px auto;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.sheet-handle:hover {
+    background: #cbd5e0;
+}
+
+.sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sheet-header h3 {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--dark-green);
+}
+
+.green-count {
+    color: var(--primary-teal);
+}
+
+.view-list-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* VAZIFALAR SKROLL HUDUDI */
+.tasks-scroll-area {
+    max-height: 270px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tasks-scroll-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tasks-scroll-area::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+/* KENG RO'YXAT KARTALARI */
+.wide-task-card {
+    display: flex;
+    align-items: center;
+    background: #f7fafc;
+    border: 1.5px solid var(--border-light);
+    border-radius: 18px;
+    padding: 16px;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.wide-task-card:hover {
+    background: #f0f4f8;
+    border-color: #cbd5e0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.wide-task-card.hidden {
+    display: none !important;
+}
+
+.icon-frame {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+/* Kategoriya ranglari */
+.bg-orange {
+    background-color: #fff3e0;
+}
+
+.text-dark-orange {
+    color: #e65100;
+}
+
+.bg-teal {
+    background-color: #e0f2f1;
+}
+
+.text-dark-teal {
+    color: #004d40;
+}
+
+.bg-green {
+    background-color: #e8f5e9;
+}
+
+.text-dark-green {
+    color: #2e7d32;
+}
+
+.bg-red {
+    background-color: #ffebee;
+}
+
+.text-dark-red {
+    color: #c62828;
+}
+
+.task-mid {
+    flex-grow: 1;
+}
+
+.task-mid h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 4px;
+}
+
+.task-mid p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.meta-data {
+    font-size: 12px;
+    color: #a0aec0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.task-price-wrapper {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.task-price-tag {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--primary-teal);
+}
+
+.apply-task-btn {
+    background: var(--primary-teal);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.apply-task-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 121, 107, 0.3);
+}
+
+.loading-more-box {
+    text-align: center;
+    padding: 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: #edf2f7;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* JONLI GPS MARKER EFFEKTI (PULSASIYA) */
+.user-live-gps-marker {
+    position: relative;
+}
+
+.gps-core-dot {
+    width: 14px;
+    height: 14px;
+    background: #0084ff;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.gps-pulse-wave {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 24px;
+    height: 24px;
+    background: rgba(0, 132, 255, 0.3);
+    border-radius: 50%;
+    animation: pulseGpsWave 2s infinite ease-out;
+    z-index: -1;
+}
+
+/* Leafletning divIcon fon va chegarasini tozalash (Siljishning oldini oladi) */
+.leaflet-div-icon {
+    background: transparent !important;
+    border: none !important;
+}
+
+@keyframes pulseGpsWave {
+    0% {
+        transform: scale(0.6);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(2.6);
+        opacity: 0;
+    }
+}
+
+/* Responsive adjustments for map view */
+@media (max-width: 1024px) {
+    .top-search-overlay, .map-tags-container { left: 12px; right: 12px; max-width: none; }
+    .map-controls-right { right: 12px; }
+    .bottom-sheet { max-width: 100%; padding: 12px; }
+}
+
+@media (max-width: 768px) {
+    .top-search-overlay { top: 16px; gap: 8px; }
+    .search-box { height: 48px; padding: 0 14px; }
+    .tune-button { width:44px;height:44px }
+    .map-controls-right { top: 40% }
+    .bottom-sheet { padding: 10px; }
+    .tasks-scroll-area { max-height: 220px }
+}
+
+@media (max-width: 480px) {
+    .top-search-overlay { left: 8px; right: 8px; top: 12px }
+    .map-tags-container { top: 80px; left: 8px; right: 8px }
+    .map-controls-right { right: 8px }
+    .bottom-sheet { padding: 8px; border-radius: 18px }
+    .wide-task-card { flex-direction: column; align-items: flex-start }
+}
+
+/* Focus-visible for all interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+.tag-link:focus-visible,
+.ctrl-btn:focus-visible,
+.tune-button:focus-visible,
+.apply-task-btn:focus-visible,
+.sheet-handle:focus-visible {
+    outline: 2px solid #00796b;
+    outline-offset: 2px;
+}

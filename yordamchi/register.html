@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topshiriq.uz — Ro'yxatdan o'tish</title>
+  <link rel="stylesheet" href="register.css">
+  <link rel="stylesheet" href="responsive.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="enhancements.css">
+</head>
+
+<body>
+
+  <div class="page">
+
+    <div class="left">
+      <div class="left-inner">
+
+        <a href="index.html" class="brand">
+          <div class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M15 5L7 13L3 9" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+          <span>Topshiriq.uz</span>
+        </a>
+
+        <div class="left-content">
+          <h1 class="hero-title">Hamjamiyatga<br>qo'shiling! 🌱</h1>
+
+          <div class="stats-row">
+            <div>
+              <div class="stat-num">4,200+</div>
+              <div class="stat-label">Faol yordamchilar</div>
+            </div>
+            <div>
+              <div class="stat-num">4.9 <span class="star">★</span></div>
+              <div class="stat-label">O'rtacha reyting</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial">
+          <div class="testi-top">
+            <img class="testi-av" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&fit=crop&q=80"
+              alt="Jasur T.">
+            <div>
+              <div class="testi-name">Jasur T.</div>
+              <div class="testi-role">Yordamchi, Chilonzor</div>
+            </div>
+          </div>
+          <p class="testi-text">"Har kuni qo'shnilarimga yordam berib daromad topayapman. Eng yaxshi platforma!"</p>
+        </div>
+
+      </div>
+
+      <div class="deco deco1"></div>
+      <div class="deco deco2"></div>
+    </div>
+
+    <div class="right">
+      <div class="form-wrap">
+
+        <h2 class="form-title">Hisob yarating</h2>
+        <p class="form-sub">Bir daqiqada ro'yxatdan o'ting va boshlang.</p>
+
+        <p class="role-label">Men kim sifatida ro'yxatdan o'taman:</p>
+        <div class="role-cards">
+          <button type="button" class="role-card active" data-role="employer">
+            <div class="role-icon teal">
+              <i class="fas fa-clipboard-list" style="font-size:20px;"></i>
+            </div>
+            <span>Ish beruvchi</span>
+          </button>
+          <button type="button" class="role-card" data-role="helper">
+            <div class="role-icon orange">
+              <i class="fas fa-hand-holding-heart" style="font-size:20px;"></i>
+            </div>
+            <span>Yordamchi (Ijrochi)</span>
+          </button>
+        </div>
+
+        <form id="registerForm" novalidate>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="firstName">Ism</label>
+              <input type="text" id="firstName" placeholder="Jasur" autocomplete="given-name">
+              <p class="field-error" id="firstNameError"></p>
+            </div>
+            <div class="field">
+              <label for="lastName">Familiya</label>
+              <input type="text" id="lastName" placeholder="Tursunov" autocomplete="family-name">
+              <p class="field-error" id="lastNameError"></p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email manzil</label>
+            <div class="input-phone">
+              <div class="input-icon" style="padding-left:14px; color:var(--text3)">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <input type="email" id="email" placeholder="aziz@gmail.com" autocomplete="email">
+            </div>
+            <p class="field-error" id="emailError"></p>
+          </div>
+
+          <div class="field">
+            <label for="phone">Telefon raqam</label>
+            <div class="input-phone">
+              <div class="phone-prefix">🇺🇿 +998</div>
+              <div class="divider-v"></div>
+              <input type="tel" id="phone" placeholder="90 123 45 67" autocomplete="tel">
+            </div>
+            <p class="field-error" id="phoneError"></p>
+          </div>
+
+          <div class="field">
+            <label for="district">Tuman</label>
+            <div class="select-wrap">
+              <select id="district">
+                <option value="">Tumaningizni tanlang</option>
+                <option value="yunusobod">Yunusobod</option>
+                <option value="chilonzor">Chilonzor</option>
+                <option value="shayxontohur">Shayxontohur</option>
+                <option value="mirzo-ulugbek">Mirzo Ulug'bek</option>
+                <option value="yakkasaroy">Yakkasaroy</option>
+                <option value="uchtepa">Uchtepa</option>
+                <option value="sergeli">Sergeli</option>
+                <option value="olmazor">Olmazor</option>
+                <option value="bektemir">Bektemir</option>
+              </select>
+              <i class="fas fa-chevron-down select-arrow"></i>
+            </div>
+            <p class="field-error" id="districtError"></p>
+          </div>
+
+          <div class="field">
+            <label for="reg-password">Parol</label>
+            <div class="input-password">
+              <input type="password" id="reg-password" placeholder="Kamida 8 ta belgi" autocomplete="new-password">
+              <button type="button" class="eye-btn" id="regEyeBtn" aria-label="Parolni ko'rsatish">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+            <p class="field-error" id="passError"></p>
+          </div>
+
+          <button type="submit" class="btn-primary" id="submitBtn">
+            <span class="btn-text">Ro'yxatdan o'tish</span>
+            <svg class="btn-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+
+        </form>
+
+        <p style="margin-top:20px; font-size:13px; color:#5a5855; text-align:center;">
+          Hisobingiz bormi? <a href="kirish.html">Kiring</a>
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="auth.js"></script>
+  <script src="./register.js"></script>
+<script src="enhancements.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1001 @@
+
+/* STRUKTURA VA UMUMIY USLUBLAR */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+:root {
+    --bg-page: #f4faf7;
+    --primary-teal: #006653;
+    /* To'q yashil asosiy brend rangi */
+    --primary-hover: #004d3f;
+    --text-dark: #2d3748;
+    --text-muted: #718096;
+    --border-color: #e2e8f0;
+    --white: #ffffff;
+}
+
+::selection {
+    background: var(--primary-teal);
+    color: white;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--primary-teal);
+    outline-offset: 2px;
+}
+
+button {
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+body {
+    background-color: var(--bg-page);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 60px;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-teal);
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-muted);
+    margin: 0 16px;
+    font-weight: 500;
+}
+
+.user-profile-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.notification-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--primary-teal);
+    cursor: pointer;
+}
+
+.btn-nav-profile {
+    background-color: var(--primary-teal);
+    color: var(--white);
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* HERO ORQA FON */
+.hero-bg {
+    height: 160px;
+    background-color: #008069;
+    /* Rasm tepasidagi to'q yashil fon paneli */
+    width: 100%;
+}
+
+/* ASOSIY KONTEYNER */
+.main-container {
+    max-width: 1000px;
+    width: 100%;
+    margin: -60px auto 40px auto;
+    /* Kartani hero fon ustiga chiqarish */
+    padding: 0 20px;
+    position: relative;
+    z-index: 5;
+}
+
+/* FOYDALANUVCHI ASOSIY KARTASI */
+.user-main-card {
+    background-color: var(--white);
+    border-radius: 16px;
+    padding: 24px 30px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    margin-bottom: 24px;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.avatar-wrapper {
+    position: relative;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    background-color: #008075;
+    color: var(--white);
+    font-size: 32px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid var(--white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    transition: opacity 0.2s;
+}
+
+.profile-avatar.has-photo {
+    color: transparent;
+}
+
+.profile-avatar.uploading {
+    opacity: 0.55;
+}
+
+.avatar-upload-spinner {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 22px;
+}
+
+.profile-avatar.uploading .avatar-upload-spinner {
+    display: flex;
+}
+
+.edit-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-info-header {
+    flex: 1;
+}
+
+.name-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.name-row h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.badge-verified {
+    background-color: #e6f7f2;
+    color: #38a169;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.user-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    margin-bottom: 16px;
+}
+
+.user-mini-stats {
+    display: flex;
+    gap: 30px;
+}
+
+.mini-stat-item {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+}
+
+.mini-stat-item:hover {
+    transform: translateY(-1px);
+}
+
+.stat-num {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-teal);
+}
+
+.icon-gold {
+    color: #b7791f;
+}
+
+.stat-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.btn-edit-profile {
+    background-color: var(--primary-teal);
+    color: var(--white);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    margin-top: 10px;
+}
+
+.btn-edit-profile:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,102,83,0.25);
+}
+
+.btn-edit-profile:active {
+    transform: scale(0.97);
+}
+
+/* IKKI USTUNLI GRID TUZILISHI */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+/* KONTENT BOX (KARTALAR) */
+.content-box {
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.content-box:hover {
+    transform: translateY(-1px);
+}
+
+.box-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 16px;
+}
+
+/* CHAP USTUN DETAIL ELEMENTS */
+.about-text {
+    font-size: 14px;
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background-color: #edf9f4;
+    color: #006653;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: all 0.15s;
+}
+
+.tag:hover {
+    transform: translateY(-1px);
+}
+
+/* FAOLIYAT KO'RSATKICHLARI */
+.performance-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (min-width: 992px) {
+    .profile-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+    }
+
+    .performance-metrics {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 14px 20px;
+    }
+
+    .user-main-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .user-mini-stats {
+        justify-content: center;
+    }
+
+    .btn-edit-profile {
+        align-self: center;
+    }
+}
+
+.metric-item {
+    flex: 1;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.metric-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.metric-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.bg-light-green {
+    background-color: #e6fffa;
+}
+
+.text-green {
+    color: #319795;
+}
+
+.bg-light-teal {
+    background-color: #ebf8ff;
+}
+
+.text-teal {
+    color: #2b6cb0;
+}
+
+.metric-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.metric-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+/* O'NG USTUN DETAILS */
+.status-online {
+    font-size: 13px;
+    color: #38a169;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.dot-online {
+    width: 8px;
+    height: 8px;
+    background-color: #38a169;
+    border-radius: 50%;
+}
+
+.week-calendar {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.day-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.day-box:hover:not(.disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.day-name {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.day-box i {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.day-box.active i {
+    background-color: #006653;
+    color: var(--white);
+}
+
+.day-box.disabled i {
+    background-color: #cbd5e0;
+    color: #718096;
+}
+
+/* SHAXS TASDIQLANGAN PANEL */
+.verification-alert-box {
+    background-color: #e6f7f2;
+    /* Rasmda ko'ringan och yashil ogohlantirish foni */
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid #e2e8f0;
+}
+
+.v-icon-box {
+    font-size: 24px;
+    color: #006653;
+}
+
+.v-text-box h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.v-text-box p {
+    font-size: 12px;
+    color: #4a5568;
+    margin-top: 2px;
+}
+
+/* REYTING DIAGRAMMASI */
+.rating-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chart-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stars-count {
+    font-size: 13px;
+    font-weight: 600;
+    width: 10px;
+    color: #4a5568;
+}
+
+.progress-bar-bg {
+    flex: 1;
+    height: 8px;
+    background-color: #edf2f7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.gold-bar {
+    background-color: #9c6516;
+}
+
+/* 5 yulduz uchun to'q tilla rang */
+.light-gold-bar {
+    background-color: #b7791f;
+}
+
+/* 4 yulduz uchun ochroq oltin rang */
+.gray-bar {
+    background-color: #cbd5e0;
+}
+
+/* 3 yulduz uchun kulrang */
+
+.votes-count {
+    font-size: 13px;
+    font-weight: 600;
+    width: 20px;
+    text-align: right;
+    color: #1a202c;
+}
+
+/* FOOTER */
+.footer {
+    padding: 30px 60px;
+    background-color: var(--white);
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-logo-section h3 {
+    color: var(--primary-teal);
+    margin-bottom: 4px;
+}
+
+.footer-logo-section p {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    margin: 0 14px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 10px;
+}
+
+.social-btn {
+    background: #cbd5e0;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.social-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.social-btn:active {
+    transform: scale(0.97);
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-logout-profile {
+    background-color: #fff;
+    color: #e53e3e;
+    border: 1px solid #e53e3e;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+}
+
+.btn-logout-profile:hover {
+    background-color: #fff5f5;
+    transform: translateY(-1px);
+}
+
+/* ════════════════════════════════════════
+   EDIT PROFILE MODAL
+   ════════════════════════════════════════ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 30, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    padding: 20px;
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.edit-modal {
+    background: var(--white);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+    transform: translateY(16px) scale(0.97);
+    opacity: 0;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.edit-modal::-webkit-scrollbar {
+    display: none;
+}
+
+.modal-overlay.open .edit-modal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.edit-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.edit-modal-header h2 {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 4px;
+}
+
+.edit-modal-header p {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.modal-close-btn {
+    background: var(--bg-page);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.modal-close-btn:hover {
+    background: #fee2e2;
+    color: #e53e3e;
+    transform: rotate(90deg);
+}
+
+.edit-modal-body {
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.edit-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.edit-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.edit-field input,
+.edit-field textarea,
+.edit-select-wrap select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 14.5px;
+    color: var(--text-dark);
+    background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+}
+
+.edit-field input:hover,
+.edit-field textarea:hover,
+.edit-select-wrap select:hover {
+    border-color: #cbd5e0;
+}
+
+.edit-field input:focus,
+.edit-field textarea:focus,
+.edit-select-wrap select:focus {
+    outline: none;
+    border-color: var(--primary-teal);
+    box-shadow: 0 0 0 3px rgba(0, 102, 83, 0.12);
+}
+
+.edit-field input.input-error,
+.edit-field textarea.input-error,
+.edit-select-wrap select.input-error {
+    border-color: #e53e3e;
+}
+
+.edit-field textarea {
+    min-height: 90px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.edit-field-error {
+    font-size: 12px;
+    color: #e53e3e;
+    margin: 0;
+    min-height: 14px;
+}
+
+.edit-phone-wrap {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.edit-phone-wrap:focus-within {
+    border-color: var(--primary-teal);
+    box-shadow: 0 0 0 3px rgba(0, 102, 83, 0.1);
+}
+
+.edit-phone-prefix {
+    padding: 11px 10px 11px 14px;
+    color: var(--text-muted);
+    font-size: 14.5px;
+    font-weight: 600;
+    background: var(--bg-page);
+    border-right: 1.5px solid var(--border-color);
+}
+
+.edit-phone-wrap input {
+    border: none;
+    border-radius: 0;
+    flex: 1;
+}
+
+.edit-phone-wrap input:focus {
+    box-shadow: none;
+}
+
+.edit-select-wrap {
+    position: relative;
+}
+
+.edit-select-wrap select {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 36px;
+}
+
+.edit-select-arrow {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.edit-optional-tag {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.edit-password-wrap {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.edit-password-wrap:focus-within {
+    border-color: var(--primary-teal);
+    box-shadow: 0 0 0 3px rgba(0, 102, 83, 0.1);
+}
+
+.edit-password-wrap input {
+    border: none;
+    flex: 1;
+}
+
+.edit-password-wrap input:focus {
+    box-shadow: none;
+}
+
+.edit-eye-btn {
+    background: none;
+    border: none;
+    padding: 0 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.edit-modal-footer {
+    display: flex;
+    gap: 10px;
+    padding: 20px 28px 28px;
+}
+
+.btn-cancel-edit {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-color);
+    background: var(--white);
+    color: var(--text-dark);
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-cancel-edit:hover {
+    background: var(--bg-page);
+    border-color: #cbd5e0;
+}
+
+.btn-save-edit {
+    flex: 1.4;
+    padding: 12px 0;
+    border-radius: 12px;
+    border: none;
+    background: var(--primary-teal);
+    color: var(--white);
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-save-edit:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 102, 83, 0.2);
+}
+
+.btn-save-edit:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-save-edit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 480px) {
+    .edit-field-row {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-modal-header,
+    .edit-modal-body,
+    .edit-modal-footer {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}

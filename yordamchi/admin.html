@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topshiriq.uz — Admin Boshqaruvi</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="auth.js"></script>
+  <script>(async()=>{ await requireAuth(); })();</script>
+<link rel="stylesheet" href="enhancements.css">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h2>Topshiriq.uz</h2>
+                <span>ADMIN BOSHQARUVI</span>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active">
+                    <i class="fas fa-th-large"></i> Overview
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="far fa-clipboard"></i> Tasks
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-users"></i> Users
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="far fa-credit-card"></i> Payments
+                </a>
+                <a href="#" class="menu-item justify-between">
+                    <span><i class="far fa-shield-check"></i> Moderation</span>
+                    <span class="badge badge-orange">12</span>
+                </a>
+                <a href="#" class="menu-item justify-between">
+                    <span><i class="fas fa-asterisk"></i> SOS</span>
+                    <span class="badge badge-red">3</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-profile">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="profile-info">
+                    <h4>Javohir Orifov</h4>
+                    <p>Super Admin</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <header class="top-header">
+                <h1 class="page-title">Overview</h1>
+                <div class="header-actions">
+                    <div class="header-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Qidiruv...">
+                    </div>
+                    <button class="notif-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="notif-dot"></span>
+                    </button>
+                </div>
+            </header>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <p>Jami Foydalanuvchilar</p>
+                        <span class="trend trend-up"><i class="fas fa-arrow-trend-up"></i> +12%</span>
+                    </div>
+                    <h2>24,512</h2>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <p>Faol Vazifalar</p>
+                        <span class="trend trend-up"><i class="fas fa-arrow-trend-up"></i> +8%</span>
+                    </div>
+                    <h2>1,894</h2>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <p>Bajarilgan</p>
+                        <span class="trend trend-flat">~ 0%</span>
+                    </div>
+                    <h2>14,203</h2>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <p>O'rtacha Reyting</p>
+                        <span class="trend trend-up"><i class="fas fa-arrow-trend-up"></i> +0.2</span>
+                    </div>
+                    <h2>4.92</h2>
+                </div>
+            </section>
+
+            <section class="charts-grid">
+                <div class="chart-card line-chart-container">
+                    <div class="chart-header">
+                        <h3>Haftalik Dinamika</h3>
+                        <div class="dropdown-select">
+                            Oxirgi 7 kun <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <canvas id="weeklyDynamicsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card doughnut-chart-container">
+                    <div class="chart-header">
+                        <h3>Kategoriyalar</h3>
+                    </div>
+                    <div class="canvas-wrapper relative-box">
+                        <canvas id="categoriesDoughnutChart"></canvas>
+                        <div class="doughnut-center-text">
+                            <h3>128</h3>
+                            <p>JAMI</p>
+                        </div>
+                    </div>
+                    <div class="chart-custom-legends">
+                        <div class="legend-item"><span class="dot bg-teal"></span> Tozalash</div>
+                        <div class="legend-item"><span class="dot bg-orange"></span> Ta'mirlash</div>
+                        <div class="legend-item"><span class="dot bg-mint"></span> Yetkazib berish</div>
+                        <div class="legend-item"><span class="dot bg-gray"></span> Boshqalar</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bottom-grid">
+                <div class="data-card">
+                    <h3>Top 10 Mahalla (Faollik)</h3>
+                    <div class="progress-list">
+                        <div class="progress-item">
+                            <div class="progress-labels"><span>Chilonzor-5</span> <span>92%</span></div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 92%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-labels"><span>Yunusobod-13</span> <span>88%</span></div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 88%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-labels"><span>Mirzo Ulug'bek</span> <span>85%</span></div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-labels"><span>Olmazor</span> <span>76%</span></div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 76%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-labels"><span>Sergeli-2</span> <span>65%</span></div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-title-flex">
+                        <h3>Jonli Faoliyat</h3>
+                        <span class="live-indicator"><span class="pulse-dot"></span> LIVE</span>
+                    </div>
+                    <div class="activity-feed">
+                        <div class="feed-item">
+                            <div class="feed-icon icon-teal"><i class="fas fa-user-plus"></i></div>
+                            <div class="feed-body">
+                                <p><strong>Aziz M.</strong> yangi vazifa e'lon qildi: "Tozalash xizmati"</p>
+                                <span class="feed-time">Hozirgina</span>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-icon icon-mint"><i class="fas fa-wallet"></i></div>
+                            <div class="feed-body">
+                                <p><strong>Sherzod K.</strong> 120,000 so'm yechib oldi</p>
+                                <span class="feed-time">2 daqiqa oldin</span>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-icon icon-orange"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="feed-body">
+                                <p>Yangi SOS xabari Chilonzor tumanidan kelib tushdi</p>
+                                <span class="feed-time">5 daqiqa oldin</span>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-icon icon-shield"><i class="fas fa-check-circle"></i></div>
+                            <div class="feed-body">
+                                <p><strong>Lola S.</strong> profili moderatsiyadan o'tdi</p>
+                                <span class="feed-time">12 daqiqa oldin</span>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-icon icon-gray"><i class="fas fa-flag-checkered"></i></div>
+                            <div class="feed-body">
+                                <p>Vazifa yakunlandi: "Kuryerlik xizmati" Yunusobodda</p>
+                                <span class="feed-time">25 daqiqa oldin</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="admin-footer">
+                <p>&copy; 2026 Topshiriq.uz - Mahalliy hamjamiyat &bull; Admin Panel v2.1</p>
+                <div class="footer-links">
+                    <a href="#">Biz haqimizda</a>
+                    <a href="#">Xavfsizlik</a>
+                    <a href="#">Bog'lanish</a>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="admin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="enhancements.js"></script>
+</body>
+
+</html>

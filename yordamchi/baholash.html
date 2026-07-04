@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vazifa Yakunlandi - Baholash</title>
+    <link rel="stylesheet" href="baholash.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="auth.js"></script>
+  <script>(async()=>{ await requireAuth(); })();</script>
+<link rel="stylesheet" href="enhancements.css">
+</head>
+
+<body>
+
+    <div class="modal-wrapper">
+
+        <div class="rating-modal">
+
+            <button class="close-btn">&times;</button>
+
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h2 class="modal-title">Vazifa yakunlandi!</h2>
+            <p class="modal-subtitle">Jasur T. yordami sizga ma'qul keldimi?<br>Tajribangiz bilan bo'lishing.</p>
+
+            <div class="profile-container">
+                <div class="avatar-wrapper">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&fit=crop&q=80" alt="Jasur T." class="avatar-img">
+                    <div class="verified-badge">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                <h3 class="profile-name">Jasur T.</h3>
+            </div>
+
+            <div class="rating-stars" id="ratingStars">
+                <i class="far fa-star" data-value="1"></i>
+                <i class="far fa-star" data-value="2"></i>
+                <i class="far fa-star" data-value="3"></i>
+                <i class="far fa-star" data-value="4"></i>
+                <i class="far fa-star" data-value="5"></i>
+            </div>
+
+            <div class="section-block">
+                <label class="block-label">Yordamchiga xos xislatlar (ko'p tanlovli):</label>
+                <div class="tags-container">
+                    <span class="tag">Tez bajardi</span>
+                    <span class="tag">Sifatli</span>
+                    <span class="tag">Samimiy</span>
+                    <span class="tag">Xushmuomala</span>
+                    <span class="tag">Mas'uliyatli</span>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <label class="block-label">Izoh (ixtiyoriy):</label>
+                <textarea class="comment-textarea"
+                    placeholder="Boshqalarga tajribangiz haqida so'zlab bering..."></textarea>
+            </div>
+
+            <div class="toggle-container">
+                <div class="toggle-text">
+                    <h4>Yana hamkorlik qilish</h4>
+                    <p>Ushbu yordamchiga yana topshiriq yuborish</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <button class="submit-btn">Baholashni yuborish</button>
+
+        </div>
+    </div>
+
+    <script src="baholash.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="enhancements.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topshiriq.uz — Kirish</title>
+  <link rel="stylesheet" href="kirish.css">
+  <link rel="stylesheet" href="responsive.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="enhancements.css">
+</head>
+
+<body>
+
+  <div class="page">
+
+    <div class="left">
+      <div class="left-inner">
+
+        <a href="index.html" class="brand">
+          <div class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M15 5L7 13L3 9" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+          <span>Topshiriq.uz</span>
+        </a>
+
+        <div class="left-content">
+          <h1 class="hero-title">Qaytib keldingiz! <span class="wave">👋</span></h1>
+          <p class="hero-sub">O'z hududingizdagi ishonchli insonlar bilan bog'laning va topshiriqlaringizni osongina
+            bajaring.</p>
+        </div>
+
+        <div class="task-card">
+          <div class="task-card-top">
+            <div class="task-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" />
+                <path d="M12 7v5l3 3" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div class="task-info">
+              <p class="task-count">23 active tasks nearby</p>
+              <p class="task-sub">Sizning hududingizda hozir</p>
+            </div>
+          </div>
+          <div class="task-avatars">
+            <img class="av" src="https://i.pravatar.cc/32?img=1" alt="">
+            <img class="av" src="https://i.pravatar.cc/32?img=2" alt="">
+            <img class="av" src="https://i.pravatar.cc/32?img=5" alt="">
+            <div class="av av-more">20</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="deco deco1"></div>
+      <div class="deco deco2"></div>
+    </div>
+
+    <div class="right">
+      <div class="form-wrap">
+
+        <h2 class="form-title">Xush kelibsiz!</h2>
+        <p class="form-sub">Davom etish uchun tizimga kiring.</p>
+
+        <form id="loginForm" novalidate>
+          <p class="role-label">Qaysi rol bilan kirasiz:</p>
+          <div class="role-cards login-role-cards">
+            <button type="button" class="role-card active" data-role="employer">
+              <div class="role-icon teal"><i class="fas fa-briefcase"></i></div>
+              <span>Ish beruvchi</span>
+            </button>
+            <button type="button" class="role-card" data-role="helper">
+              <div class="role-icon orange"><i class="fas fa-hand-holding-heart"></i></div>
+              <span>Yordamchi</span>
+            </button>
+          </div>
+
+          <div class="field">
+            <label for="email">Email manzil</label>
+            <div class="input-phone"> 
+              <div class="input-icon" style="padding-left:14px; color:var(--text3)">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <input type="email" id="email" name="email" placeholder="aziz@gmail.com" autocomplete="email">
+            </div>
+            <p class="field-error" id="emailError"></p>
+          </div>
+
+          <div class="field">
+            <div class="label-row">
+              <label for="password">Parol</label>
+              <a href="#" class="forgot-link">Parolni unutdingizmi?</a>
+            </div>
+            <div class="input-password">
+              <input type="password" id="password" name="password" placeholder="••••••••"
+                autocomplete="current-password">
+              <button type="button" class="eye-btn" id="eyeBtn" aria-label="Parolni ko'rsatish">
+                <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+            <p class="field-error" id="passError"></p>
+          </div>
+
+          <div class="remember-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="remember">
+              <span class="checkmark"></span>
+              <span>Meni eslab qol</span>
+            </label>
+          </div>
+
+
+          <button type="submit" class="btn-primary" id="submitBtn">
+            <span class="btn-text">Kirish</span>
+            <span class="btn-loader" id="btnLoader"></span>
+          </button>
+
+        </form>
+
+        <div class="divider">
+          <span>yoki</span>
+        </div>
+
+        <a href="#" class="sms-card">
+          <div class="sms-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </div>
+          <div class="sms-text">
+            <p class="sms-title">SMS kod bilan kirish</p>
+            <p class="sms-sub">Parolsiz, tezkor kirish usuli</p>
+          </div>
+          <svg class="sms-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </a>
+
+        <p class="register-row">
+          Hisobingiz yo'qmi? <a href="./register.html">Ro'yxatdan o'ting</a>
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="./kirish.js"></script>
+<script src="enhancements.js"></script>
+</body>
+
+</html>

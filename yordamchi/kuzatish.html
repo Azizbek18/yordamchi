@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Topshiriq.uz – Vazifa #T-2847</title>
+    <link rel="stylesheet" href="kuzatish.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="auth.js"></script>
+    <script>(async () => { await requireAuth(); })();</script>
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="enhancements.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon"><i class="fas fa-handshake"></i></span> Topshiriq.uz
+            </a>
+            <nav class="nav-menu">
+                <a href="mahallam.html" id="nav-mahallam">Mahallam</a>
+                <a href="vazifa.html" id="nav-vazifalar">Vazifalar</a>
+                <a href="yordam.html" id="nav-yordam">Yordam</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="bildirishnoma.html" style="text-decoration:none;">
+                    <button class="notification-btn" aria-label="Bildirishnomalar">
+                        <i class="far fa-bell"></i>
+                    </button>
+                </a>
+                <a href="profil.html" style="text-decoration:none;">
+                    <div class="avatar-nav">A</div>
+                </a>
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Menyu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+        <!-- Task Header -->
+        <div class="task-header">
+            <div class="task-header-left">
+                <h1>#T-2847 &nbsp;·&nbsp; Bajarilmoqda <span class="icon">🔄</span></h1>
+                <p>Vazifa: Hovlidagi xazonlarni tozalash va qoplarga joylash</p>
+            </div>
+            <div class="price-badge">250,000 UZS</div>
+        </div>
+
+        <div class="page-grid">
+            <!-- LEFT COLUMN -->
+            <div>
+                <!-- Status + Map -->
+                <div class="grid">
+                    <!-- Steps -->
+                    <div class="card">
+                        <div class="card-title">Jarayon Holati</div>
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-dot done">✓</div>
+                                <div class="step-line"></div>
+                                <div class="step-info">
+                                    <h4>Vazifa e'lon qilindi</h4>
+                                    <span>Bugun, 09:15</span>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-dot done">✓</div>
+                                <div class="step-line"></div>
+                                <div class="step-info">
+                                    <h4>Bajaruvchi tasdiqlandi</h4>
+                                    <span>Bugun, 10:30</span>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-dot active">●</div>
+                                <div class="step-line"></div>
+                                <div class="step-info">
+                                    <h4>Jarayon davom etmoqda</h4>
+                                    <span class="sub-link">Jasur yo'lda…</span>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-dot pending">○</div>
+                                <div class="step-info">
+                                    <h4>Yakunlandi</h4>
+                                    <span>Kutilmoqda</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map -->
+                    <div class="card map-card">
+                        <div class="map-header">
+                            <span>📍 Bajaruvchi joylashuvi</span>
+                            <span class="live-label"><span class="live-dot"></span> LIVE</span>
+                        </div>
+                        <div class="map-body">
+                            <svg class="map-svg" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+                                <!-- road -->
+                                <rect width="400" height="220" fill="#e4ede8" />
+                                <rect x="0" y="90" width="400" height="18" fill="#d0d8d2" rx="2" />
+                                <rect x="160" y="0" width="18" height="220" fill="#d0d8d2" rx="2" />
+                                <rect x="250" y="0" width="12" height="220" fill="#d8dfd9" rx="2" />
+                                <!-- blocks -->
+                                <rect x="20" y="20" width="80" height="60" rx="6" fill="#c8d8cc" />
+                                <rect x="180" y="20" width="55" height="60" rx="6" fill="#c8d8cc" />
+                                <rect x="290" y="120" width="80" height="60" rx="6" fill="#c8d8cc" />
+                                <rect x="20" y="130" width="70" height="55" rx="6" fill="#c8d8cc" />
+                                <!-- dashed path -->
+                                <path d="M155,168 Q200,150 240,110 Q265,90 290,80" stroke="#2a9078" stroke-width="2.5"
+                                    fill="none" class="dashed-path" />
+                                <!-- home pin -->
+                                <circle cx="295" cy="72" r="18" fill="#1a6b5a" />
+                                <text x="295" y="78" text-anchor="middle" fill="white" font-size="14">🏠</text>
+                                <text x="318" y="68" fill="#1a2e28" font-size="11" font-weight="600">Siz (Uy)</text>
+                                <!-- person pin -->
+                                <g id="helperMarker" transform="translate(150, 170)">
+                                    <circle cx="0" cy="0" r="17" fill="#2a9078" stroke="white" stroke-width="2.5" />
+                                    <text x="0" y="4" text-anchor="middle" fill="white" font-size="11"
+                                        font-weight="700">JA</text>
+                                    <text x="20" y="-2" fill="#1a2e28" font-size="11" font-weight="600">Jasur</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Feed -->
+                <div class="card feed-card">
+                    <div class="card-title">🔄 Jonli xabarlar</div>
+                    <div class="feed-item">
+                        <div class="feed-icon">🚴</div>
+                        <div class="feed-text">
+                            <h4>Jasur yo'lga chiqdi</h4>
+                            <p>Kutilayotgan yetib kelish vaqti: 10:55</p>
+                        </div>
+                        <span class="feed-time">10:35</span>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-icon">✅</div>
+                        <div class="feed-text">
+                            <h4>Ijrochi tasdiqlandi</h4>
+                            <p>Tizim tomonidan Jasur tanlandi</p>
+                        </div>
+                        <span class="feed-time">10:30</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDEBAR -->
+            <div class="sidebar">
+                <!-- Contractor -->
+                <div class="card contractor-card">
+                    <div class="contractor-top">
+                        <div class="c-avatar">J<span class="c-online"></span></div>
+                        <div>
+                            <div class="c-name">Jasur Ahmedov</div>
+                            <div class="c-stars">★ 4.9 <span style="color:#888">(42 ta sharh)</span></div>
+                        </div>
+                    </div>
+                    <div class="c-meta">
+                        <div class="c-meta-row"><span class="icon">🚚</span> Sizdan 1.2 km uzoqlikda</div>
+                        <div class="c-meta-row"><span class="icon">🛡️</span> Hujjatlari tasdiqlangan</div>
+                    </div>
+                    <div class="c-actions">
+                        <button class="btn-chat" onclick="openModal('chatModal')">💬 Chat</button>
+                        <button class="btn-call" onclick="openModal('callModal')">📞 Qo'ng'iroq</button>
+                    </div>
+                    <div class="note-box">Jasur akada o'zi bilan maxsus xazon qoplari bo'lar ekan, xavotir olmang."
+                    </div>
+                    <button class="cancel-btn" onclick="openModal('cancelModal')">Vazifani bekor qilish</button>
+                </div>
+
+                <!-- Safe Payment -->
+                <div class="safe-card">
+                    <div class="safe-icon">🛡️</div>
+                    <div class="safe-text">
+                        <h4>Xavfsiz to'lov</h4>
+                        <p>Sizning mablag'ingiz tizim tomonidan muzlatilgan. To'lov faqat siz vazifani qabul
+                            qilganingizdan so'ng ijrochiga o'tkaziladi.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-left">
+            <a href="index.html" class="logo" style="cursor:pointer;">Topshiriq.uz</a>
+            <p>© 2024 Topshiriq.uz – Mahalliy hamjamiyat</p>
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Biz haqimizda</a>
+            <a href="yordam.html">Xavfsizlik</a>
+            <a href="yordam.html">Qoidalar</a>
+            <a href="yordam.html">Bog'lanish</a>
+        </div>
+    </footer>
+
+    <!-- MODAL: Cancel -->
+    <div class="modal-overlay" id="cancelModal">
+        <div class="modal" style="position:relative">
+            <span class="modal-close-x" onclick="closeModal('cancelModal')">✕</span>
+            <h2>⚠️ Vazifani bekor qilish</h2>
+            <p>Haqiqatan ham #T-2847 vazifasini bekor qilmoqchimisiz? Jasur allaqachon yo'lga chiqdi. Bekor qilish uchun
+                komisyon to'lov olinishi mumkin.</p>
+            <div class="modal-actions">
+                <button class="modal-cancel" onclick="closeModal('cancelModal')">Ortga qaytish</button>
+                <button class="modal-confirm" onclick="confirmCancelTask()">Ha, bekor qilish</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Call -->
+    <div class="modal-overlay" id="callModal">
+        <div class="modal" style="position:relative">
+            <span class="modal-close-x" onclick="closeModal('callModal')">✕</span>
+            <h2>📞 Jasur Ahmedov</h2>
+            <p>Qo'ng'iroq qilishdan oldin eslatma: Shaxsiy ma'lumotlaringizni (manzil, to'lov) ilovadan tashqarida baham
+                ko'rmang.</p>
+            <div style="text-align:center;margin-bottom:20px">
+                <div style="font-size:3rem">👤</div>
+                <div style="font-size:1.3rem;font-weight:700;margin-top:8px">+998 90 *** ** 47</div>
+                <div style="font-size:.82rem;color:#5a7a72;margin-top:4px">Ilovadan qo'ng'iroq qilish xavfsizroq</div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-cancel" onclick="closeModal('callModal')">Bekor qilish</button>
+                <button class="modal-confirm" style="background:var(--green-dark)" onclick="confirmCall()">📞
+                    Qo'ng'iroq</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Chat -->
+    <div class="modal-overlay" id="chatModal">
+        <div class="modal chat-modal" style="position:relative;padding:0">
+            <div class="chat-header">
+                <div class="chat-header-av">JA</div>
+                <div class="chat-header-info">
+                    <h4>Jasur Ahmedov</h4>
+                    <span>🟢 Online – 1.2 km uzoqlikda</span>
+                </div>
+                <span onclick="closeModal('chatModal')"
+                    style="margin-left:auto;cursor:pointer;font-size:1.2rem;opacity:.7">✕</span>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="chat-msg them">Salom! Men yo'lga chiqdim, taxminan 20 daqiqada yetib boraman 👋</div>
+                <div class="chat-msg me">Yaxshi, kutamiz! Eshik oldiga keling.</div>
+                <div class="chat-msg them">Xop, tushunarli. Qoplar menda bor, siz hech narsa tayyorlamasangiz ham
+                    bo'ladi.</div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="chatInput" placeholder="Xabar yozing…"
+                    onkeydown="if(event.key==='Enter')sendMsg()" />
+                <button class="chat-send" onclick="sendMsg()">Yuborish</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="kuzatish.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="enhancements.js"></script>
+</body>
+
+</html>

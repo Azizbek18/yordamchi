@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topshiriq.uz - Chat</title>
+    <link rel="stylesheet" href="chatlar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="auth.js"></script>
+  <link rel="stylesheet" href="header.css">
+<link rel="stylesheet" href="enhancements.css">
+
+<!-- Дополнительные стили для loading / empty / fallback аватаров -->
+<style>
+    .chat-list-state {
+        padding: 40px 20px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 14px;
+    }
+    .chat-list-state i {
+        font-size: 28px;
+        margin-bottom: 10px;
+        display: block;
+        color: var(--primary-color);
+        opacity: 0.6;
+    }
+    .chat-list-state .spinner {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--primary-light);
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-chat-window {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        text-align: center;
+        padding: 20px;
+    }
+    .empty-chat-window i {
+        font-size: 56px;
+        color: var(--primary-color);
+        opacity: 0.25;
+        margin-bottom: 16px;
+    }
+    .empty-chat-window h3 {
+        font-size: 18px;
+        color: var(--text-dark);
+        margin-bottom: 6px;
+    }
+    .empty-chat-window p { font-size: 14px; max-width: 280px; }
+
+    /* Скрываем элементы до выбора диалога */
+    .messages-container { display: none; }
+    .messages-container.active { display: flex; }
+    .chat-input-area { display: none; }
+    .chat-input-area.active { display: flex; }
+    .task-banner   { display: none; }
+    .task-banner.active { display: flex; }
+
+    .chat-item .avatar-fallback {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        margin-right: 12px;
+        flex-shrink: 0;
+        background: var(--primary-color);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 16px;
+        text-transform: uppercase;
+        object-fit: cover;
+    }
+    .msg-avatar-fallback {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 8px;
+        flex-shrink: 0;
+        background: var(--primary-color);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+</style>
+</head>
+
+<body>
+
+      <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon"><i class="fas fa-handshake"></i></span> Topshiriq.uz
+      </a>
+      <nav class="nav-menu">
+        <a href="mahallam.html" id="nav-mahallam">Mahallam</a>
+        <a href="vazifa.html" id="nav-vazifalar">Vazifalar</a>
+        <a href="yordam.html" id="nav-yordam">Yordam</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="bildirishnoma.html" style="text-decoration:none;">
+          <button class="notification-btn" aria-label="Bildirishnomalar">
+            <i class="far fa-bell"></i>
+          </button>
+        </a>
+        <a href="profil.html" style="text-decoration:none;">
+          <div class="avatar-nav">A</div>
+        </a>
+        <button class="hamburger-btn" id="hamburger-btn" aria-label="Menyu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+    <main class="chat-container">
+
+        <aside class="sidebar" id="sidebar">
+            <h2 class="sidebar-title">Suhbatlar</h2>
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="chatSearchInput" placeholder="Qidirish..." aria-label="Suhbat qidirish">
+            </div>
+
+            <!-- Список чатов теперь рендерится динамически из Supabase -->
+            <div class="chat-list" id="chatList"></div>
+        </aside>
+
+        <section class="chat-window" id="chatWindow">
+
+            <!-- Баннер задачи (показывается только если диалог привязан к task_id) -->
+            <div class="task-banner" id="taskBanner">
+                <div class="task-icon"><i class="fa-solid fa-briefcase-medical"></i></div>
+                <div class="task-details">
+                    <h3 id="taskBannerTitle">—</h3>
+                    <p>Topshiriq holati: <span id="taskBannerStatus">Jarayonda</span></p>
+                </div>
+                <div class="task-budget">
+                    <span class="budget-label">Budjet</span>
+                    <span class="budget-amount" id="taskBannerBudget">—</span>
+                </div>
+                <button class="btn-complete" id="btnCompleteTask">Tugatish</button>
+            </div>
+
+            <div class="chat-header">
+                <button class="back-btn" id="backBtn" aria-label="Orqaga">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div class="user-status">
+                    <span class="chat-header-name" id="chatHeaderName">Suhbatni tanlang</span>
+                    <span class="status-dot"></span>
+                    <span class="status-text" id="chatHeaderStatus">Online</span>
+                </div>
+                <div class="header-actions">
+                    <button aria-label="Qo'ng'iroq"><i class="fa-solid fa-phone"></i></button>
+                    <button aria-label="Ko'proq"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                </div>
+            </div>
+
+            <!-- Контейнер сообщений (ранее был с захардкоженными демо-сообщениями) -->
+            <div class="messages-container" id="messagesContainer"></div>
+
+            <!-- Пустое состояние когда чат не выбран -->
+            <div class="empty-chat-window" id="emptyChatWindow">
+                <i class="fa-regular fa-comments"></i>
+                <h3>Suhbatni tanlang</h3>
+                <p>Chap tomondan suhbatni tanlang yoki yangi topshiriq bering.</p>
+            </div>
+
+            <!-- FIX: <form> o'rniga <div> — sahifa reload muammosi yo'q bo'ladi -->
+            <div class="chat-input-area" id="chatInputArea">
+                <button type="button" class="input-action-btn" aria-label="Fayl biriktirish">
+                    <i class="fa-solid fa-circle-plus"></i>
+                </button>
+                <input type="text" id="messageInput" placeholder="Xabar yozing..." autocomplete="off"
+                    aria-label="Xabar maydoni" disabled>
+                <button type="button" class="input-action-btn emoji-btn" aria-label="Emoji">
+                    <i class="fa-regular fa-face-smile"></i>
+                </button>
+                <button type="button" class="send-btn" id="sendBtn" aria-label="Yuborish" disabled>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="chatlar.js"></script>
+<script src="enhancements.js"></script>
+</body>
+
+</html>

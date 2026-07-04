@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topshiriq.uz — Mahallangizning yordamchi platformasi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="auth.js"></script>
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="lang-switcher.css">
+    <link rel="stylesheet" href="enhancements.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon"><i class="fas fa-handshake"></i></span> Topshiriq.uz
+            </a>
+            <nav class="nav-menu">
+                <a href="mahallam.html" id="nav-mahallam" data-i18n="nav.mahallam">Mahallam</a>
+                <a href="vazifa.html" id="nav-vazifalar" data-i18n="nav.vazifalar">Vazifalar</a>
+                <a href="yordam.html" id="nav-yordam" data-i18n="nav.yordam">Yordam</a>
+            </nav>
+            <div class="nav-actions">
+                <!-- Language Switcher -->
+                <div class="lang-switcher" id="lang-switcher">
+                    <button class="lang-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Tilni tanlash">
+                        <span class="lang-selected-flag">🇺🇿</span>
+                        <span class="lang-selected-label">O'zbek</span>
+                        <i class="fas fa-chevron-down lang-chevron"></i>
+                    </button>
+                    <div class="lang-dropdown" role="listbox">
+                        <div class="lang-dropdown-header">Tilni tanlang</div>
+                        <div class="lang-option active" data-lang="uz" role="option">
+                            <span class="lang-option-flag">🇺🇿</span>
+                            <div class="lang-option-info">
+                                <span class="lang-option-label">O'zbek</span>
+                                <span class="lang-option-native">O'zbek tili</span>
+                            </div>
+                            <span class="lang-option-check"><i class="fas fa-check"></i></span>
+                        </div>
+                        <div class="lang-option" data-lang="ru" role="option">
+                            <span class="lang-option-flag">🇷🇺</span>
+                            <div class="lang-option-info">
+                                <span class="lang-option-label">Русский</span>
+                                <span class="lang-option-native">Rus tili</span>
+                            </div>
+                            <span class="lang-option-check"><i class="fas fa-check"></i></span>
+                        </div>
+                        <div class="lang-option" data-lang="en" role="option">
+                            <span class="lang-option-flag">🇬🇧</span>
+                            <div class="lang-option-info">
+                                <span class="lang-option-label">English</span>
+                                <span class="lang-option-native">Ingliz tili</span>
+                            </div>
+                            <span class="lang-option-check"><i class="fas fa-check"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="bildirishnoma.html" style="text-decoration:none;">
+                    <button class="notification-btn" aria-label="Bildirishnomalar" data-i18n-title="nav.bildirishnoma">
+                        <i class="far fa-bell"></i>
+                    </button>
+                </a>
+                <a href="profil.html" style="text-decoration:none;">
+                    <div class="avatar-nav">A</div>
+                </a>
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Menyu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="section-container hero-grid">
+            <div class="hero-text">
+                <span class="badge"><i class="fas fa-check-circle"></i> <span data-i18n="hero.badge">Mahallangizning yordamchi platformasi</span></span>
+                <h1><span data-i18n="hero.title1">Yakin atrofingizda</span><br><span class="highlight" data-i18n="hero.title2">yordam tayyor!</span></h1>
+                <p data-i18n="hero.desc">Qo'shnilaringizga yordam bering yoki o'zingizga kerakli xizmatni 5 daqiqada toping. Ishonchli, tez va
+                    qulay!</p>
+
+                <div class="hero-buttons">
+                    <a href="poster.html" class="btn-dark"><span data-i18n="hero.btn_create">Topshiriq berish</span> <i class="fas fa-plus-circle"></i></a>
+                    <a href="vazifa.html" class="btn-outline"><span data-i18n="hero.btn_accept">Topshiriq qabul qilish</span> <i
+                            class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-users">
+                        <div class="avatar-group">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&fit=crop&q=80"
+                                alt="Yordamchi" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&fit=crop&q=80"
+                                alt="Yordamchi" loading="lazy">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&fit=crop&q=80"
+                                alt="Yordamchi" loading="lazy">
+                            <div class="avatar-more">+4.2k</div>
+                        </div>
+                        <p data-i18n="hero.helpers">Yordamchilar</p>
+                    </div>
+                    <div class="stat-meta">
+                        <h4>4.9/5.0</h4>
+                        <p data-i18n="hero.rating">Reyting</p>
+                    </div>
+                    <div class="stat-meta">
+                        <h4>18+</h4>
+                        <p data-i18n="hero.mahallalar">Mahallalar</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-preview">
+                <div class="phone-mockup">
+                    <div class="phone-header">
+                        <div class="profile-dot"></div>
+                        <i class="far fa-bell"></i>
+                    </div>
+                    <h3 data-i18n="hero.phone_title">Topshiriqlar</h3>
+
+                    <div class="mock-card">
+                        <div class="mock-tag xarid" data-i18n="hero.mock_tag_xarid">Xarid</div>
+                        <div class="mock-price">25k</div>
+                        <h4 data-i18n="hero.mock_title1">Aptekadan dori olib kelish</h4>
+                        <p data-i18n="hero.mock_dist1">200 metr masofada</p>
+                    </div>
+
+                    <div class="mock-card">
+                        <div class="mock-tag tamir" data-i18n="hero.mock_tag_tamir">Ta'mir</div>
+                        <div class="mock-price">120k</div>
+                        <h4 data-i18n="hero.mock_title2">Ekran almashtirish (iPhone)</h4>
+                        <p data-i18n="hero.mock_dist2">500 metr masofada</p>
+                    </div>
+
+                    <div class="mock-card">
+                        <div class="mock-tag bezor" data-i18n="hero.mock_tag_bezor">Bezor</div>
+                        <div class="mock-price">45k</div>
+                        <h4 data-i18n="hero.mock_title3">Bozordan oziq-ovqat xaridi</h4>
+                        <p data-i18n="hero.mock_dist3">1.2 km masofada</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- METRICS RIBBON -->
+    <section class="metrics-ribbon">
+        <div class="section-container metrics-grid">
+            <div class="metric-item">
+                <h3>4,200+</h3>
+                <p data-i18n="metrics.helpers">Faol yordamchilar</p>
+            </div>
+            <div class="metric-item">
+                <h3>12,800+</h3>
+                <p data-i18n="metrics.tasks">Bajarilgan topshiriqlar</p>
+            </div>
+            <div class="metric-item">
+                <h3>4.9/5.0</h3>
+                <p data-i18n="metrics.rating">O'rtacha reyting</p>
+            </div>
+            <div class="metric-item">
+                <h3>100%</h3>
+                <p data-i18n="metrics.payment">Xavfsiz to'lov</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-container">
+            <div class="section-header text-center">
+                <h2 data-i18n="how.title">3 qadam — muammo hal</h2>
+                <p data-i18n="how.subtitle">Siz uchun eng ma'qul yo'lni tanlang</p>
+            </div>
+
+            <div class="steps-grid">
+                <!-- Path 1: Topshiriq beruvchi -->
+                <div class="step-column column-left">
+                    <div class="column-title">
+                        <span class="step-num bg-teal">1</span>
+                        <h3 data-i18n="how.path1_title">Topshiriq beruvchi</h3>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-pen-to-square"></i></div>
+                        <div class="step-details">
+                            <h4 data-i18n="how.step1_title">Topshiriq yarating</h4>
+                            <p data-i18n="how.step1_desc">Nima kerakligini va qancha to'lamoqchi ekanligingizni yozing.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-users"></i></div>
+                        <div class="step-details">
+                            <h4 data-i18n="how.step2_title">Yordamchini tanlang</h4>
+                            <p data-i18n="how.step2_desc">Kelgan takliflar orasidan eng yaxshi reytinglisini tanlang.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-shield-check"></i></div>
+                        <div class="step-details">
+                            <h4 data-i18n="how.step3_title">Tasdiqlang va to'lang</h4>
+                            <p data-i18n="how.step3_desc">Ish bitgandan so'ng xizmat haqini xavfsiz o'tkazing.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Path 2: Yordamchi -->
+                <div class="step-column column-right">
+                    <div class="column-title">
+                        <span class="step-num bg-orange">2</span>
+                        <h3 data-i18n="how.path2_title">Yordamchi (Ijrochi)</h3>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-magnifying-glass"></i></div>
+                        <div class="step-details">
+                            <h4 data-i18n="how.step4_title">Topshiriq qidiring</h4>
+                            <p data-i18n="how.step4_desc">Atrofingizdagi bo'sh topshiriqlarni filtr orqali toping.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-paper-plane"></i></div>
+                        <div class="step-details">
+                            <h4 data-i18n="how.step5_title">Taklif yuboring</h4>
+                            <p data-i18n="how.step5_desc">O'z narxingizni va tajribangizni mijozga taklif qiling.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-wallet"></i></div>
+                        <div class="step-details">
+                            <h4 data-i18n="how.step6_title">Daromad oling</h4>
+                            <p data-i18n="how.step6_desc">Topshiriqni bajaring va kafolatlangan to'lovni oling.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="categories-section" id="categories">
+        <div class="section-container">
+            <div class="section-header flex-header">
+                <div>
+                    <h2 data-i18n="cat.title">Kategoriyalar</h2>
+                    <p data-i18n="cat.subtitle">Har qanday vazifa uchun usta bor</p>
+                </div>
+                <a href="vazifa.html" class="see-all"><span data-i18n="cat.see_all">Hammasini ko'rish</span> <i class="fas fa-chevron-right"></i></a>
+            </div>
+
+            <div class="categories-grid">
+                <div class="category-item">
+                    <div class="cat-icon c-1"><i class="fas fa-basket-shopping"></i></div>
+                    <p data-i18n="cat.dori">Dori & Xarid</p>
+                </div>
+                <div class="category-item">
+                    <div class="cat-icon c-2"><i class="fas fa-screwdriver-wrench"></i></div>
+                    <p data-i18n="cat.tamir">Ta'mirlash & Usta</p>
+                </div>
+                <div class="category-item">
+                    <div class="cat-icon c-3"><i class="fas fa-truck-ramped"></i></div>
+                    <p data-i18n="cat.yetkazish">Yetkazib berish</p>
+                </div>
+                <div class="category-item">
+                    <div class="cat-icon c-4"><i class="fas fa-laptop-code"></i></div>
+                    <p data-i18n="cat.raqamli">Raqamli yordam</p>
+                </div>
+                <div class="category-item">
+                    <div class="cat-icon c-5"><i class="fas fa-broom"></i></div>
+                    <p data-i18n="cat.uy">Uy ishlari</p>
+                </div>
+                <div class="category-item">
+                    <div class="cat-icon c-6"><i class="fas fa-ellipsis"></i></div>
+                    <p data-i18n="cat.boshqa">Boshqa</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACTIVE TASKS -->
+    <section class="active-tasks-section">
+        <div class="section-container">
+            <div class="section-header text-center">
+                <h2 data-i18n="tasks.title">Hozirda faol topshiriqlar</h2>
+                <p data-i18n="tasks.subtitle">Siz bajara oladigan vazifalar bir qadamda</p>
+            </div>
+
+            <div class="tasks-grid">
+                <!-- Task 1 -->
+                <div class="task-card">
+                    <div class="task-author">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&fit=crop&q=80"
+                            alt="Laylo K." loading="lazy">
+                        <div>
+                            <h4>Laylo K.</h4>
+                            <span><i class="fas fa-star"></i> <span data-i18n="tasks.task1_rating">4.8 (12 ta topshiriq)</span></span>
+                        </div>
+                        <span class="task-price">35,000 UZS</span>
+                    </div>
+                    <h3 class="task-title" data-i18n="tasks.task1_title">Chorsu bozoridan milliy shirinliklar</h3>
+                    <p class="task-desc" data-i18n="tasks.task1_desc">Mehmonlar kelyapti, iltimos Chorsu bozoridan 2 kg chak-chak va novvot olib...
+                    </p>
+                    <div class="task-footer">
+                        <span><i class="fas fa-location-dot"></i> <span data-i18n="tasks.task1_loc">Shayxontohur tumani</span></span>
+                        <a href="topshiriq.html" class="btn-action-link" data-i18n="tasks.taklif">Taklif berish</a>
+                    </div>
+                </div>
+
+                <!-- Task 2 -->
+                <div class="task-card">
+                    <div class="task-author">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&fit=crop&q=80"
+                            alt="Akmal K." loading="lazy">
+                        <div>
+                            <h4>Akmal K.</h4>
+                            <span><i class="fas fa-star"></i> <span data-i18n="tasks.task2_rating">5.0 (5 ta topshiriq)</span></span>
+                        </div>
+                        <span class="task-price">150,000 UZS</span>
+                    </div>
+                    <h3 class="task-title" data-i18n="tasks.task2_title">Muzlatgichni tuzatish kerak</h3>
+                    <p class="task-desc" data-i18n="tasks.task2_desc">Samsung muzlatgichi sovitishni to'xtatdi, usta ko'rib berishi zarur...</p>
+                    <div class="task-footer">
+                        <span><i class="fas fa-location-dot"></i> <span data-i18n="tasks.task2_loc">Mirzo Ulug'bek tumani</span></span>
+                        <a href="topshiriq.html" class="btn-action-link" data-i18n="tasks.taklif">Taklif berish</a>
+                    </div>
+                </div>
+
+                <!-- Task 3 -->
+                <div class="task-card">
+                    <div class="task-author">
+                        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&fit=crop&q=80"
+                            alt="Jasur R." loading="lazy">
+                        <div>
+                            <h4>Jasur R.</h4>
+                            <span><i class="fas fa-star"></i> <span data-i18n="tasks.task3_rating">4.9 (24 ta topshiriq)</span></span>
+                        </div>
+                        <span class="task-badge-urgent" data-i18n="tasks.task3_badge">Tezkor</span>
+                    </div>
+                    <h3 class="task-title" data-i18n="tasks.task3_title">Printer drayverini o'rnatish</h3>
+                    <p class="task-desc" data-i18n="tasks.task3_desc">Onlayn darsim boshlanayapti, printer kompyuterga ulanmayapti...</p>
+                    <div class="task-footer">
+                        <span><i class="fas fa-location-dot"></i> <span data-i18n="tasks.task3_loc">Yakkasaroy tumani</span></span>
+                        <a href="topshiriq.html" class="btn-action-link" data-i18n="tasks.taklif">Taklif berish</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SAFETY SECTION -->
+    <section class="safety-section" id="safety">
+        <div class="section-container">
+            <div class="section-header text-center">
+                <h2 data-i18n="safety.title">Xavfsizlik birinchi o'rinda</h2>
+                <p data-i18n="safety.subtitle">Bizning ekotizim ishonch ustiga qurilgan</p>
+            </div>
+
+            <div class="safety-grid">
+                <div class="safety-item">
+                    <div class="safety-icon"><i class="fas fa-id-card"></i></div>
+                    <h4 data-i18n="safety.id_title">ID Tasdiqlash</h4>
+                    <p data-i18n="safety.id_desc">Barcha yordamchilar shaxsi pasport orqali tasdiqlanadi.</p>
+                </div>
+                <div class="safety-item">
+                    <div class="safety-icon"><i class="fas fa-vault"></i></div>
+                    <h4 data-i18n="safety.escrow_title">Escrow To'lov</h4>
+                    <p data-i18n="safety.escrow_desc">Mablag' ish to'liq bitmaguncha tizimda saqlanadi.</p>
+                </div>
+                <div class="safety-item">
+                    <div class="safety-icon"><i class="fas fa-star-half-stroke"></i></div>
+                    <h4 data-i18n="safety.rating_title">Reyting Tizimi</h4>
+                    <p data-i18n="safety.rating_desc">Har bir ishdan so'ng xolis baho berish imkoniyati.</p>
+                </div>
+                <div class="safety-item">
+                    <div class="safety-icon"><i class="fas fa-circle-exclamation"></i></div>
+                    <h4 data-i18n="safety.sos_title">SOS Yordam</h4>
+                    <p data-i18n="safety.sos_desc">24/7 qo'llab-quvvatlash va nizolarni hal qilish xizmati.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="section-container footer-grid">
+            <div class="footer-about">
+                <div class="logo white-text">
+                    <span class="logo-icon"><i class="fas fa-handshake"></i></span> Topshiriq.uz
+                </div>
+                <p data-i18n="footer.desc">O'zbekistondagi mahalliy yordam va topshiriqlar uchun eng ishonchli hamjamiyat. Qo'shnilar bir-biriga
+                    yordam beradi.</p>
+                <div class="footer-socials">
+                    <a href="#"><i class="fab fa-globe"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <h4 data-i18n="footer.company">Kompaniya</h4>
+                <a href="index.html" data-i18n="footer.about">Biz haqimizda</a>
+                <a href="#how-it-works" data-i18n="footer.how">Qanday ishlaydi</a>
+                <a href="#categories" data-i18n="footer.categories">Kategoriyalar</a>
+                <a href="yordam.html" data-i18n="footer.blog">Blog</a>
+            </div>
+
+            <div class="footer-links">
+                <h4 data-i18n="footer.help_title">Yordam</h4>
+                <a href="yordam.html" data-i18n="footer.help_center">Yordam markazi</a>
+                <a href="yordam.html" data-i18n="footer.terms">Foydalanish shartlari</a>
+                <a href="yordam.html" data-i18n="footer.privacy">Maxfiylik siyosati</a>
+                <a href="yordam.html" data-i18n="footer.contacts">Kontaktlar</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p data-i18n="footer.copyright">&copy; 2026 Topshiriq.uz. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="enhancements.js"></script>
+</body>
+
+</html>

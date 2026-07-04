@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topshiriq.uz - Profil</title>
+    <link rel="stylesheet" href="profil.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="auth.js"></script>
+    <script>(async () => { await requireAuth(); })();</script>
+    <link rel="stylesheet" href="header.css">
+<link rel="stylesheet" href="enhancements.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon"><i class="fas fa-handshake"></i></span> Topshiriq.uz
+            </a>
+            <nav class="nav-menu">
+                <a href="mahallam.html" id="nav-mahallam">Mahallam</a>
+                <a href="vazifa.html" id="nav-vazifalar">Vazifalar</a>
+                <a href="yordam.html" id="nav-yordam">Yordam</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="bildirishnoma.html" style="text-decoration:none;">
+                    <button class="notification-btn" aria-label="Bildirishnomalar">
+                        <i class="far fa-bell"></i>
+                    </button>
+                </a>
+                <a href="profil.html" style="text-decoration:none;">
+                    <div class="avatar-nav">A</div>
+                </a>
+                <button class="hamburger-btn" id="hamburger-btn" aria-label="Menyu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero-bg"></div>
+
+    <main class="main-container">
+
+        <section class="user-main-card">
+            <div class="avatar-wrapper">
+                <div class="profile-avatar" id="profileAvatar">JT<span class="avatar-upload-spinner"><i
+                            class="fa-solid fa-spinner fa-spin"></i></span></div>
+                <button class="edit-avatar-btn" id="editAvatarBtnTrigger"><i class="fa-solid fa-pencil"></i></button>
+                <input type="file" id="avatarFileInput" accept="image/png, image/jpeg, image/webp" hidden>
+            </div>
+
+            <div class="user-info-header">
+                <div class="name-row">
+                    <h1 id="profileName">Jasur Tursunov</h1>
+                    <span class="badge-verified"><i class="fa-solid fa-circle-check"></i> Tasdiqlangan</span>
+                </div>
+                <p class="user-subtitle" id="profileSubtitle">Universal usta • Chilonzor tumani</p>
+
+                <div class="user-mini-stats">
+                    <div class="mini-stat-item">
+                        <span class="stat-num" id="stat-num-1">67</span>
+                        <span class="stat-text" id="stat-label-1">Bajarilgan</span>
+                    </div>
+                    <div class="mini-stat-item">
+                        <span class="stat-num" id="stat-num-2">4.9 <i class="fa-solid fa-star icon-gold"></i></span>
+                        <span class="stat-text" id="stat-label-2">Reyting</span>
+                    </div>
+                    <div class="mini-stat-item">
+                        <span class="stat-num" id="stat-num-3">2 yil</span>
+                        <span class="stat-text" id="stat-label-3">Platformada</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn-edit-profile"><i class="fa-regular fa-pen-to-square"></i> Tahrirlash</button>
+                <button class="btn-logout-profile" id="profileLogoutBtn"><i class="fa-solid fa-sign-out-alt"></i>
+                    Chiqish</button>
+            </div>
+        </section>
+
+        <div class="profile-grid">
+
+            <div class="left-column">
+
+                <div class="content-box">
+                    <h2 class="box-title" id="about-title">Men haqimda</h2>
+                    <p class="about-text" id="about-text">
+                        Assalomu alaykum! Ismim Jasur, 5 yillik tajribaga ega universal ustaman. Asosan elektr
+                        jihozlarini ta'mirlash, santexnika va mebel yig'ish bilan shug'ullanaman. Qo'shnilarimga yordam
+                        berishdan hamisha xursandman. Sifat va tezlik men uchun muhim.
+                    </p>
+                    <div class="skills-tags" id="skills-tags">
+                        <span class="tag">Elektr</span>
+                        <span class="tag">Santexnika</span>
+                        <span class="tag">Mebel yig'ish</span>
+                        <span class="tag">Maishiy texnika</span>
+                    </div>
+                </div>
+
+                <div class="content-box">
+                    <h2 class="box-title">Faoliyat ko'rsatkichlari</h2>
+                    <div class="performance-metrics">
+                        <div class="metric-item" id="metric-item-1">
+                            <div class="metric-icon-box bg-light-green" id="metric-icon-box-1"><i class="fa-solid fa-wallet text-green" id="metric-icon-1"></i>
+                            </div>
+                            <div class="metric-details">
+                                <span class="metric-label" id="metric-label-1">Daromad</span>
+                                <span class="metric-value" id="metric-value-1">4.2M so'm</span>
+                            </div>
+                        </div>
+                        <div class="metric-item" id="metric-item-2">
+                            <div class="metric-icon-box bg-light-teal" id="metric-icon-box-2"><i class="fa-regular fa-clock text-teal" id="metric-icon-2"></i>
+                            </div>
+                            <div class="metric-details">
+                                <span class="metric-label" id="metric-label-2">Javob vaqti</span>
+                                <span class="metric-value" id="metric-value-2">15 daqiqa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-box" id="recent-interactions-box" style="margin-top:20px;">
+                    <h2 class="box-title" id="interactions-title">Kimlardan ish olgan</h2>
+                    <div class="interactions-list" id="interactions-list" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
+                        <!-- Dinamik ro'yxat bu yerga joylashadi -->
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="right-column">
+
+                <div class="content-box" id="right-column-dynamic-box">
+                    <h2 class="box-title">Ish vaqti</h2>
+                    <p class="status-online"><span class="dot-online"></span> Hozir bo'sh</p>
+
+                    <div class="week-calendar">
+                        <div class="day-box active"><span class="day-name">DU</span><i
+                                class="fa-solid fa-check check-icon"></i></div>
+                        <div class="day-box active"><span class="day-name">SE</span><i
+                                class="fa-solid fa-check check-icon"></i></div>
+                        <div class="day-box active"><span class="day-name">CH</span><i
+                                class="fa-solid fa-check check-icon"></i></div>
+                        <div class="day-box active"><span class="day-name">PA</span><i
+                                class="fa-solid fa-check check-icon"></i></div>
+                        <div class="day-box active"><span class="day-name">JU</span><i
+                                class="fa-solid fa-check check-icon"></i></div>
+                        <div class="day-box disabled"><span class="day-name">SH</span><i
+                                class="fa-solid fa-minus minus-icon"></i></div>
+                        <div class="day-box disabled"><span class="day-name">YA</span><i
+                                class="fa-solid fa-minus minus-icon"></i></div>
+                    </div>
+                </div>
+
+                <div class="verification-alert-box">
+                    <div class="v-icon-box"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="v-text-box">
+                        <h3>Shaxs tasdiqlangan</h3>
+                        <p>Pasport va raqam tekshirilgan</p>
+                    </div>
+                </div>
+
+                <div class="content-box">
+                    <h2 class="box-title">Reyting</h2>
+                    <div class="rating-chart">
+
+                        <div class="chart-row">
+                            <span class="stars-count">5</span>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill gold-bar" style="width: 85%;"></div>
+                            </div>
+                            <span class="votes-count">58</span>
+                        </div>
+
+                        <div class="chart-row">
+                            <span class="stars-count">4</span>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill light-gold-bar" style="width: 15%;"></div>
+                            </div>
+                            <span class="votes-count">8</span>
+                        </div>
+
+                        <div class="chart-row">
+                            <span class="stars-count">3</span>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill gray-bar" style="width: 4%;"></div>
+                            </div>
+                            <span class="votes-count">1</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-logo-section">
+                <h3>Topshiriq.uz</h3>
+                <p>© 2024 Topshiriq.uz - Mahalliy hamjamiyat</p>
+            </div>
+            <div class="footer-links">
+                <a href="index.html">Biz haqimizda</a>
+                <a href="yordam.html">Xavfsizlik</a>
+                <a href="yordam.html">Qoidalar</a>
+                <a href="yordam.html">Bog'lanish</a>
+            </div>
+            <div class="footer-socials">
+                <button class="social-btn"><i class="fa-solid fa-globe"></i></button>
+                <button class="social-btn"><i class="fa-solid fa-share-nodes"></i></button>
+            </div>
+        </div>
+    </footer>
+    <script src="profil.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script> <!-- EDIT PROFILE MODAL -->
+    <div class="modal-overlay" id="editProfileOverlay">
+        <div class="edit-modal" id="editProfileModal">
+            <div class="edit-modal-header">
+                <div>
+                    <h2>Profilni tahrirlash</h2>
+                    <p>Ma'lumotlaringizni yangilang</p>
+                </div>
+                <button class="modal-close-btn" id="closeEditModalBtn" aria-label="Yopish">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="edit-modal-body">
+                <div class="edit-field-row">
+                    <div class="edit-field">
+                        <label for="editFirstName">Ism</label>
+                        <input type="text" id="editFirstName" placeholder="Ismingiz">
+                        <p class="edit-field-error" id="editFirstNameError"></p>
+                    </div>
+                    <div class="edit-field">
+                        <label for="editLastName">Familiya</label>
+                        <input type="text" id="editLastName" placeholder="Familiyangiz">
+                        <p class="edit-field-error" id="editLastNameError"></p>
+                    </div>
+                </div>
+
+                <div class="edit-field">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" placeholder="email@misol.com">
+                    <p class="edit-field-error" id="editEmailError"></p>
+                </div>
+
+                <div class="edit-field">
+                    <label for="editPhone">Telefon raqam</label>
+                    <div class="edit-phone-wrap">
+                        <span class="edit-phone-prefix">+998</span>
+                        <input type="tel" id="editPhone" placeholder="90 123 45 67" maxlength="9">
+                    </div>
+                    <p class="edit-field-error" id="editPhoneError"></p>
+                </div>
+
+                <div class="edit-field">
+                    <label for="editDistrict">Tuman</label>
+                    <div class="edit-select-wrap">
+                        <select id="editDistrict">
+                            <option value="">Tumaningizni tanlang</option>
+                            <option value="yunusobod">Yunusobod</option>
+                            <option value="chilonzor">Chilonzor</option>
+                            <option value="shayxontohur">Shayxontohur</option>
+                            <option value="mirzo-ulugbek">Mirzo Ulug'bek</option>
+                            <option value="yakkasaroy">Yakkasaroy</option>
+                            <option value="uchtepa">Uchtepa</option>
+                            <option value="sergeli">Sergeli</option>
+                            <option value="olmazor">Olmazor</option>
+                            <option value="bektemir">Bektemir</option>
+                        </select>
+                        <i class="fas fa-chevron-down edit-select-arrow"></i>
+                    </div>
+                    <p class="edit-field-error" id="editDistrictError"></p>
+                </div>
+                <div class="edit-field">
+                    <label for="editAbout">Tavsif</label>
+                    <textarea id="editAbout" placeholder="O'zingiz haqida yozing..." style="min-height: 80px; resize: vertical; font-family: inherit;"></textarea>
+                    <p class="edit-field-error" id="editAboutError"></p>
+                </div>
+                <div class="edit-field">
+                    <label for="editPassword">Yangi parol <span class="edit-optional-tag">(ixtiyoriy)</span></label>
+                    <div class="edit-password-wrap">
+                        <input type="password" id="editPassword" placeholder="O'zgartirmasangiz bo'sh qoldiring"
+                            autocomplete="new-password">
+                        <button type="button" class="edit-eye-btn" id="editPasswordEyeBtn"
+                            aria-label="Parolni ko'rsatish">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="edit-field-error" id="editPasswordError"></p>
+                </div>
+            </div>
+
+            <div class="edit-modal-footer">
+                <button class="btn-cancel-edit" id="cancelEditBtn">Bekor qilish</button>
+                <button class="btn-save-edit" id="saveEditBtn">
+                    <span class="save-btn-text">Saqlash</span>
+                    <i class="fa-solid fa-spinner fa-spin save-btn-spinner" style="display:none;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Tour Elements -->
+    <style>
+        @keyframes hand-point {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-10px, -5px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        .hand-pointing {
+            animation: hand-point 1.2s infinite ease-in-out;
+        }
+        .tour-highlight {
+            position: relative;
+            z-index: 10003 !important;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.55), 0 8px 30px rgba(0,0,0,0.3) !important;
+            border-radius: 12px;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+    </style>
+    <div id="tour-overlay" style="display:none; position:fixed; inset:0; background:transparent; z-index:9998; pointer-events:auto;"></div>
+    <div id="tour-tooltip" style="display:none; position:fixed; background:#fff; border-radius:16px; padding:20px; box-shadow:0 12px 40px rgba(0,0,0,0.22); border:1.8px solid #006653; width:310px; z-index:10004; font-family:inherit; transition:all 0.3s ease;">
+        <h4 style="margin:0 0 6px 0; color:#006653; font-size:15px; font-weight:800;" id="tour-step-title">1-Qadam</h4>
+        <p style="margin:0 0 16px 0; color:#4a5568; font-size:13px; line-height:1.55;" id="tour-step-desc">Profilingiz uchun rasm yuklang.</p>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <button id="tour-skip-btn" style="background:none; border:none; color:#718096; font-size:12px; font-weight:600; cursor:pointer; padding:4px 8px; border-radius:6px; transition:background 0.2s;">O'tkazib yuborish</button>
+            <button id="tour-next-btn" style="background:#006653; color:#fff; border:none; padding:8px 18px; border-radius:30px; font-size:12px; font-weight:700; cursor:pointer; transition:background 0.2s; box-shadow:0 4px 12px rgba(0,102,83,0.2);">Keyingi 👉</button>
+        </div>
+    </div>
+    <div id="tour-hand-pointer" class="hand-pointing" style="display:none; position:fixed; z-index:10005; font-size:38px; pointer-events:none; transition:all 0.5s cubic-bezier(0.25, 1, 0.5, 1); filter:drop-shadow(0 4px 10px rgba(0,0,0,0.25));">👉</div>
+
+<script src="enhancements.js"></script>
+</body>
+
+</html>
