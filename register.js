@@ -71,10 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
             password,
             options: {
                 data: {
-                    role: selectedRole,
+                    role: selectedRole === 'employer' ? 'poster' : 'helper',
+                    first_name: firstName,
+                    last_name: lastName,
                     full_name: fullName,
                     phone: cleanPhone,
-                    city: district,
+                    district: district,
                     preferred_language: preferredLanguage
                 }
             }
@@ -88,10 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const profilePayload = {
             id: data.user.id,
-            role: selectedRole,
+            role: selectedRole === 'employer' ? 'poster' : 'helper',
+            first_name: firstName,
+            last_name: lastName,
             full_name: fullName,
+            email: email,
             phone: cleanPhone,
-            city: district,
+            district: district,
             preferred_language: preferredLanguage
         };
 

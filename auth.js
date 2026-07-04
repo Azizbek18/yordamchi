@@ -259,9 +259,11 @@ async function updateProfileSettings(updates) {
 
     if (_supabase) {
         const payload = {
+            first_name: next.first_name || null,
+            last_name: next.last_name || null,
             full_name: next.full_name || getUserFullName(next),
             phone: next.phone || null,
-            city: next.city || next.district || null,
+            district: next.district || next.city || null,
             address: next.address || null,
             bio: next.bio || null,
             avatar_url: next.avatar_url || null,
