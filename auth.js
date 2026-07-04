@@ -18,7 +18,7 @@ const ROLE_HOME = {
 
 const PAGE_ACCESS = {
     employer: ['poster.html', 'mahallam.html', 'profil.html', 'bildirishnoma.html', 'chatlar.html', 'kuzatish.html', 'baholash.html', 'muammo.html', 'yordam.html', 'index.html'],
-    helper: ['vazifa.html', 'helper.html', 'daromad.html', 'profil.html', 'bildirishnoma.html', 'chatlar.html', 'kuzatish.html', 'baholash.html', 'muammo.html', 'yordam.html', 'index.html']
+    helper: ['vazifa.html', 'helper.html', 'daromad.html', 'mahallam.html', 'profil.html', 'bildirishnoma.html', 'chatlar.html', 'kuzatish.html', 'baholash.html', 'muammo.html', 'yordam.html', 'index.html']
 };
 
 const I18N = {

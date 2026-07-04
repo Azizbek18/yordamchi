@@ -147,17 +147,17 @@ document.addEventListener("DOMContentLoaded", () => {
             customTasks.push(newTask);
             localStorage.setItem('poster_tasks_' + user.id, JSON.stringify(customTasks));
 
-            // Save to Supabase jobs table
+            // Save to Supabase tasks table
             if (_supabase) {
-                _supabase.from('jobs').insert([{
-                    employer_id: user.id,
+                _supabase.from('tasks').insert([{
+                    poster_id: user.id,
                     title: title,
                     description: desc,
                     category: mapCategoryToDb(category),
-                    budget: parseInt(budget, 10),
-                    currency: 'UZS',
+                    price: parseInt(budget, 10),
                     location: user.city || user.district || user.mahalla || "Yunusobod",
-                    status: "open"
+                    district: user.district || user.city || user.mahalla || "Yunusobod",
+                    status: "published"
                 }]).then(({ error }) => {
                     if (error) {
                         console.error("Supabase'ga e'lon yozishda xatolik:", error);

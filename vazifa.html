@@ -380,7 +380,7 @@
 
       container.innerHTML = pageTasks.map(t => {
         const styleCfg = categoryStyles[t.category] || categoryStyles.boshqa;
-        const priceFormatted = new Intl.NumberFormat('uz-UZ').format(t.budget || 0) + " so'm";
+        const priceFormatted = new Intl.NumberFormat('uz-UZ').format(t.price || 0) + " so'm";
         const timeAgo = formatTimeAgo(t.created_at);
         const chipStyle = styleCfg.style ? `style="${styleCfg.style}"` : '';
 
@@ -394,7 +394,7 @@
             <p>${t.description || ''}</p>
             <div class="task-card-bottom">
               <span class="location-text">${t.location || 'Manzil ko\'rsatilmagan'} &bull; ${timeAgo}</span>
-              <a href="kuzatish.html?id=${t.id}" class="bajar-btn" data-job-id="${t.id}">Bajaraman</a>
+              <a href="kuzatish.html?id=${t.id}" class="bajar-btn" data-job-id="${t.id}" data-price="${t.price || 0}">Bajaraman</a>
             </div>
           </div>
         `;
@@ -408,10 +408,11 @@
             showToast('Bu amal faqat Yordamchi roli uchun.', 'error');
             return;
           }
-          const { error } = await _supabase.from('applications').insert({
-            job_id: btn.dataset.jobId,
+          const { error } = await _supabase.from('task_bids').insert({
+            task_id: btn.dataset.jobId,
             helper_id: user.id,
-            message: 'Topshiriqni bajarishga tayyorman',
+            price: parseFloat(btn.dataset.price) || 0,
+            proposal: 'Topshiriqni bajarishga tayyorman',
             status: 'pending'
           });
           if (error && !String(error.message).includes('duplicate')) {
@@ -598,20 +599,20 @@
       let filtered = allTasksLoaded.filter(t => {
         const matchesCategory = activeCats.length === 0 || activeCats.includes(t.category);
         const matchesSearch = !query || t.title.toLowerCase().includes(query) || (t.description && t.description.toLowerCase().includes(query));
-        const matchesPrice = (t.budget || 0) >= minPrice && (t.budget || 0) <= maxPrice;
+        const matchesPrice = (t.price || 0) >= minPrice && (t.price || 0) <= maxPrice;
         const matchesDistance = maxDistance === Infinity || (t.distance || 0) <= maxDistance;
         return matchesCategory && matchesSearch && matchesPrice && matchesDistance;
       });
 
       const sortValue = currentSortValue;
       if (sortValue.includes("Narx")) {
-        filtered.sort((a, b) => (a.budget || 0) - (b.budget || 0));
+        filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
       } else if (sortValue.includes("Eng yangilari")) {
         filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       } else if (sortValue.includes("Masofaga")) {
         filtered.sort((a, b) => a.distance - b.distance);
       } else if (sortValue.includes("Reyting")) {
-        filtered.sort((a, b) => (b.budget || 0) - (a.budget || 0));
+        filtered.sort((a, b) => (b.price || 0) - (a.price || 0));
       }
 
       renderTasks(filtered);
@@ -625,9 +626,9 @@
       }
 
       const { data, error } = await _supabase
-        .from('jobs')
+        .from('tasks')
         .select('*')
-        .eq('status', 'open')
+        .eq('status', 'published')
         .order('created_at', { ascending: false });
 
       if (error) {
