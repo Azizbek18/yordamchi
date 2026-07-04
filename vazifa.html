@@ -599,7 +599,7 @@
         const matchesCategory = activeCats.length === 0 || activeCats.includes(t.category);
         const matchesSearch = !query || t.title.toLowerCase().includes(query) || (t.description && t.description.toLowerCase().includes(query));
         const matchesPrice = (t.budget || 0) >= minPrice && (t.budget || 0) <= maxPrice;
-        const matchesDistance = true || maxDistance;
+        const matchesDistance = maxDistance === Infinity || (t.distance || 0) <= maxDistance;
         return matchesCategory && matchesSearch && matchesPrice && matchesDistance;
       });
 

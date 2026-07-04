@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const homeLabel = document.querySelector('text[x="318"]');
             if (homeLabel) homeLabel.textContent = "Buyurtmachi (Uy)";
             
-            const helperLabel = document.querySelector('text[x="170"]');
+            const helperLabel = document.querySelector('#helperMarker text[x="20"]');
             if (helperLabel) helperLabel.textContent = "Siz (Yo'lda)";
         }
     }

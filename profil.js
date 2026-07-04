@@ -260,7 +260,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const profileLogoutBtn = document.getElementById("profileLogoutBtn");
     if (profileLogoutBtn) {
-        profileLogoutBtn.addEventListener("click", () => {
+        profileLogoutBtn.addEventListener("click", async () => {
+            if (typeof logoutUser === "function") {
+                await logoutUser();
+                return;
+            }
             if (typeof saveCurrentUser === "function") {
                 saveCurrentUser(null);
             } else {
