@@ -3,7 +3,7 @@
 // Supported: uz (O'zbek), ru (Русский), en (English)
 // ============================================
 
-const translations = {
+window.translations = {
     uz: {
         // Navbar
         "nav.mahallam": "Mahallam",
@@ -13,7 +13,7 @@ const translations = {
 
         // Hero
         "hero.badge": "Mahallangizning yordamchi platformasi",
-        "hero.title1": "Yakin atrofingizda",
+        "hero.title1": "Yaqin atrofingizda",
         "hero.title2": "yordam tayyor!",
         "hero.desc": "Qo'shnilaringizga yordam bering yoki o'zingizga kerakli xizmatni 5 daqiqada toping. Ishonchli, tez va qulay!",
         "hero.btn_create": "Topshiriq berish",

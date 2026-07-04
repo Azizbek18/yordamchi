@@ -92,6 +92,10 @@ function normalizeRole(role) {
 
 function t(key) {
     const lang = getCurrentLanguage();
+    const globalTrans = window.translations || (typeof translations !== 'undefined' ? translations : null);
+    if (globalTrans && globalTrans[lang] && globalTrans[lang][key] !== undefined) {
+        return globalTrans[lang][key];
+    }
     return (I18N[lang] && I18N[lang][key]) || I18N.uz[key] || key;
 }
 
