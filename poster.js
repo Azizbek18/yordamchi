@@ -16,6 +16,12 @@ function showToast(text, type = "success") {
 document.addEventListener("DOMContentLoaded", () => {
     const user = typeof getCurrentUser === "function" ? getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || '{}');
 
+    const greetingEl = document.getElementById("posterGreeting");
+    if (greetingEl) {
+        const fullName = typeof getUserFullName === "function" ? getUserFullName(user) : (user.first_name || "Foydalanuvchi");
+        greetingEl.textContent = `Salom, ${fullName.split(" ")[0]}! 👋`;
+    }
+
     // UI elements
     const taskModalOverlay = document.getElementById("taskModalOverlay");
     const openTaskModalBtn = document.getElementById("open-task-modal");
@@ -308,7 +314,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".btn-chat-trigger").forEach(btn => {
             btn.addEventListener("click", () => {
                 const name = btn.dataset.helper || "Jasur";
-                showToast(`${name} bilan shaxsiy suhbat oynasi ochilmoqda...`);
+                openChatWithHelper(name);
             });
         });
     }
@@ -361,4 +367,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Global Chat function (for fallback inline call)
 function openChatWithHelper(helperName) {
     showToast(`${helperName} bilan shaxsiy suhbat oynasi ochilmoqda...`);
+    setTimeout(() => {
+        window.location.href = "chatlar.html";
+    }, 450);
 }

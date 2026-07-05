@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="auth.js"></script>
   <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="lang-switcher.css">
 <link rel="stylesheet" href="enhancements.css">
 
 <!-- Дополнительные стили для loading / empty / fallback аватаров -->
@@ -136,15 +137,20 @@
 
     <main class="chat-container">
 
-        <aside class="sidebar" id="sidebar">
-            <h2 class="sidebar-title">Suhbatlar</h2>
+        <aside class="chat-panel" id="chatPanel">
+            <h2 class="chat-panel-title">Suhbatlar</h2>
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="chatSearchInput" placeholder="Qidirish..." aria-label="Suhbat qidirish">
             </div>
 
             <!-- Список чатов теперь рендерится динамически из Supabase -->
-            <div class="chat-list" id="chatList"></div>
+            <div class="chat-list" id="chatList">
+                <div class="chat-list-state">
+                    <i class="fa-regular fa-comments"></i>
+                    Hali suhbatlar yo'q.
+                </div>
+            </div>
         </aside>
 
         <section class="chat-window" id="chatWindow">

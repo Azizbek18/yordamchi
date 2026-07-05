@@ -58,14 +58,14 @@
     }
 
     /* Footer moslashadi */
-    footer {
+    footer:not(.main-footer) {
         flex-direction: column;
         gap: 12px;
         text-align: center;
         padding: 20px 16px;
     }
 
-    .footer-links {
+    footer:not(.main-footer) .footer-links {
         flex-wrap: wrap;
         justify-content: center;
         gap: 12px 20px;
@@ -283,15 +283,15 @@
     }
 
     /* Footer */
-    footer {
+    footer:not(.main-footer) {
         padding: 16px 12px;
     }
 
-    .footer-links {
+    footer:not(.main-footer) .footer-links {
         gap: 10px 16px;
     }
 
-    .footer-links a {
+    footer:not(.main-footer) .footer-links a {
         font-size: .78rem;
     }
 }

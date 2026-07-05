@@ -1,307 +1,260 @@
-document.addEventListener("DOMContentLoaded", () => {
+
+const TRACK_STATUS_STEP = {
+    draft: 0, published: 0, assigned: 1, on_the_way: 2, arrived: 2, started: 2, completed: 3, cancelled: 1
+};
+
+const TRACK_STATUS_LABEL = {
+    published: "E'lon qilingan", assigned: "Bajaruvchi tasdiqlandi", on_the_way: "Yo'lda",
+    arrived: "Manzilga yetib keldi", started: "Ish boshlandi", completed: "Yakunlandi", cancelled: "Bekor qilingan"
+};
+
+const TRACK_MARKER_PROGRESS = { assigned: 0, on_the_way: 0.45, arrived: 0.85, started: 1, completed: 1 };
+
+document.addEventListener("DOMContentLoaded", async () => {
     function showToast(text, type = "success") {
         if (typeof Toastify !== 'undefined') {
             Toastify({
-                text: text,
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                style: {
-                    background: type === "success" ? "#006653" : "#e53e3e",
-                }
+                text, duration: 3000, gravity: "top", position: "right",
+                style: { background: type === "success" ? "#006653" : "#e53e3e" }
             }).showToast();
         }
     }
 
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    const role = currentUser.role || 'helper';
-
-    // ── Apply Role-Specific Sidebar & Labels on Load ─────────────
-    initializeRoleSidebar(role);
-
-    // ── Simulated Live Tracking Synchronization ─────────────────
-    let startTime = localStorage.getItem('kuzatish_start_time_default_1');
-    if (!startTime) {
-        startTime = Date.now();
-        localStorage.setItem('kuzatish_start_time_default_1', startTime);
-    } else {
-        startTime = parseInt(startTime, 10);
+    function formatSom(amount) {
+        return Math.round(Number(amount) || 0).toLocaleString('uz-UZ') + " UZS";
     }
 
-    // Reset button for demo testing purposes
-    const resetBtn = document.createElement("button");
-    resetBtn.textContent = "Kuzatuvni qaytadan boshlash 🔄";
-    resetBtn.style = "position:fixed; bottom:20px; left:20px; z-index:9999; padding:8px 14px; border-radius:30px; border:1px solid #e2e8f0; background:white; font-size:11.5px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.08); font-family:inherit;";
-    document.body.appendChild(resetBtn);
-    resetBtn.addEventListener("click", () => {
-        localStorage.setItem('kuzatish_start_time_default_1', Date.now());
-        window.location.reload();
-    });
+    function initialsOf(name) {
+        return (name || '').trim().split(/\s+/).slice(0, 2).map(p => p.charAt(0)).join('').toUpperCase() || '?';
+    }
 
+    const loadingEl = document.getElementById("trackingLoadingState");
+    const contentEl = document.getElementById("trackingContent");
+    const user = typeof getCurrentUser === "function" ? getCurrentUser() : null;
+
+    function showEmpty(text) {
+        loadingEl.textContent = text;
+        loadingEl.style.display = 'block';
+        contentEl.style.display = 'none';
+    }
+
+    if (!user || !_supabase) {
+        showEmpty("Kuzatish uchun tizimga kiring.");
+        return;
+    }
+
+    const myRole = user.role === 'employer' ? 'poster' : 'helper';
+    const filterCol = myRole === 'poster' ? 'poster_id' : 'helper_id';
+
+    const { data: activeTasks, error: taskError } = await _supabase
+        .from('tasks')
+        .select('*')
+        .eq(filterCol, user.id)
+        .in('status', ['assigned', 'on_the_way', 'arrived', 'started'])
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+    if (taskError) {
+        showEmpty("Ma'lumotlarni yuklab bo'lmadi: " + taskError.message);
+        return;
+    }
+
+    if (!activeTasks || activeTasks.length === 0) {
+        showEmpty("Hozircha kuzatib boradigan faol vazifangiz yo'q.");
+        return;
+    }
+
+    let task = activeTasks[0];
+    const counterpartId = myRole === 'poster' ? task.helper_id : task.poster_id;
+
+    const { data: counterpart } = await _supabase
+        .from('profiles')
+        .select('first_name, last_name, phone, rating, reviews_count')
+        .eq('id', counterpartId)
+        .maybeSingle();
+
+    const counterpartName = [counterpart?.first_name, counterpart?.last_name].filter(Boolean).join(' ') || 'Foydalanuvchi';
+    const counterpartInitials = initialsOf(counterpartName);
+
+    loadingEl.style.display = 'none';
+    contentEl.style.display = 'block';
+
+    // ── Sarlavha ──
+    document.getElementById("taskHeaderTitle").textContent =
+        `#${task.id.slice(0, 8).toUpperCase()} · ${TRACK_STATUS_LABEL[task.status] || task.status}`;
+    document.getElementById("taskHeaderDesc").textContent = `Vazifa: ${task.title}`;
+    document.getElementById("taskPriceBadge").textContent = formatSom(task.price);
+
+    // ── Kontragent kartasi ──
+    document.getElementById("contractorName").textContent = counterpartName;
+    document.getElementById("contractorAvatar").innerHTML = `${counterpartInitials}<span class="c-online"></span>`;
+    document.getElementById("contractorStars").innerHTML =
+        `★ ${counterpart?.rating ? Number(counterpart.rating).toFixed(1) : '—'} <span style="color:#888">(${counterpart?.reviews_count || 0} ta sharh)</span>`;
+    document.getElementById("contractorStatusRow").innerHTML =
+        `<span class="icon">🚚</span> Holat: ${TRACK_STATUS_LABEL[task.status] || task.status}`;
+
+    // ── Xarita (illyustrativ, real GPS emas — holatga qarab belgi joylashuvi) ──
     const path = document.querySelector('.dashed-path');
     const marker = document.getElementById('helperMarker');
-    const distText = document.querySelector('.c-meta-row');
+    if (path && marker) {
+        const fraction = TRACK_MARKER_PROGRESS[task.status] ?? 0;
+        const length = path.getTotalLength();
+        const pt = path.getPointAtLength(fraction * length);
+        marker.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+    }
+    document.getElementById("mapMarkerInitials").textContent = myRole === 'poster' ? counterpartInitials : 'SIZ';
+    document.getElementById("mapMarkerLabel").textContent = myRole === 'poster' ? counterpartName.split(' ')[0] : "Siz";
+    document.getElementById("mapHomeLabel").textContent = myRole === 'poster' ? "Siz (Uy)" : "Buyurtmachi (Uy)";
 
-    function animate() {
-        const elapsed = Date.now() - startTime;
-        let fraction = elapsed / 60000; // 60 seconds duration
-        if (fraction > 1) fraction = 1;
+    // ── Jarayon qadamlari ──
+    const stepIndex = TRACK_STATUS_STEP[task.status] ?? 0;
+    const step2Text = {
+        assigned: `${counterpartName.split(' ')[0]} hali yo'lga chiqmadi`,
+        on_the_way: `${counterpartName.split(' ')[0]} yo'lda…`,
+        arrived: `${counterpartName.split(' ')[0]} manzilga yetib keldi`,
+        started: `${counterpartName.split(' ')[0]} ishni boshladi`
+    }[task.status] || '';
 
-        // 1. Move SVG Marker along path
-        if (path && marker) {
-            const length = path.getTotalLength();
-            const pt = path.getPointAtLength(fraction * length);
-            marker.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+    const steps = [
+        { title: "Vazifa e'lon qilindi", info: new Date(task.created_at).toLocaleString('uz-UZ', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }), done: true },
+        { title: "Bajaruvchi tasdiqlandi", info: stepIndex >= 1 ? "Bajarildi" : "Kutilmoqda", done: stepIndex >= 1 },
+        { title: "Jarayon davom etmoqda", info: step2Text, done: stepIndex >= 3, active: stepIndex === 2 },
+        { title: "Yakunlandi", info: stepIndex >= 3 ? "Bajarildi" : "Kutilmoqda", done: stepIndex >= 3 }
+    ];
+
+    document.getElementById("stepsContainer").innerHTML = steps.map((s, i) => `
+        <div class="step">
+            <div class="step-dot ${s.done ? 'done' : (s.active ? 'active' : 'pending')}">${s.done ? '✓' : (s.active ? '●' : '○')}</div>
+            ${i < steps.length - 1 ? '<div class="step-line"></div>' : ''}
+            <div class="step-info">
+                <h4>${s.title}</h4>
+                <span class="${s.active ? 'sub-link' : ''}">${s.info}</span>
+            </div>
+        </div>
+    `).join('');
+
+    // ── Jonli xabarlar (task_tracking_steps) ──
+    const { data: trackingSteps } = await _supabase
+        .from('task_tracking_steps')
+        .select('*')
+        .eq('task_id', task.id)
+        .order('created_at', { ascending: false });
+
+    const feedContainer = document.getElementById("feedContainer");
+    const feedEntries = (trackingSteps && trackingSteps.length > 0) ? trackingSteps : [
+        { title: "Vazifa e'lon qilindi", description: task.title, created_at: task.created_at }
+    ];
+    feedContainer.innerHTML = feedEntries.map(f => `
+        <div class="feed-item">
+            <div class="feed-icon">📌</div>
+            <div class="feed-text">
+                <h4>${f.title}</h4>
+                <p>${f.description || ''}</p>
+            </div>
+            <span class="feed-time">${new Date(f.created_at).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+    `).join('');
+
+    // ── Chat va Qo'ng'iroq ──
+    document.getElementById("btnOpenChat").addEventListener("click", () => {
+        if (typeof openChatWith === "function") openChatWith(counterpartId, task.id);
+    });
+    document.getElementById("callModalTitle").textContent = `📞 ${counterpartName}`;
+    document.getElementById("callModalPhone").textContent = counterpart?.phone || "Telefon raqami mavjud emas";
+
+    // ── Amal tugmalari (rolga va holatga qarab) ──
+    async function updateTaskStatus(newStatus, extra = {}) {
+        const { error } = await _supabase.from('tasks').update({ status: newStatus, ...extra }).eq('id', task.id);
+        if (error) {
+            showToast("Xatolik: " + error.message, "error");
+            return false;
         }
-
-        // 2. Update distance label
-        if (distText) {
-            if (role === 'helper') {
-                if (fraction >= 1) {
-                    distText.innerHTML = '<span class="icon">📍</span> Yetib keldingiz! 🎉';
-                } else {
-                    const distVal = (1.2 * (1 - fraction)).toFixed(2);
-                    distText.innerHTML = `<span class="icon">📍</span> Manzilgacha ${distVal} km qoldi`;
-                }
-            } else {
-                if (fraction >= 1) {
-                    distText.innerHTML = '<span class="icon">🚚</span> Jasur yetib keldi! 🎉';
-                } else {
-                    const distVal = (1.2 * (1 - fraction)).toFixed(2);
-                    distText.innerHTML = `<span class="icon">🚚</span> Sizdan ${distVal} km uzoqlikda`;
-                }
-            }
-        }
-
-        // 3. Update progress steps
-        const stepDots = document.querySelectorAll('.step-dot');
-        const stepInfos = document.querySelectorAll('.step-info span, .step-info .sub-link');
-        
-        if (fraction >= 1) {
-            // Jarayon davom etmoqda -> done
-            if (stepDots[2]) {
-                stepDots[2].className = "step-dot done";
-                stepDots[2].textContent = "✓";
-            }
-            if (stepInfos[2]) {
-                stepInfos[2].textContent = role === 'helper' ? "Manzilga yetib keldingiz" : "Jasur manzilga yetib keldi";
-                stepInfos[2].className = "";
-            }
-
-            // Yakunlandi -> active
-            if (stepDots[3]) {
-                stepDots[3].className = "step-dot active";
-                stepDots[3].textContent = "●";
-            }
-            if (stepInfos[3]) {
-                stepInfos[3].textContent = "Tasdiqlanishi kutilmoqda";
-            }
-        }
-
-        // 4. Update dynamic live log feed
-        updateLiveLogs(fraction);
-
-        // 5. If finished, handle employer completion button
-        if (fraction >= 1) {
-            handleCompletionActions();
-        } else {
-            requestAnimationFrame(animate);
-        }
+        task = { ...task, status: newStatus, ...extra };
+        await _supabase.from('task_tracking_steps').insert({
+            task_id: task.id,
+            status: newStatus,
+            title: TRACK_STATUS_LABEL[newStatus] || newStatus
+        });
+        return true;
     }
 
-    function updateLiveLogs(fraction) {
-        const feedCard = document.querySelector('.feed-card');
-        if (!feedCard) return;
+    const actionSlot = document.getElementById("taskActionSlot");
 
-        let html = '<div class="card-title">🔄 Jonli xabarlar</div>';
-        
-        if (fraction >= 1) {
-            html += `
-              <div class="feed-item">
-                  <div class="feed-icon">🎉</div>
-                  <div class="feed-text">
-                      <h4>${role === 'helper' ? "Manzilga yetib keldingiz" : "Jasur manzilga yetib keldi"}</h4>
-                      <p>Topshiriq bajarilishi boshlanishi kutilmoqda</p>
-                  </div>
-                  <span class="feed-time">Hozir</span>
-              </div>
-            `;
-        }
-        if (fraction >= 0.7) {
-            html += `
-              <div class="feed-item">
-                  <div class="feed-icon">📍</div>
-                  <div class="feed-text">
-                      <h4>${role === 'helper' ? "Manzilga yaqinlashmoqdasiz" : "Jasur mahallangizga yaqinlashmoqda"}</h4>
-                      <p>Masofa: ~300 metr</p>
-                  </div>
-                  <span class="feed-time">Yaqinda</span>
-              </div>
-            `;
-        }
-        if (fraction >= 0.3) {
-            html += `
-              <div class="feed-item">
-                  <div class="feed-icon">🚴</div>
-                  <div class="feed-text">
-                      <h4>${role === 'helper' ? "Yo'lga chiqdingiz" : "Jasur yo'lga chiqdi"}</h4>
-                      <p>Kutilayotgan yetib kelish vaqti: 10:55</p>
-                  </div>
-                  <span class="feed-time">10:35</span>
-              </div>
-            `;
-        }
-        html += `
-          <div class="feed-item">
-              <div class="feed-icon">✅</div>
-              <div class="feed-text">
-                  <h4>Ijrochi tasdiqlandi</h4>
-                  <p>Tizim tomonidan Jasur tanlandi</p>
-              </div>
-              <span class="feed-time">10:30</span>
-          </div>
-        `;
-        
-        if (feedCard.innerHTML !== html) {
-            feedCard.innerHTML = html;
-        }
-    }
-
-    let completionActionBound = false;
-    function handleCompletionActions() {
-        if (completionActionBound) return;
-        completionActionBound = true;
-
-        const sidebar = document.querySelector('.contractor-card');
-        if (!sidebar) return;
-
-        // Remove cancel button
-        const cancelBtn = sidebar.querySelector('.cancel-btn');
-        if (cancelBtn) cancelBtn.remove();
-
-        if (role === 'poster') {
-            // Employer sees "Confirm & Pay" button
-            const confirmBtn = document.createElement("button");
-            confirmBtn.className = "btn-modal-primary";
-            confirmBtn.id = "btnConfirmCompletion";
-            confirmBtn.innerHTML = '<i class="fas fa-check-circle" style="margin-right:8px;"></i>Ishni qabul qilish';
-            confirmBtn.style = "background:#006653; width:100%; border-radius:12px; padding:12px; border:none; color:white; font-size:14px; font-weight:700; cursor:pointer; margin-top:12px; transition:all 0.2s; font-family:inherit;";
-            
-            confirmBtn.addEventListener("click", () => {
-                showToast("Ish muvaffaqiyatli qabul qilindi! To'lov Jasurning hamyoniga o'tkazildi. Rahmat! 🎉");
-                confirmBtn.disabled = true;
-                confirmBtn.textContent = "Qabul qilindi";
-                confirmBtn.style.background = "#718096";
-
-                // Update steps to complete
-                const stepDots = document.querySelectorAll('.step-dot');
-                if (stepDots[3]) {
-                    stepDots[3].className = "step-dot done";
-                    stepDots[3].textContent = "✓";
+    if (myRole === 'helper') {
+        const nextStepByStatus = {
+            assigned: { label: "Yo'lga chiqdim", next: 'on_the_way' },
+            on_the_way: { label: "Yetib keldim", next: 'arrived' },
+            arrived: { label: "Ishni boshladim", next: 'started' }
+        };
+        const step = nextStepByStatus[task.status];
+        if (step) {
+            const btn = document.createElement("button");
+            btn.className = "btn-modal-primary";
+            btn.style = "background:#006653; width:100%; border-radius:12px; padding:12px; border:none; color:white; font-size:14px; font-weight:700; cursor:pointer; margin-top:12px; font-family:inherit;";
+            btn.textContent = step.label;
+            btn.addEventListener("click", async () => {
+                btn.disabled = true;
+                const ok = await updateTaskStatus(step.next);
+                if (ok) {
+                    showToast("Holat yangilandi: " + TRACK_STATUS_LABEL[step.next]);
+                    window.location.reload();
+                } else {
+                    btn.disabled = false;
                 }
-                const stepInfos = document.querySelectorAll('.step-info span');
-                if (stepInfos[3]) {
-                    stepInfos[3].textContent = "Muvaffaqiyatli yakunlandi";
-                }
-
-                setTimeout(() => {
-                    window.location.href = "baholash.html";
-                }, 1600);
             });
-            sidebar.appendChild(confirmBtn);
-        } else {
-            // Helper sees info status
-            const statusInfo = document.createElement("div");
-            statusInfo.style = "background:#f0fff4; border:1px dashed #38a169; border-radius:12px; padding:10px 12px; font-size:12.5px; color:#276749; font-weight:600; margin-top:12px; text-align:center; font-family:inherit;";
-            statusInfo.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Buyurtmachi ishni qabul qilishi kutilmoqda...';
-            sidebar.appendChild(statusInfo);
+            actionSlot.appendChild(btn);
+        } else if (task.status === 'started') {
+            const info = document.createElement("div");
+            info.style = "background:#f0fff4; border:1px dashed #38a169; border-radius:12px; padding:10px 12px; font-size:12.5px; color:#276749; font-weight:600; margin-top:12px; text-align:center; font-family:inherit;";
+            info.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Buyurtmachi ishni qabul qilishi kutilmoqda...';
+            actionSlot.appendChild(info);
         }
+    } else if (myRole === 'poster' && task.status === 'started') {
+        const btn = document.createElement("button");
+        btn.className = "btn-modal-primary";
+        btn.id = "btnConfirmCompletion";
+        btn.innerHTML = '<i class="fas fa-check-circle" style="margin-right:8px;"></i>Ishni qabul qilish';
+        btn.style = "background:#006653; width:100%; border-radius:12px; padding:12px; border:none; color:white; font-size:14px; font-weight:700; cursor:pointer; margin-top:12px; font-family:inherit;";
+        btn.addEventListener("click", async () => {
+            btn.disabled = true;
+            const ok = await updateTaskStatus('completed', { completed_at: new Date().toISOString() });
+            if (!ok) { btn.disabled = false; return; }
+
+            await _supabase.from('transactions').insert({
+                user_id: task.helper_id,
+                task_id: task.id,
+                amount: task.price,
+                type: 'payment_release',
+                status: 'completed'
+            });
+
+            showToast("Ish muvaffaqiyatli qabul qilindi! To'lov ijrochiga o'tkazildi. Rahmat! 🎉");
+            document.getElementById("btnCancelTask")?.remove();
+            btn.textContent = "Qabul qilindi";
+            setTimeout(() => { window.location.href = "baholash.html"; }, 1600);
+        });
+        actionSlot.appendChild(btn);
     }
 
-    function initializeRoleSidebar(role) {
-        const cAvatar = document.querySelector('.c-avatar');
-        const cName = document.querySelector('.c-name');
-        const cStars = document.querySelector('.c-stars');
-        const cMetaRows = document.querySelectorAll('.c-meta-row');
-        const noteBox = document.querySelector('.note-box');
-        const callTitle = document.querySelector('#callModal h2');
-        const chatHeaderName = document.querySelector('.chat-header-info h4');
-        const chatHeaderStatus = document.querySelector('.chat-header-info span');
-        const chatHeaderAv = document.querySelector('.chat-header-av');
+    // ── Modal boshqaruvi ──
+    window.openModal = id => document.getElementById(id)?.classList.add('open');
+    window.closeModal = id => document.getElementById(id)?.classList.remove('open');
 
-        if (role === 'helper') {
-            // Helper sees client (Xurmo Saidova)
-            if (cAvatar) {
-                cAvatar.innerHTML = 'X<span class="c-online"></span>';
-                cAvatar.style.background = '#805ad5'; // Purple/Indigo for client profile
-            }
-            if (cName) cName.textContent = 'Xurmo Saidova';
-            if (cStars) cStars.innerHTML = '★ 4.8 <span style="color:#888">(15 ta sharh)</span>';
-            if (cMetaRows[0]) cMetaRows[0].innerHTML = '<span class="icon">📍</span> Yunusobod 7-mavze, 4-uy';
-            if (cMetaRows[1]) cMetaRows[1].innerHTML = '<span class="icon">🛡️</span> To\'lov muzlatilgan (Xavfsiz)';
-            if (noteBox) noteBox.textContent = 'Iltimos, kelishdan oldin telefon qilib yuboring, eshik qo\'ng\'irog\'i ishlamayapti.';
+    document.getElementById("cancelModalText").textContent =
+        `Haqiqatan ham "${task.title}" vazifasini bekor qilmoqchimisiz?`;
 
-            if (callTitle) callTitle.textContent = '📞 Xurmo Saidova';
-            const targetPhone = document.querySelector('#callModal div[style*="font-size:1.3rem"]');
-            if (targetPhone) targetPhone.textContent = '+998 93 321 45 67';
-
-            if (chatHeaderName) chatHeaderName.textContent = 'Xurmo Saidova';
-            if (chatHeaderStatus) chatHeaderStatus.textContent = '🟢 Online – Buyurtmachi';
-            if (chatHeaderAv) {
-                chatHeaderAv.textContent = 'XS';
-                chatHeaderAv.style.background = '#805ad5';
-            }
-            
-            // Adjust tracking map labels perspective
-            const homeLabel = document.querySelector('text[x="318"]');
-            if (homeLabel) homeLabel.textContent = "Buyurtmachi (Uy)";
-            
-            const helperLabel = document.querySelector('#helperMarker text[x="20"]');
-            if (helperLabel) helperLabel.textContent = "Siz (Yo'lda)";
-        }
-    }
-
-    // Modal controls (preserve previous functionality)
-    window.openModal = function(id) {
-        document.getElementById(id).classList.add('open');
-    };
-    
-    window.closeModal = function(id) {
-        document.getElementById(id).classList.remove('open');
-    };
-
-    window.sendMsg = function() {
-        const input = document.getElementById('chatInput');
-        const text = input.value.trim();
-        if (!text) return;
-        
-        const chatBody = document.getElementById('chatBody');
-        const msg = document.createElement('div');
-        msg.className = 'chat-msg me';
-        msg.textContent = text;
-        chatBody.appendChild(msg);
-        
-        input.value = '';
-        chatBody.scrollTop = chatBody.scrollHeight;
-        
-        setTimeout(() => {
-            showToast("Xabar yuborildi");
-        }, 300);
-    };
-
-    window.confirmCancelTask = function() {
+    window.confirmCancelTask = async function () {
         closeModal('cancelModal');
+        const ok = await updateTaskStatus('cancelled');
+        if (!ok) return;
         showToast("Vazifa bekor qilindi");
         setTimeout(() => {
-            window.location.href = role === 'poster' ? 'poster.html' : 'vazifa.html';
+            window.location.href = myRole === 'poster' ? 'poster.html' : 'vazifa.html';
         }, 1200);
     };
 
-    window.confirmCall = function() {
+    window.confirmCall = function () {
         closeModal('callModal');
         showToast("Qo'ng'iroq ulanmoqda... 📞");
     };
-
-    // Start simulated loop
-    animate();
 });

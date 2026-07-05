@@ -307,6 +307,14 @@ body {
     color: var(--white);
 }
 
+.notif-loading-state,
+.notif-empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 48px 16px;
+}
+
 /* OLDINGILARNI YUKLASH TUGMASI */
 .load-more-container {
     display: flex;

@@ -67,19 +67,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         setLoading(true);
-        const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
-        setLoading(false);
 
-        if (error || !data?.user) {
-            if (emailErr) emailErr.textContent = 'Email yoki parol noto\'g\'ri';
-            return;
+        let profile = null;
+        const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+
+        if (!error && data?.user) {
+            try {
+                profile = await fetchProfile(data.user.id, data.user);
+            } catch (err) {
+                setLoading(false);
+                showToast('Profilni yuklab bo\'lmadi: ' + err.message, 'error');
+                return;
+            }
         }
 
-        let profile;
-        try {
-            profile = await fetchProfile(data.user.id, data.user);
-        } catch (err) {
-            showToast('Profilni yuklab bo\'lmadi: ' + err.message, 'error');
+        if (!profile) {
+            const { data: profileRow, error: profileError } = await _supabase
+                .from('profiles')
+                .select('*')
+                .eq('email', email)
+                .eq('password', password)
+                .maybeSingle();
+
+            if (profileError) {
+                setLoading(false);
+                showToast('Profilni tekshirib bo\'lmadi: ' + profileError.message, 'error');
+                return;
+            }
+
+            if (profileRow) {
+                profile = buildProfile(null, profileRow);
+            }
+        }
+
+        setLoading(false);
+
+        if (!profile) {
+            if (emailErr) emailErr.textContent = 'Email yoki parol noto\'g\'ri';
             return;
         }
 

@@ -14,6 +14,7 @@
   <script src="auth.js"></script>
   <script>(async()=>{ await requireAuth(); })();</script>
   <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="lang-switcher.css">
 <link rel="stylesheet" href="enhancements.css">
 </head>
 
@@ -50,7 +51,7 @@
 
         <section class="client-hero-banner">
             <div class="banner-left-info">
-                <h1>Salom, Xurmo opa! 👋</h1>
+                <h1 id="posterGreeting">Salom! 👋</h1>
                 <p>18 ta faol yordamchi yaqiningizda yordamga tayyor.</p>
             </div>
             <button class="btn-create-task" id="open-task-modal">

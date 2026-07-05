@@ -5,6 +5,20 @@ function showRegisterToast(text, type = 'info') {
     }
 }
 
+function authErrorToUzbek(error) {
+    const code = error?.code || error?.error_code || '';
+    const messages = {
+        email_address_invalid: 'Bu email manzil Supabase tomonidan qabul qilinmadi (test/soxta manzillar bloklangan). Iltimos, haqiqiy shaxsiy emailingizni kiriting.',
+        email_exists: 'Bu email allaqachon ro\'yxatdan o\'tgan. Kirish sahifasidan foydalaning.',
+        user_already_exists: 'Bu email allaqachon ro\'yxatdan o\'tgan. Kirish sahifasidan foydalaning.',
+        over_email_send_rate_limit: 'Juda ko\'p urinish qilindi. Bir necha daqiqadan so\'ng qayta urinib ko\'ring.',
+        weak_password: 'Parol juda oddiy. Kuchliroq parol tanlang.',
+        signup_disabled: 'Hozircha ro\'yxatdan o\'tish vaqtincha o\'chirilgan.',
+        validation_failed: 'Kiritilgan ma\'lumotlar noto\'g\'ri formatda.'
+    };
+    return messages[code] || error?.message || 'Hisob yaratilmadi';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     let selectedRole = 'employer';
 
@@ -83,7 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (error || !data?.user) {
-            showRegisterToast('Xatolik: ' + (error?.message || 'Hisob yaratilmadi'), 'error');
+            const friendlyMsg = authErrorToUzbek(error);
+            const code = error?.code || error?.error_code || '';
+            if (code === 'email_address_invalid' || code === 'email_exists' || code === 'user_already_exists') {
+                setErr('emailError', friendlyMsg);
+            }
+            showRegisterToast(friendlyMsg, 'error');
             resetButton();
             return;
         }

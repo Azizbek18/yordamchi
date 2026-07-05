@@ -14,6 +14,7 @@
   <script src="auth.js"></script>
   <script>(async()=>{ await requireAuth(); })();</script>
   <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="lang-switcher.css">
 <link rel="stylesheet" href="enhancements.css">
 </head>
 
@@ -51,11 +52,11 @@
         <section class="income-banner">
             <div class="banner-left">
                 <div class="label">Mening daromadlarim</div>
-                <div class="amount">Bu oy: 640,000 so'm</div>
+                <div class="amount">Bu oy: <span id="monthIncome">0 so'm</span></div>
             </div>
             <div class="banner-right">
                 <div class="trend-label">O'sish sur'ati</div>
-                <div class="trend-value">+12% o'tgan oydan</div>
+                <div class="trend-value" id="trendValue">—</div>
             </div>
         </section>
 
@@ -67,7 +68,7 @@
                     <div class="balance-card-inner">
                         <div>
                             <div class="balance-title">Asosiy balans</div>
-                            <div class="balance-value">2,450,000 so'm</div>
+                            <div class="balance-value" id="balanceValue">0 so'm</div>
                             <div class="balance-subtext">
                                 <i class="fa-solid fa-circle-check"></i> Yechib olish uchun mavjud
                             </div>
@@ -83,40 +84,10 @@
                         <h3 class="card-title">Haftalik daromad</h3>
                         <select class="select-period">
                             <option>Oxirgi 7 kun</option>
-                            <option>Oxirgi 30 kun</option>
                         </select>
                     </div>
 
-                    <div class="chart-placeholder">
-                        <div class="chart-bar-wrapper">
-                            <div class="chart-bar" style="height: 40px;"></div>
-                            <span class="chart-day">Du</span>
-                        </div>
-                        <div class="chart-bar-wrapper">
-                            <div class="chart-bar" style="height: 80px;"></div>
-                            <span class="chart-day">Se</span>
-                        </div>
-                        <div class="chart-bar-wrapper">
-                            <div class="chart-bar" style="height: 50px;"></div>
-                            <span class="chart-day">Ch</span>
-                        </div>
-                        <div class="chart-bar-wrapper">
-                            <div class="chart-bar" style="height: 110px;"></div>
-                            <span class="chart-day">Pa</span>
-                        </div>
-                        <div class="chart-bar-wrapper">
-                            <div class="chart-bar active" style="height: 140px;"></div>
-                            <span class="chart-day">Ju</span>
-                        </div>
-                        <div class="chart-bar-wrapper">
-                            <div class="chart-bar" style="height: 30px;"></div>
-                            <span class="chart-day">Sha</span>
-                        </div>
-                        <div class="chart-bar-wrapper">
-                            <div class="chart-bar" style="height: 20px;"></div>
-                            <span class="chart-day">Yak</span>
-                        </div>
-                    </div>
+                    <div class="chart-placeholder" id="chartPlaceholder"></div>
                 </div>
 
                 <div class="content-card">
@@ -124,42 +95,10 @@
                         <h3 class="card-title">Tranzaksiyalar tarixi</h3>
                     </div>
 
-                    <div class="transaction-list">
-                        <div class="transaction-item">
-                            <div class="tx-left">
-                                <div class="tx-icon-box bg-light-teal"><i class="fa-solid fa-broom"></i></div>
-                                <div class="tx-details">
-                                    <h4>Xonadonni tozalash</h4>
-                                    <p>Tozalash • 12 Yanvar, 14:20</p>
-                                </div>
-                            </div>
-                            <div class="tx-amount tx-positive">+120,000 so'm</div>
-                        </div>
-
-                        <div class="transaction-item">
-                            <div class="tx-left">
-                                <div class="tx-icon-box bg-light-red"><i class="fa-solid fa-percentage"></i></div>
-                                <div class="tx-details">
-                                    <h4>Xizmat haqi (Komissiya)</h4>
-                                    <p>Xizmat • 12 Yanvar, 14:21</p>
-                                </div>
-                            </div>
-                            <div class="tx-amount tx-negative">-6,000 so'm</div>
-                        </div>
-
-                        <div class="transaction-item">
-                            <div class="tx-left">
-                                <div class="tx-icon-box bg-light-teal"><i class="fa-solid fa-wrench"></i></div>
-                                <div class="tx-details">
-                                    <h4>Kran almashtirish</h4>
-                                    <p>Ta'mirlash • 11 Yanvar, 10:45</p>
-                                </div>
-                            </div>
-                            <div class="tx-amount tx-positive">+85,000 so'm</div>
-                        </div>
+                    <div class="transaction-list" id="transactionList">
+                        <p class="tx-empty-state">Yuklanmoqda...</p>
                     </div>
 
-                    <button class="see-all-btn" id="btn-see-all">Barchasini ko'rish</button>
                 </div>
 
             </div>
@@ -172,7 +111,7 @@
                         bo'ling.</p>
 
                     <div class="referral-box">
-                        <span class="referral-code" id="ref-code">JASUR2025</span>
+                        <span class="referral-code" id="ref-code">—</span>
                         <button class="copy-icon" id="btn-copy" title="Nusxalash"><i
                                 class="fa-regular fa-copy"></i></button>
                     </div>
@@ -189,13 +128,12 @@
                             <i class="fa-solid fa-award"></i>
                         </div>
                         <h3 class="hero-title">Mahalla Qahramoni</h3>
-                        <p class="hero-subtitle">Siz ushbu oydagi eng faol yordamchilar orasidasiz! Yana 3 ta topshiriq
-                            va sizga "Oltin" statusi beriladi.</p>
+                        <p class="hero-subtitle" id="badgeSubtitle">Har bir bajarilgan topshiriq sizni "Oltin" statusiga yaqinlashtiradi.</p>
 
                         <div class="progress-bar-container">
-                            <div class="progress-fill"></div>
+                            <div class="progress-fill" id="badgeProgressFill"></div>
                         </div>
-                        <div class="progress-text">12/15 topshiriq bajarilgan</div>
+                        <div class="progress-text" id="badgeProgressText">0/15 topshiriq bajarilgan</div>
                     </div>
                 </div>
 

@@ -14,6 +14,7 @@
   <script src="auth.js"></script>
   <script>(async () => { await requireAuth(); })();</script>
   <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="lang-switcher.css">
 <link rel="stylesheet" href="enhancements.css">
   <style>
     /* Custom Premium Select Styles */
@@ -647,14 +648,6 @@
 
     if (searchInput) {
       searchInput.addEventListener('input', applyFilters);
-      searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          const val = searchInput.value.toLowerCase().trim();
-          if (val.includes('dori')) {
-            window.location.href = 'natija.html';
-          }
-        }
-      });
     }
 
     if (priceMinInput) {

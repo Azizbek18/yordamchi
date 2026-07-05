@@ -13,6 +13,7 @@
   <script src="auth.js"></script>
   <script>(async()=>{ await requireAuth(); })();</script>
   <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="lang-switcher.css">
 <link rel="stylesheet" href="enhancements.css">
 </head>
 <body>
@@ -51,55 +52,63 @@
             <p class="page-subtitle">Sizning xavfsizligingiz va adolatli hamjamiyat bizning ustuvorligimizdir.</p>
 
             <div class="moderation-tabs">
-                <button class="mod-tab active">Shikoyat berish</button>
-                <button class="mod-tab">Nizoni hal qilish</button>
-                <button class="mod-tab">Tarix</button>
+                <button class="mod-tab active" data-tab="report">Shikoyat berish</button>
+                <button class="mod-tab" data-tab="history">Tarix</button>
             </div>
 
-            <div class="category-grid">
-                <div class="category-card" data-category="odobsizlik">
-                    <div class="icon-wrapper red-text"><i class="fa-solid fa-user-slash"></i></div>
-                    <span>Odobsizlik</span>
-                </div>
-                <div class="category-card" data-category="tolov">
-                    <div class="icon-wrapper orange-text"><i class="fa-solid fa-money-bill-wave"></i></div>
-                    <span>To'lov muammosi</span>
-                </div>
-                <div class="category-card active" data-category="firibgarlik">
-                    <div class="icon-wrapper bright-red-text"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <span>Firibgarlik</span>
-                </div>
-                <div class="category-card" data-category="boshqa">
-                    <div class="icon-wrapper gray-text"><i class="fa-solid fa-ellipsis"></i></div>
-                    <span>Boshqa</span>
-                </div>
-            </div>
-
-            <div class="form-panel">
-                <div class="form-group">
-                    <label class="form-label">Vazifani tanlang</label>
-                    <div class="custom-select-wrapper">
-                        <select id="taskSelect">
-                            <option value="T-4921">Dorixonadan dori (T-4921)</option>
-                            <option value="T-5022">Mebel ko'chirish (T-5022)</option>
-                            <option value="T-3112">Kran ta'mirlash (T-3112)</option>
-                        </select>
-                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+            <div id="reportTabPanel">
+                <div class="category-grid">
+                    <div class="category-card" data-category="odobsizlik">
+                        <div class="icon-wrapper red-text"><i class="fa-solid fa-user-slash"></i></div>
+                        <span>Odobsizlik</span>
+                    </div>
+                    <div class="category-card" data-category="tolov">
+                        <div class="icon-wrapper orange-text"><i class="fa-solid fa-money-bill-wave"></i></div>
+                        <span>To'lov muammosi</span>
+                    </div>
+                    <div class="category-card active" data-category="firibgarlik">
+                        <div class="icon-wrapper bright-red-text"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <span>Firibgarlik</span>
+                    </div>
+                    <div class="category-card" data-category="boshqa">
+                        <div class="icon-wrapper gray-text"><i class="fa-solid fa-ellipsis"></i></div>
+                        <span>Boshqa</span>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Isbotlar (Rasm yoki video)</label>
-                    <div class="dropzone" id="dropzone">
-                        <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
-                        <p class="dropzone-text">Fayllarni bu yerga tashlang yoki tanlang</p>
-                        <span class="dropzone-subtext">Maksimal 10MB, JPG, PNG, MP4</span>
-                        <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display: none;">
-                        <div id="filePreviewContainer" class="preview-container"></div>
+                <div class="form-panel">
+                    <div class="form-group">
+                        <label class="form-label">Vazifani tanlang</label>
+                        <div class="custom-select-wrapper">
+                            <select id="taskSelect">
+                                <option value="">Yuklanmoqda...</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down select-arrow"></i>
+                        </div>
                     </div>
-                </div>
 
-                <button class="btn-submit" id="submitComplaint">Shikoyatni yuborish</button>
+                    <div class="form-group">
+                        <label class="form-label">Muammoni tasvirlab bering</label>
+                        <textarea id="complaintDesc" class="complaint-desc-textarea" rows="4" placeholder="Nima bo'lganini batafsil yozing..." style="width:100%; border:1.5px solid #e2e8f0; border-radius:12px; padding:12px 14px; font-size:14px; font-family:inherit; resize:vertical;"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Isbotlar (Rasm yoki video)</label>
+                        <div class="dropzone" id="dropzone">
+                            <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                            <p class="dropzone-text">Fayllarni bu yerga tashlang yoki tanlang</p>
+                            <span class="dropzone-subtext">Maksimal 10MB, JPG, PNG, MP4</span>
+                            <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display: none;">
+                            <div id="filePreviewContainer" class="preview-container"></div>
+                        </div>
+                    </div>
+
+                    <button class="btn-submit" id="submitComplaint">Shikoyatni yuborish</button>
+                </div>
+            </div>
+
+            <div id="historyTabPanel" style="display:none;">
+                <div id="historyList" class="form-panel">Yuklanmoqda...</div>
             </div>
 
         </section>

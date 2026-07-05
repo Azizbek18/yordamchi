@@ -13,74 +13,33 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="auth.js"></script>
   <script>(async()=>{ await requireAuth(); })();</script>
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="lang-switcher.css">
 <link rel="stylesheet" href="enhancements.css">
 </head>
 
 <body>
 
-    <!-- Drawer overlay (mobil/tablet) -->
-    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <!-- NAVBAR (umumiy, auth.js orqali to'ldiriladi) -->
+    <header class="navbar"></header>
 
     <div class="container">
 
-        <!-- ===== SIDEBAR ===== -->
-        <aside class="sidebar" id="sidebar">
-            <a href="index.html" class="logo" style="text-decoration:none; display:block; cursor:pointer;">Topshiriq.uz</a>
-
-            <div class="user-profile">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&fit=crop&q=80" alt="Jasur T." class="avatar">
-                <div class="user-info">
-                    <h4>Jasur T. <i class="fas fa-check-circle verified"></i></h4>
-                    <p>Verified Yordamchi</p>
-                </div>
-            </div>
-
-            <div class="balance-card">
-                <p>Bu oy:</p>
-                <h3>640,000 so'm</h3>
-            </div>
-
-            <nav class="menu">
-                <a href="vazifa.html" class="menu-item"><i class="fas fa-clipboard-list"></i> Topshiriqlar</a>
-                <a href="map.html" class="menu-item"><i class="fas fa-map-marked-alt"></i> Xarita</a>
-                <a href="vazifa.html" class="menu-item"><i class="fas fa-briefcase"></i> Mening ishlarim</a>
-                <a href="chatlar.html" class="menu-item"><i class="fas fa-comment-alt"></i> Chatlar</a>
-                <a href="daromad.html" class="menu-item"><i class="fas fa-wallet"></i> Daromad</a>
-                <a href="profil.html" class="menu-item"><i class="fas fa-user"></i> Profil</a>
-            </nav>
-
-            <div class="status-toggle">
-                <span>Faollik: <strong id="status-text">Active</strong></span>
-                <label class="switch">
-                    <input type="checkbox" id="status-checkbox" checked>
-                    <span class="slider round"></span>
-                </label>
-            </div>
-        </aside>
-
         <!-- ===== ASOSIY PANEL ===== -->
         <main class="main-content">
-            <header class="main-header">
+            <div class="main-header">
                 <div class="welcome">
-                    <h3>Xush kelibsiz, Jasur!</h3>
-                    <p>Bugun mahallangizda 12 ta yangi topshiriq mavjud.</p>
+                    <h3>Xush kelibsiz!</h3>
+                    <p id="welcomeSubtitle">Bugun mahallangizda yangi topshiriqlar mavjud.</p>
                 </div>
-                <div class="header-actions">
-                    <!-- Hamburger: faqat mobil/tabletda ko'rinadi -->
-                    <button class="hamburger-btn" id="hamburger-btn" aria-label="Menyuni ochish">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <button class="icon-btn"><i class="fas fa-bell"></i></button>
-                    <button class="icon-btn"><i class="fas fa-search"></i></button>
-                </div>
-            </header>
+            </div>
 
             <!-- Summary Banner -->
             <section class="summary-banner">
                 <div class="banner-info">
                     <span class="tag">KUNLIK SARHISOB</span>
-                    <h1>Bugungi daromad:<br><span id="today-earnings">45,000</span> so'm</h1>
-                    <p class="success-note"><i class="fas fa-check-circle"></i> 3 ta topshiriq muvaffaqiyatli bajarildi
+                    <h1>Bugungi daromad:<br><span id="today-earnings">0</span> so'm</h1>
+                    <p class="success-note"><i class="fas fa-check-circle"></i> <span id="todayCompletedNote">0 ta topshiriq bajarildi</span>
                     </p>
                 </div>
                 <button class="view-report-btn">Hisobotni ko'rish</button>
@@ -90,110 +49,59 @@
             <div class="mobile-stats-strip">
                 <div class="mobile-stat-chip">
                     <span class="chip-label">Bajarildi</span>
-                    <span class="chip-value blue">3</span>
+                    <span class="chip-value blue" id="mStatDone">0</span>
                 </div>
                 <div class="mobile-stat-chip">
-                    <span class="chip-label">Rad etildi</span>
-                    <span class="chip-value">0</span>
+                    <span class="chip-label">Bekor qilingan</span>
+                    <span class="chip-value" id="mStatCancelled">0</span>
                 </div>
                 <div class="mobile-stat-chip">
                     <span class="chip-label">Reyting</span>
-                    <span class="chip-value">4.9 ⭐</span>
+                    <span class="chip-value" id="mStatRating">— ⭐</span>
                 </div>
                 <div class="mobile-stat-chip">
-                    <span class="chip-label">Onlayn</span>
-                    <span class="chip-value" style="font-size:14px">4s 20m</span>
+                    <span class="chip-label">Holat</span>
+                    <span class="chip-value" style="font-size:14px" id="mStatActivity">Active</span>
                 </div>
                 <div class="mobile-stat-chip" style="min-width:110px">
                     <span class="chip-label">Bu oy</span>
-                    <span class="chip-value" style="font-size:13px">640k so'm</span>
+                    <span class="chip-value" style="font-size:13px" id="mStatMonth">0 so'm</span>
                 </div>
             </div>
 
             <!-- Filtrlar -->
             <section class="filters">
                 <div class="filter-tabs">
-                    <button class="tab active">Barchasi</button>
-                    <button class="tab">Yetkazib berish</button>
+                    <button class="tab active" data-category="">Barchasi</button>
+                    <button class="tab" data-category="yetkazish">Yetkazib berish</button>
                 </div>
-                <button class="sort-btn"><i class="fas fa-sliders-h"></i> Saralash: Eng yaqin</button>
             </section>
 
             <!-- Topshiriq kartochkalari -->
-            <section class="cards-grid">
-                <div class="task-card border-red">
-                    <div class="card-header">
-                        <span class="category-tag urgent"><i class="fas fa-bolt"></i> Shoshilinch</span>
-                        <span class="price-tag red">15,000 so'm</span>
-                    </div>
-                    <h3>Telefonga pul o'tkazma</h3>
-                    <p>Paynet orqali hisobimni to'ldirish kerak. Internetim...</p>
-                    <div class="card-footer">
-                        <span><i class="fas fa-map-marker-alt"></i> 200m masofada</span>
-                        <button class="accept-btn">Qabul qilish</button>
-                    </div>
-                </div>
-
-                <div class="task-card border-green">
-                    <div class="card-header">
-                        <span class="category-tag shopping"><i class="fas fa-shopping-cart"></i> Haridlar</span>
-                        <span class="price-tag green">30,000 so'm</span>
-                    </div>
-                    <h3>Bozordan sabzavot</h3>
-                    <p>Chorsu bozoridan 5 kg kartoshka va 3 kg piyoz olib...</p>
-                    <div class="card-footer">
-                        <span><i class="far fa-clock"></i> 2 soat qoldi</span>
-                        <button class="accept-btn green-btn">Qabul qilish</button>
-                    </div>
-                </div>
-
-                <div class="task-card border-green">
-                    <div class="card-header">
-                        <span class="category-tag cleaning"><i class="fas fa-broom"></i> Tozalash</span>
-                        <span class="price-tag green">50,000 so'm</span>
-                    </div>
-                    <h3>Hovli supurish</h3>
-                    <p>Kuzgi barglarni tozalash va hovlini tartibga keltirish...</p>
-                    <div class="card-footer">
-                        <span><i class="fas fa-map-marker-alt"></i> Yaqin atrofda</span>
-                        <button class="accept-btn green-btn">Qabul qilish</button>
-                    </div>
-                </div>
-
-                <div class="task-card border-green">
-                    <div class="card-header">
-                        <span class="category-tag education"><i class="fas fa-user-graduate"></i> O'qitish</span>
-                        <span class="price-tag green">100,000 so'm</span>
-                    </div>
-                    <h3>Ingliz tili yordami</h3>
-                    <p>Maktab o'quvchisiga uy vazifasini tushuntirish kerak.</p>
-                    <div class="card-footer">
-                        <span><i class="far fa-clock"></i> Bugun</span>
-                        <button class="accept-btn green-btn">Qabul qilish</button>
-                    </div>
-                </div>
+            <section class="cards-grid" id="taskCardsGrid">
+                <p class="tasks-empty-state">Yuklanmoqda...</p>
             </section>
         </main>
 
         <!-- ===== O'NG PANEL ===== -->
-        <aside class="right-panel">
-            <h3>Kunlik statistikangiz</h3>
+        <aside class="right-panel right-helpers-sidebar">
+            <h3 class="sidebar-heading">Kunlik statistikangiz</h3>
             <div class="stats-grid">
                 <div class="stat-box">
                     <p>Bajarildi</p>
-                    <span class="stat-num blue">3</span>
+                    <span class="stat-num blue" id="statDone">0</span>
                 </div>
                 <div class="stat-box">
-                    <p>Rad etildi</p>
-                    <span class="stat-num">0</span>
+                    <p>Bekor qilingan</p>
+                    <span class="stat-num" id="statCancelled">0</span>
                 </div>
                 <div class="stat-box">
                     <p>Reyting</p>
-                    <span class="stat-num">4.9 <i class="fas fa-star star"></i></span>
+                    <span class="stat-num" id="statRating">— <i class="fas fa-star star"></i></span>
                 </div>
                 <div class="stat-box">
-                    <p>Onlayn vaqt</p>
-                    <span class="stat-num text-small">4s 20m</span>
+                    <p>Holat</p>
+                    <span class="stat-num text-small" id="statActivity">Active</span>
                 </div>
             </div>
 
@@ -242,58 +150,8 @@
         </aside>
     </div>
 
-    <!-- ===== MOBIL PASTKI NAVIGATSIYA ===== -->
-    <nav class="bottom-nav">
-        <a href="vazifa.html" class="bottom-nav-item active">
-            <i class="fas fa-clipboard-list"></i>
-            <span>Topshiriqlar</span>
-        </a>
-        <a href="map.html" class="bottom-nav-item">
-            <i class="fas fa-map-marked-alt"></i>
-            <span>Xarita</span>
-        </a>
-        <a href="chatlar.html" class="bottom-nav-item">
-            <i class="fas fa-comment-alt"></i>
-            <span>Chatlar</span>
-        </a>
-        <a href="daromad.html" class="bottom-nav-item">
-            <i class="fas fa-wallet"></i>
-            <span>Daromad</span>
-        </a>
-        <a href="profil.html" class="bottom-nav-item">
-            <i class="fas fa-user"></i>
-            <span>Profil</span>
-        </a>
-    </nav>
-
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="helper.js"></script>
-    <script>
-        // ===== DRAWER (hamburger) =====
-        const hamburgerBtn = document.getElementById("hamburger-btn");
-        const sidebar = document.getElementById("sidebar");
-        const drawerOverlay = document.getElementById("drawer-overlay");
-
-        function openDrawer() {
-            sidebar.classList.add("drawer-open");
-            drawerOverlay.classList.add("active");
-            document.body.style.overflow = "hidden";
-        }
-
-        function closeDrawer() {
-            sidebar.classList.remove("drawer-open");
-            drawerOverlay.classList.remove("active");
-            document.body.style.overflow = "";
-        }
-
-        hamburgerBtn.addEventListener("click", openDrawer);
-        drawerOverlay.addEventListener("click", closeDrawer);
-
-        // Ekran kattalashganda drawerni yopish
-        window.addEventListener("resize", () => {
-            if (window.innerWidth >= 1024) closeDrawer();
-        });
-    </script>
 <script src="enhancements.js"></script>
 </body>
 

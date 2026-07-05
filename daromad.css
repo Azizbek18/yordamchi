@@ -371,6 +371,13 @@ body {
     color: #e53e3e;
 }
 
+.tx-empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 24px 0;
+}
+
 .see-all-btn {
     display: block;
     text-align: center;

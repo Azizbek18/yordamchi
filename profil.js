@@ -15,11 +15,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const spinnerHtml = spinner ? spinner.outerHTML : '<span class="avatar-upload-spinner"><i class="fa-solid fa-spinner fa-spin"></i></span>';
 
         if (user && user.avatar_url) {
-            avatarEl.style.backgroundImage = `url('${user.avatar_url}')`;
+            avatarEl.style.setProperty("background-image", `url('${user.avatar_url}')`, "important");
+            avatarEl.style.setProperty("--avatar-image", `url('${user.avatar_url}')`);
             avatarEl.classList.add("has-photo");
             avatarEl.innerHTML = spinnerHtml;
         } else {
-            avatarEl.style.backgroundImage = "";
+            avatarEl.style.removeProperty("background-image");
+            avatarEl.style.removeProperty("--avatar-image");
             avatarEl.classList.remove("has-photo");
             avatarEl.innerHTML = getUserInitials(user) + spinnerHtml;
         }
@@ -46,6 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // ── Dinamik Rolga oid ma'lumotlarni yuklash ───────────────────────────
             const role = user.role || 'poster';
+            document.body.classList.toggle('role-employer', role !== 'helper');
+            document.body.classList.toggle('role-helper', role === 'helper');
             const statNum1 = document.getElementById("stat-num-1");
             const statLabel1 = document.getElementById("stat-label-1");
             const statNum2 = document.getElementById("stat-num-2");
@@ -187,22 +191,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (rightColumnDynamicBox) {
                     rightColumnDynamicBox.innerHTML = `
                         <h2 class="box-title">Hamyon va Balans</h2>
-                        <div style="padding:20px; background:linear-gradient(135deg, #006653, #004d3f); border-radius:18px; color:#fff; position:relative; overflow:hidden; margin-top:14px; box-shadow:0 8px 20px rgba(0,102,83,0.15);">
-                            <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.8px; font-weight:600;">Joriy hisob balansi</div>
-                            <div style="font-size:26px; font-weight:800; margin:8px 0 18px;">450,000 UZS</div>
-                            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+                        <div class="employer-wallet-card">
+                            <div class="wallet-label">Joriy hisob balansi</div>
+                            <div class="wallet-balance">450,000 UZS</div>
+                            <div class="wallet-footer">
                                 <span>Xavfsiz tranzaksiya</span>
-                                <span style="background:rgba(255,255,255,0.22); padding:3px 9px; border-radius:6px; font-size:10px; font-weight:800; letter-spacing:0.5px;">FAOL</span>
+                                <span class="wallet-status">FAOL</span>
                             </div>
-                            <div style="position:absolute; right:-15px; bottom:-15px; font-size:80px; opacity:0.1; transform:rotate(-15deg);"><i class="fa-solid fa-credit-card"></i></div>
+                            <div class="wallet-watermark"><i class="fa-solid fa-credit-card"></i></div>
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px;">
-                            <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:#4a5568;">
-                                <i class="fa-solid fa-circle-check" style="color:#006653; font-size:15px;"></i>
+                        <div class="employer-trust-list">
+                            <div class="trust-row">
+                                <i class="fa-solid fa-circle-check"></i>
                                 <span>Karta ulangan: 8600 **** **** 4321</span>
                             </div>
-                            <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:#4a5568;">
-                                <i class="fa-solid fa-shield-halved" style="color:#006653; font-size:15px;"></i>
+                            <div class="trust-row">
+                                <i class="fa-solid fa-shield-halved"></i>
                                 <span>Mablag'lar kafolatlangan</span>
                             </div>
                         </div>
@@ -212,26 +216,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (interactionsTitle) interactionsTitle.textContent = "Topshiriqlarni bajarganlar";
                 if (interactionsList) {
                     interactionsList.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#fcf9f7; border-radius:12px; border-left:4px solid #dd6b20;">
+                        <div class="employer-history-item">
                             <div>
-                                <strong style="font-size:14px; color:#2d3748;">Jasur Ahmedov (Yordamchi)</strong>
-                                <div style="font-size:12px; color:#718096; margin-top:2px;">"Hovlidagi xazonlarni tozalash"</div>
+                                <strong>Jasur Ahmedov (Yordamchi)</strong>
+                                <div>"Hovlidagi xazonlarni tozalash"</div>
                             </div>
-                            <span style="font-size:12px; font-weight:700; color:#dd6b20; background:#fffaf0; padding:4px 8px; border-radius:8px;">Yakunlangan</span>
+                            <span>Yakunlangan</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#fcf9f7; border-radius:12px; border-left:4px solid #dd6b20;">
+                        <div class="employer-history-item">
                             <div>
-                                <strong style="font-size:14px; color:#2d3748;">Dilshod Karimov (Yordamchi)</strong>
-                                <div style="font-size:12px; color:#718096; margin-top:2px;">"Printer drayverini sozlash"</div>
+                                <strong>Dilshod Karimov (Yordamchi)</strong>
+                                <div>"Printer drayverini sozlash"</div>
                             </div>
-                            <span style="font-size:12px; font-weight:700; color:#dd6b20; background:#fffaf0; padding:4px 8px; border-radius:8px;">Yakunlangan</span>
+                            <span>Yakunlangan</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#fcf9f7; border-radius:12px; border-left:4px solid #dd6b20;">
+                        <div class="employer-history-item">
                             <div>
-                                <strong style="font-size:14px; color:#2d3748;">Farrux M. (Yordamchi)</strong>
-                                <div style="font-size:12px; color:#718096; margin-top:2px;">"Aptekadan dori olib kelish"</div>
+                                <strong>Farrux M. (Yordamchi)</strong>
+                                <div>"Aptekadan dori olib kelish"</div>
                             </div>
-                            <span style="font-size:12px; font-weight:700; color:#dd6b20; background:#fffaf0; padding:4px 8px; border-radius:8px;">Yakunlangan</span>
+                            <span>Yakunlangan</span>
                         </div>
                     `;
                 }
@@ -506,6 +510,19 @@ document.addEventListener("DOMContentLoaded", () => {
             if (avatarEl) avatarEl.classList.add("uploading");
 
             try {
+                const localAvatarUrl = await readFileAsDataUrl(file);
+                const localUpdatedUser = { ...user, avatar_url: localAvatarUrl };
+                if (typeof saveCurrentUser === "function") {
+                    saveCurrentUser(localUpdatedUser);
+                } else {
+                    localStorage.setItem('currentUser', JSON.stringify(localUpdatedUser));
+                }
+                renderAvatar(localUpdatedUser);
+                if (typeof refreshGlobalAvatars === "function") {
+                    refreshGlobalAvatars(localUpdatedUser);
+                }
+                window.dispatchEvent(new CustomEvent("profile:updated", { detail: localUpdatedUser }));
+
                 if (!_supabase) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
@@ -517,6 +534,10 @@ document.addEventListener("DOMContentLoaded", () => {
                             localStorage.setItem('currentUser', JSON.stringify(updatedUser));
                         }
                         renderAvatar(updatedUser);
+                        if (typeof refreshGlobalAvatars === "function") {
+                            refreshGlobalAvatars(updatedUser);
+                        }
+                        window.dispatchEvent(new CustomEvent("profile:updated", { detail: updatedUser }));
                         if (avatarEl) avatarEl.classList.remove("uploading");
                         if (typeof Toastify !== "undefined") {
                             Toastify({ text: "Profil rasmi yangilandi! ✅", style: { background: "#006653" } }).showToast();
@@ -537,7 +558,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (uploadError) {
                     console.error("Avatar yuklashda xatolik:", uploadError);
                     if (typeof Toastify !== "undefined") {
-                        Toastify({ text: "Yuklashda xatolik: " + uploadError.message, style: { background: "#e53e3e" } }).showToast();
+                        Toastify({ text: "Rasm saqlandi. Supabase avatars bucket sozlanmagani uchun serverga yuklanmadi.", style: { background: "#006653" } }).showToast();
                     }
                     return;
                 }
@@ -559,13 +580,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (updateError) {
                     console.error("Profilga avatar saqlashda xatolik:", updateError);
                     if (typeof Toastify !== "undefined") {
-                        Toastify({ text: "Xatolik: " + updateError.message, style: { background: "#e53e3e" } }).showToast();
+                        Toastify({ text: "Rasm saqlandi. Profil jadvaliga yozishda xatolik: " + updateError.message, style: { background: "#006653" } }).showToast();
                     }
                     return;
                 }
 
                 saveCurrentUser(updatedProfile);
                 renderAvatar(updatedProfile);
+                if (typeof refreshGlobalAvatars === "function") {
+                    refreshGlobalAvatars(updatedProfile);
+                }
+                window.dispatchEvent(new CustomEvent("profile:updated", { detail: updatedProfile }));
 
                 if (typeof Toastify !== "undefined") {
                     Toastify({ text: "Profil rasmi yangilandi! ✅", style: { background: "#006653" } }).showToast();
@@ -579,6 +604,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (avatarEl) avatarEl.classList.remove("uploading");
                 avatarFileInput.value = "";
             }
+        });
+    }
+
+    function readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
         });
     }
 

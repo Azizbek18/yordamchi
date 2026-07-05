@@ -100,6 +100,8 @@ function debounce(fn, ms) {
     var currentUser = {};
     try { currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}'); } catch (e) {}
     var role = currentUser.role || 'helper';
+    if (role === 'poster') role = 'employer';
+    var isEmployer = role === 'employer';
 
     // Guard: Leaflet loaded?
     if (typeof L === 'undefined') {
@@ -214,7 +216,7 @@ function debounce(fn, ms) {
     async function fetchItems() {
         if (!hasSupabase) return [];
 
-        if (role === 'poster') {
+        if (isEmployer) {
             var res = await _supabase
                 .from('profiles')
                 .select('id, first_name, last_name, avatar_url, rating, district, bio')
@@ -269,14 +271,14 @@ function debounce(fn, ms) {
         var coords = getDistrictCoords(helper.district);
         var avatarHtml;
         if (helper.avatar_url) {
-            avatarHtml = '<img src="' + escapeHtml(helper.avatar_url) + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #00796b;" loading="lazy">';
+            avatarHtml = '<img class="helper-map-avatar" src="' + escapeHtml(helper.avatar_url) + '" loading="lazy" alt="' + escapeHtml(name) + '">';
         } else {
-            avatarHtml = '<div style="width:48px;height:48px;border-radius:50%;background:#00796b;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0;border:2px solid #00796b;">' + escapeHtml(name.charAt(0).toUpperCase()) + '</div>';
+            avatarHtml = '<div class="helper-map-avatar helper-map-avatar-fallback">' + escapeHtml(name.charAt(0).toUpperCase()) + '</div>';
         }
 
         return '<div class="wide-task-card" data-type="helper" data-lat="' + coords[0] + '" data-lng="' + coords[1] + '" data-helper-id="' + helper.id + '">' +
             avatarHtml +
-            '<div class="task-mid" style="text-align:left;">' +
+            '<div class="task-mid">' +
                 '<h4>' + escapeHtml(name) + '</h4>' +
                 '<p>' + escapeHtml(helper.bio || "Ishonchli mahalladosh yordamchi.") + '</p>' +
                 '<span class="meta-data"><i class="fas fa-star" style="color:#d69e2e;"></i> ' + rating + ' &bull; <i class="fas fa-location-dot"></i> ' + escapeHtml(helper.district || 'Toshkent') + '</span>' +
@@ -300,14 +302,14 @@ function debounce(fn, ms) {
 
         if (!items.length) {
             scrollArea.innerHTML = '<div class="loading-more-box"><i class="fa-regular fa-clipboard"></i> ' +
-                (role === 'poster' ? "Hozircha yordamchilar topilmadi." : "Hozircha mavjud topshiriqlar yo'q.") + '</div>';
-            if (totalCountSpan) totalCountSpan.textContent = role === 'poster' ? '0 nafar' : '0 ta';
+                (isEmployer ? "Hozircha yordamchilar topilmadi." : "Hozircha mavjud topshiriqlar yo'q.") + '</div>';
+            if (totalCountSpan) totalCountSpan.textContent = isEmployer ? '0 nafar' : '0 ta';
             return;
         }
 
         // Build HTML
         scrollArea.innerHTML = items.map(function (item) {
-            return role === 'poster' ? buildHelperCardHtml(item) : buildTaskCardHtml(item);
+            return isEmployer ? buildHelperCardHtml(item) : buildTaskCardHtml(item);
         }).join('');
 
         // Create markers from the newly rendered cards
@@ -320,12 +322,12 @@ function debounce(fn, ms) {
             var title = (card.querySelector("h4") || {}).textContent || '';
             var type = card.getAttribute("data-type") || '';
 
-            var emoji = role === 'poster' ? '\u{1F9D1}\u200D\u{1F527}' : (getCategoryVisual(type).emoji || '\u{1F4CD}');
+            var emoji = isEmployer ? '\u{1F9D1}\u200D\u{1F527}' : (getCategoryVisual(type).emoji || '\u{1F4CD}');
 
             var marker = L.marker([lat, lng], { icon: makePinIcon(emoji) }).addTo(map);
             marker.bindPopup(
                 '<b>' + escapeHtml(title) + '</b><br>' +
-                (role === 'poster' ? "Yordamchi faol" : "Haq ko'rsatilgan")
+                (isEmployer ? "Yordamchi faol" : "Haq ko'rsatilgan")
             );
 
             allMarkers.push({
@@ -341,7 +343,7 @@ function debounce(fn, ms) {
         });
 
         if (totalCountSpan) {
-            totalCountSpan.textContent = role === 'poster' ? (visibleCount + ' nafar') : (visibleCount + ' ta');
+            totalCountSpan.textContent = isEmployer ? (visibleCount + ' nafar') : (visibleCount + ' ta');
         }
 
         // Apply current filter/search state
@@ -382,7 +384,7 @@ function debounce(fn, ms) {
         });
 
         if (totalCountSpan) {
-            totalCountSpan.textContent = role === 'poster' ? (visibleMarkerCount + ' nafar') : (visibleMarkerCount + ' ta');
+            totalCountSpan.textContent = isEmployer ? (visibleMarkerCount + ' nafar') : (visibleMarkerCount + ' ta');
         }
     }
 
@@ -519,7 +521,7 @@ function debounce(fn, ms) {
     if (backBtn) {
         backBtn.addEventListener("click", function (e) {
             e.preventDefault();
-            window.location.href = role === 'poster' ? 'poster.html' : 'vazifa.html';
+            window.location.href = isEmployer ? 'poster.html' : 'vazifa.html';
         });
     }
 
@@ -715,9 +717,10 @@ function debounce(fn, ms) {
     // ==========================================
     var listToggle = document.getElementById("list-toggle-alert");
     if (listToggle) {
+        listToggle.href = isEmployer ? 'poster.html' : 'vazifa.html';
         listToggle.addEventListener("click", function (e) {
             e.preventDefault();
-            var target = role === 'poster' ? 'poster.html' : 'vazifa.html';
+            var target = isEmployer ? 'poster.html' : 'vazifa.html';
             showToast("Ro'yxat ko'rinishiga yo'naltirilmoqda...");
             setTimeout(function () { window.location.href = target; }, 900);
         });
@@ -726,7 +729,7 @@ function debounce(fn, ms) {
     // ==========================================
     // 16. ROLE-SPECIFIC UI
     // ==========================================
-    if (role === 'poster') {
+    if (isEmployer) {
         document.title = "Topshiriq.uz — Atrofingizdagi yordamchilar xaritasi";
         var headerTitle = document.querySelector(".sheet-header h3");
         if (headerTitle) {

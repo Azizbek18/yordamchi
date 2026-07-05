@@ -429,6 +429,16 @@ input:focus {
     position: relative;
 }
 
+.select-wrap:has(.app-custom-select),
+.select-wrap.custom-select-active {
+    overflow: visible;
+    z-index: 20;
+}
+
+.select-wrap .app-custom-select-menu {
+    z-index: 10050;
+}
+
 .select-wrap select {
     width: 100%;
     padding: 13px 40px 13px 16px;
@@ -451,6 +461,7 @@ input:focus {
 @media (max-width: 860px) {
     .field-row {
         grid-template-columns: 1fr;
+        gap: 0;
     }
 }
 
