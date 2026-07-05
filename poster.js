@@ -261,18 +261,18 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
+        const cancelBtn = `<button class="btn-danger-link btn-cancel-trigger" data-task-id="${t.id}" ${t.helper_id ? `data-helper-id="${t.helper_id}"` : ''}>Bekor qilish</button>`;
+
         let body = '';
         if (t.status === 'published') {
-            if (bids.length > 0) {
-                body = bids.map(bid => renderBidRow(bid, profileMap[bid.helper_id])).join('');
-            } else {
-                body = `
-                    <div class="task-card-status-footer">
-                        <span class="status-pending-label"><i class="fa-regular fa-clock"></i> Hali takliflar yo'q</span>
-                        <button class="btn-danger-link btn-cancel-trigger" data-task-id="${t.id}">Bekor qilish</button>
-                    </div>
-                `;
-            }
+            const bidsHtml = bids.length > 0 ? bids.map(bid => renderBidRow(bid, profileMap[bid.helper_id])).join('') : '';
+            body = `
+                ${bidsHtml}
+                <div class="task-card-status-footer">
+                    <span class="status-pending-label"><i class="fa-regular fa-clock"></i> ${bids.length === 0 ? "Hali takliflar yo'q" : `${bids.length} ta taklif`}</span>
+                    ${cancelBtn}
+                </div>
+            `;
         } else if (['assigned', 'on_the_way', 'arrived', 'started'].includes(t.status)) {
             const helperProfile = profileMap[t.helper_id];
             const helperName = [helperProfile?.first_name, helperProfile?.last_name].filter(Boolean).join(' ') || 'Yordamchi';
@@ -286,6 +286,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="task-card-actions-row">
                     <button class="btn-secondary-outline btn-chat-trigger" data-helper-id="${t.helper_id}" data-task-id="${t.id}">Suhbat</button>
                     <a class="btn-primary-teal" style="text-decoration:none;display:inline-block;" href="kuzatish.html?id=${t.id}">Kuzatish</a>
+                </div>
+                <div class="task-card-status-footer">
+                    <span class="status-pending-label">&nbsp;</span>
+                    ${cancelBtn}
                 </div>
             `;
         } else {
@@ -331,7 +335,14 @@ document.addEventListener("DOMContentLoaded", () => {
             countPill.textContent = `${activeCount} faol`;
         }
 
-        const publishedTaskIds = tasks.filter(t => t.status === 'published').map(t => t.id);
+        // Bekor qilingan topshiriqlar ro'yxatdan butunlay yashiriladi
+        const visibleTasks = tasks.filter(t => t.status !== 'cancelled');
+        if (visibleTasks.length === 0) {
+            stack.innerHTML = `<p class="tasks-empty-state">Hozircha faol topshiriq yo'q.</p>`;
+            return;
+        }
+
+        const publishedTaskIds = visibleTasks.filter(t => t.status === 'published').map(t => t.id);
         let bids = [];
         if (publishedTaskIds.length > 0) {
             const { data: bidRows } = await _supabase
@@ -345,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const helperIds = [...new Set([
             ...bids.map(b => b.helper_id),
-            ...tasks.filter(t => t.helper_id).map(t => t.helper_id)
+            ...visibleTasks.filter(t => t.helper_id).map(t => t.helper_id)
         ])];
 
         let profileMap = {};
@@ -357,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
             (profiles || []).forEach(p => { profileMap[p.id] = p; });
         }
 
-        stack.innerHTML = tasks.map(t => renderTaskCard(t, bids.filter(b => b.task_id === t.id), profileMap)).join('');
+        stack.innerHTML = visibleTasks.map(t => renderTaskCard(t, bids.filter(b => b.task_id === t.id), profileMap)).join('');
 
         bindTaskCardActions();
     }
@@ -418,12 +429,28 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".btn-cancel-trigger").forEach(btn => {
             btn.addEventListener("click", async () => {
                 if (!confirm("Ushbu topshiriqni haqiqatan ham bekor qilmoqchimisiz?")) return;
+                btn.disabled = true;
                 const taskId = btn.dataset.taskId;
+                const helperId = btn.dataset.helperId;
                 const { error } = await _supabase.from('tasks').update({ status: 'cancelled' }).eq('id', taskId);
                 if (error) {
                     showToast(error.message, "error");
+                    btn.disabled = false;
                     return;
                 }
+
+                await _supabase.from('task_bids').update({ status: 'rejected' }).eq('task_id', taskId).eq('status', 'pending');
+
+                if (helperId) {
+                    await _supabase.from('notifications').insert({
+                        user_id: helperId,
+                        title: 'Topshiriq bekor qilindi',
+                        text: 'Buyurtmachi vazifani bekor qildi.',
+                        type: 'status',
+                        related_id: taskId
+                    });
+                }
+
                 showToast("Topshiriq muvaffaqiyatli bekor qilindi.");
                 loadTasks();
             });

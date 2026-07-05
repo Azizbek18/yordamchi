@@ -331,6 +331,7 @@
     }
 
     let allTasksLoaded = [];
+    let myBidTaskIds = new Set();
     let currentPage = 1;
     const PAGE_SIZE = 12;
 
@@ -395,7 +396,9 @@
             <p>${t.description || ''}</p>
             <div class="task-card-bottom">
               <span class="location-text">${t.location || 'Manzil ko\'rsatilmagan'} &bull; ${timeAgo}</span>
-              <a href="topshiriq.html?id=${t.id}" class="bajar-btn">Bajaraman</a>
+              ${myBidTaskIds.has(t.id)
+                ? `<a href="topshiriq.html?id=${t.id}" class="bajar-btn" style="background:#a0aec0;pointer-events:none;">Yuborilgan ✓</a>`
+                : `<a href="topshiriq.html?id=${t.id}" class="bajar-btn">Bajaraman</a>`}
             </div>
           </div>
         `;
@@ -615,6 +618,16 @@
       }
 
       allTasksLoaded = data || [];
+
+      const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+      if (user) {
+        const { data: myBids } = await _supabase
+          .from('task_bids')
+          .select('task_id')
+          .eq('helper_id', user.id);
+        myBidTaskIds = new Set((myBids || []).map(b => b.task_id));
+      }
+
       updateCategoryCounts();
       applyFilters();
     }

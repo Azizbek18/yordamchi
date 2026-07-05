@@ -87,45 +87,69 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const priceInput = document.getElementById("offerPriceInput");
-    priceInput.value = task.price || 0;
-
+    const messageInput = document.getElementById("offerMessageInput");
     const sendBtn = document.getElementById("btnSendOffer");
-    sendBtn.addEventListener("click", async () => {
-        if (user.role !== 'helper') {
-            showToast('Bu amal faqat Yordamchi roli uchun.', 'error');
-            return;
-        }
 
+    const BID_STATUS_LABEL = { pending: 'Yuborilgan ✓', accepted: 'Qabul qilingan ✅', rejected: 'Rad etilgan' };
+
+    function applySentState(bid) {
+        priceInput.value = bid.price;
+        priceInput.disabled = true;
+        messageInput.value = bid.proposal || '';
+        messageInput.disabled = true;
+        sendBtn.textContent = BID_STATUS_LABEL[bid.status] || 'Yuborilgan ✓';
         sendBtn.disabled = true;
-        const { error } = await _supabase.from('task_bids').insert({
-            task_id: task.id,
-            helper_id: user.id,
-            price: parseFloat(priceInput.value) || 0,
-            proposal: document.getElementById("offerMessageInput").value.trim() || 'Topshiriqni bajarishga tayyorman',
-            status: 'pending'
+    }
+
+    const { data: existingBid } = await _supabase
+        .from('task_bids')
+        .select('*')
+        .eq('task_id', task.id)
+        .eq('helper_id', user.id)
+        .maybeSingle();
+
+    if (existingBid) {
+        applySentState(existingBid);
+    } else {
+        priceInput.value = task.price || 0;
+
+        sendBtn.addEventListener("click", async () => {
+            if (user.role !== 'helper') {
+                showToast('Bu amal faqat Yordamchi roli uchun.', 'error');
+                return;
+            }
+
+            sendBtn.disabled = true;
+            const bidPayload = {
+                task_id: task.id,
+                helper_id: user.id,
+                price: parseFloat(priceInput.value) || 0,
+                proposal: messageInput.value.trim() || 'Topshiriqni bajarishga tayyorman',
+                status: 'pending'
+            };
+            const { error } = await _supabase.from('task_bids').insert(bidPayload);
+
+            if (error && !String(error.message).includes('duplicate')) {
+                showToast(error.message, 'error');
+                sendBtn.disabled = false;
+                return;
+            }
+
+            const helperName = typeof getUserFullName === "function"
+                ? getUserFullName(user)
+                : [user.first_name, user.last_name].filter(Boolean).join(' ') || 'Yordamchi';
+
+            const offeredPrice = Math.round(bidPayload.price).toLocaleString('uz-UZ');
+            await _supabase.from('notifications').insert({
+                user_id: task.poster_id,
+                title: 'Yangi taklif!',
+                text: `${helperName} "${task.title}" vazifasi uchun ${offeredPrice} so'mga taklif yubordi.`,
+                type: 'offer',
+                related_id: task.id
+            });
+
+            showToast("Taklifingiz yuborildi! ✅");
+            applySentState({ ...bidPayload });
         });
-
-        if (error && !String(error.message).includes('duplicate')) {
-            showToast(error.message, 'error');
-            sendBtn.disabled = false;
-            return;
-        }
-
-        const helperName = typeof getUserFullName === "function"
-            ? getUserFullName(user)
-            : [user.first_name, user.last_name].filter(Boolean).join(' ') || 'Yordamchi';
-
-        const offeredPrice = Math.round(parseFloat(priceInput.value) || 0).toLocaleString('uz-UZ');
-        await _supabase.from('notifications').insert({
-            user_id: task.poster_id,
-            title: 'Yangi taklif!',
-            text: `${helperName} "${task.title}" vazifasi uchun ${offeredPrice} so'mga taklif yubordi.`,
-            type: 'offer',
-            related_id: task.id
-        });
-
-        showToast("Taklifingiz yuborildi! ✅");
-        sendBtn.textContent = "Yuborildi";
-        setTimeout(() => { window.location.href = 'vazifa.html'; }, 1500);
-    });
+    }
 });

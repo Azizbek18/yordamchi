@@ -34,7 +34,7 @@ function helperTimeAgo(dateStr) {
     return `${Math.floor(hours / 24)} kun oldin`;
 }
 
-function renderHelperTaskCard(t) {
+function renderHelperTaskCard(t, alreadyApplied) {
     const meta = HELPER_CATEGORY_META[t.category] || HELPER_CATEGORY_META.boshqa;
     const isUrgent = meta.tag === 'urgent';
     return `
@@ -47,7 +47,7 @@ function renderHelperTaskCard(t) {
             <p>${t.description || ''}</p>
             <div class="card-footer">
                 <span><i class="fas fa-map-marker-alt"></i> ${t.district || t.location || 'Manzil noma\'lum'}</span>
-                <button class="accept-btn ${isUrgent ? '' : 'green-btn'}" data-task-id="${t.id}">Qabul qilish</button>
+                <button class="accept-btn ${isUrgent ? '' : 'green-btn'}" data-task-id="${t.id}" ${alreadyApplied ? 'style="background:#a0aec0;"' : ''}>${alreadyApplied ? 'Yuborilgan ✓' : 'Qabul qilish'}</button>
             </div>
         </div>
     `;
@@ -134,12 +134,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         error = fallback.error;
     }
 
+    const { data: myBids } = await _supabase.from('task_bids').select('task_id').eq('helper_id', user.id);
+    const myBidTaskIds = new Set((myBids || []).map(b => b.task_id));
+
     function renderCards(tasks) {
         if (!tasks || tasks.length === 0) {
             cardsGrid.innerHTML = `<p class="tasks-empty-state">Hozircha mos topshiriqlar topilmadi.</p>`;
             return;
         }
-        cardsGrid.innerHTML = tasks.map(renderHelperTaskCard).join('');
+        cardsGrid.innerHTML = tasks.map(t => renderHelperTaskCard(t, myBidTaskIds.has(t.id))).join('');
 
         cardsGrid.querySelectorAll('.accept-btn').forEach(btn => {
             btn.addEventListener('click', () => {
