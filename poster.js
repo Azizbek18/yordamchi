@@ -13,6 +13,40 @@ function showToast(text, type = "success") {
     }
 }
 
+const POSTER_CATEGORY_EMOJI = {
+    xarid: '🛒', tamirlash: '🔧', yetkazish: '🚚', tozalash: '🧹', raqamli: '💻', boshqa: '✨'
+};
+
+const POSTER_STATUS_LABEL = {
+    published: "E'lon qilingan", assigned: 'Bajaruvchi tasdiqlandi', on_the_way: "Yo'lda",
+    arrived: 'Manzilga yetib keldi', started: 'Ish boshlandi', completed: 'Yakunlandi', cancelled: 'Bekor qilingan'
+};
+
+const POSTER_ACTIVE_STATUSES = ['published', 'assigned', 'on_the_way', 'arrived', 'started'];
+
+function posterFormatSom(amount) {
+    return Math.round(Number(amount) || 0).toLocaleString('uz-UZ');
+}
+
+function posterTimeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return 'Hozirgina';
+    if (minutes < 60) return `${minutes} daqiqa oldin`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} soat oldin`;
+    return `${Math.floor(hours / 24)} kun oldin`;
+}
+
+function posterInitials(name) {
+    return (name || '').trim().split(/\s+/).slice(0, 2).map(p => p.charAt(0)).join('').toUpperCase() || '?';
+}
+
+function isTaskSchemaMismatch(error) {
+    const message = String(error?.message || '').toLowerCase();
+    return error?.code === '42703' || message.includes('column') || message.includes('schema cache');
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const user = typeof getCurrentUser === "function" ? getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || '{}');
 
@@ -101,6 +135,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    function mapCategoryToDb(cat) {
+        switch (cat) {
+            case 'Bozorlik': return 'xarid';
+            case 'Dorixona': return 'xarid';
+            case 'Tozalash': return 'tozalash';
+            case 'Usta': return 'tamirlash';
+            case 'Yuk tashish': return 'yetkazish';
+            default: return 'boshqa';
+        }
+    }
+
     // Task submit trigger
     if (submitCreateTaskBtn) {
         submitCreateTaskBtn.addEventListener("click", async () => {
@@ -126,32 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
             setErr("taskBudgetError", taskBudgetInput, !budget ? "Taklif qilayotgan haqni kiriting" : "");
 
             if (!valid) return;
-
-            function mapCategoryToDb(cat) {
-                switch (cat) {
-                    case 'Bozorlik': return 'xarid';
-                    case 'Dorixona': return 'xarid';
-                    case 'Tozalash': return 'tozalash';
-                    case 'Usta': return 'tamirlash';
-                    case 'Yuk tashish': return 'yetkazish';
-                    default: return 'boshqa';
-                }
-            }
-
-            // Save to localStorage
-            const customTasks = JSON.parse(localStorage.getItem('poster_tasks_' + user.id) || '[]');
-            const newTask = {
-                id: 'task_' + Date.now(),
-                title: title,
-                description: desc,
-                category: category,
-                budget: parseInt(budget).toLocaleString() + " so'm",
-                emoji: getEmojiForCategory(category),
-                status: 'pending'
-            };
-
-            customTasks.push(newTask);
-            localStorage.setItem('poster_tasks_' + user.id, JSON.stringify(customTasks));
 
             // Save to Supabase tasks table
             let savedToSupabase = false;
@@ -187,22 +206,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            showToast("Yangi topshiriq muvaffaqiyatli e'lon qilindi! 🎉");
             if (!savedToSupabase) {
-                showToast("Topshiriq saqlandi, lekin Supabase'ga yozilmadi. SQL jadval ustunlarini tekshiring.", "error");
-                closeTaskModal();
-                renderTasks();
+                showToast("Topshiriqni saqlab bo'lmadi. SQL jadval ustunlarini tekshiring.", "error");
                 return;
             }
 
+            showToast("Yangi topshiriq muvaffaqiyatli e'lon qilindi! 🎉");
             closeTaskModal();
-            renderTasks();
+            loadTasks();
         });
-    }
-
-    function isTaskSchemaMismatch(error) {
-        const message = String(error?.message || '').toLowerCase();
-        return error?.code === '42703' || message.includes('column') || message.includes('schema cache');
     }
 
     function getEmojiForCategory(category) {
@@ -216,150 +228,222 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Dynamic tasks rendering and actions re-binding
-    function renderTasks() {
-        const stack = document.querySelector(".client-tasks-vertical-stack");
-        if (!stack) return;
-
-        const customTasks = JSON.parse(localStorage.getItem('poster_tasks_' + user.id) || '[]');
-        
-        const defaultTasksHtml = `
-            <div class="client-task-card" data-task-id="default_1">
-                <div class="task-card-main-header">
-                    <div class="task-card-title-block">
-                        <span class="card-emoji-icon">💊</span>
-                        <div>
-                            <h4>Dorixonadan dori</h4>
-                            <p class="sub-gray">Yaqin atrofdagi OXYmed dan</p>
-                        </div>
-                    </div>
-                    <span class="task-card-price-tag">5 000 so'm</span>
+    function renderBidRow(bid, helperProfile) {
+        const helperName = [helperProfile?.first_name, helperProfile?.last_name].filter(Boolean).join(' ') || 'Yordamchi';
+        return `
+            <div class="helper-progress-status-box" data-bid-id="${bid.id}">
+                <div class="helper-mini-meta">
+                    <span style="width:24px;height:24px;border-radius:50%;background:#e6f7f2;color:#006653;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${posterInitials(helperName)}</span>
+                    <span class="status-alert-txt"><strong>${helperName}</strong> — ${posterFormatSom(bid.price)} so'm taklif qildi ${helperProfile?.rating ? `(⭐ ${Number(helperProfile.rating).toFixed(1)})` : ''}</span>
+                    <span class="time-elapsed-txt">${posterTimeAgo(bid.created_at)}</span>
                 </div>
-                <div class="helper-progress-status-box">
-                    <div class="helper-mini-meta">
-                        <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80" alt="Jasur">
-                        <span class="status-alert-txt"><strong>Jasur qabul qildi</strong> — yo'lda</span>
-                        <span class="time-elapsed-txt">4 min avval</span>
-                    </div>
-                    <div class="custom-progress-track">
-                        <div class="progress-fill-line" style="width: 70%;"></div>
-                    </div>
-                </div>
+                ${bid.proposal ? `<p class="sub-gray" style="margin:0 0 10px;">${bid.proposal}</p>` : ''}
                 <div class="task-card-actions-row">
-                    <button class="btn-secondary-outline btn-chat-trigger" data-helper="Jasur">Suhbat</button>
-                    <button class="btn-primary-teal btn-complete-trigger">Bajarildi deb belgilash</button>
-                </div>
-            </div>
-
-            <div class="client-task-card" data-task-id="default_2">
-                <div class="task-card-main-header">
-                    <div class="task-card-title-block">
-                        <span class="card-emoji-icon">🛒</span>
-                        <div>
-                            <h4>Bozordan xarid</h4>
-                            <p class="sub-gray">Moy va un (5kg)</p>
-                        </div>
-                    </div>
-                    <span class="task-card-price-tag">15 000 so'm</span>
-                </div>
-                <div class="task-card-status-footer">
-                    <span class="status-pending-label"><i class="fa-regular fa-clock"></i> Pending — kutilmoqda</span>
-                    <button class="btn-danger-link btn-cancel-trigger">Bekor qilish</button>
+                    <button class="btn-secondary-outline btn-reject-bid" data-bid-id="${bid.id}">Rad etish</button>
+                    <button class="btn-primary-teal btn-accept-bid" data-bid-id="${bid.id}" data-helper-id="${bid.helper_id}" data-task-id="${bid.task_id}">Qabul qilish</button>
                 </div>
             </div>
         `;
+    }
 
-        const customTasksHtml = customTasks.map(t => `
-            <div class="client-task-card" data-task-id="${t.id}">
-                <div class="task-card-main-header">
-                    <div class="task-card-title-block">
-                        <span class="card-emoji-icon">${t.emoji}</span>
-                        <div>
-                            <h4>${t.title}</h4>
-                            <p class="sub-gray">${t.description}</p>
-                        </div>
+    function renderTaskCard(t, bids, profileMap) {
+        const emoji = POSTER_CATEGORY_EMOJI[t.category] || '✨';
+        const header = `
+            <div class="task-card-main-header">
+                <div class="task-card-title-block">
+                    <span class="card-emoji-icon">${emoji}</span>
+                    <div>
+                        <h4>${t.title}</h4>
+                        <p class="sub-gray">${t.description || ''}</p>
                     </div>
-                    <span class="task-card-price-tag">${t.budget}</span>
                 </div>
-                <div class="task-card-status-footer">
-                    <span class="status-pending-label"><i class="fa-regular fa-clock"></i> Pending — kutilmoqda</span>
-                    <button class="btn-danger-link btn-cancel-trigger">Bekor qilish</button>
-                </div>
+                <span class="task-card-price-tag">${posterFormatSom(t.price)} so'm</span>
             </div>
-        `).join('');
+        `;
 
-        stack.innerHTML = customTasksHtml + defaultTasksHtml;
-        
+        let body = '';
+        if (t.status === 'published') {
+            if (bids.length > 0) {
+                body = bids.map(bid => renderBidRow(bid, profileMap[bid.helper_id])).join('');
+            } else {
+                body = `
+                    <div class="task-card-status-footer">
+                        <span class="status-pending-label"><i class="fa-regular fa-clock"></i> Hali takliflar yo'q</span>
+                        <button class="btn-danger-link btn-cancel-trigger" data-task-id="${t.id}">Bekor qilish</button>
+                    </div>
+                `;
+            }
+        } else if (['assigned', 'on_the_way', 'arrived', 'started'].includes(t.status)) {
+            const helperProfile = profileMap[t.helper_id];
+            const helperName = [helperProfile?.first_name, helperProfile?.last_name].filter(Boolean).join(' ') || 'Yordamchi';
+            body = `
+                <div class="helper-progress-status-box">
+                    <div class="helper-mini-meta">
+                        <span style="width:24px;height:24px;border-radius:50%;background:#e6f7f2;color:#006653;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${posterInitials(helperName)}</span>
+                        <span class="status-alert-txt"><strong>${helperName}</strong> — ${POSTER_STATUS_LABEL[t.status] || t.status}</span>
+                    </div>
+                </div>
+                <div class="task-card-actions-row">
+                    <button class="btn-secondary-outline btn-chat-trigger" data-helper-id="${t.helper_id}" data-task-id="${t.id}">Suhbat</button>
+                    <a class="btn-primary-teal" style="text-decoration:none;display:inline-block;" href="kuzatish.html?id=${t.id}">Kuzatish</a>
+                </div>
+            `;
+        } else {
+            body = `
+                <div class="task-card-status-footer">
+                    <span class="status-pending-label">${POSTER_STATUS_LABEL[t.status] || t.status}</span>
+                </div>
+            `;
+        }
+
+        return `<div class="client-task-card" data-task-id="${t.id}">${header}${body}</div>`;
+    }
+
+    async function loadTasks() {
+        const stack = document.querySelector(".client-tasks-vertical-stack");
         const countPill = document.querySelector(".count-indicator-pill");
+        if (!stack) return;
+
+        if (!user || !_supabase) {
+            stack.innerHTML = `<p class="tasks-empty-state">Topshiriqlarni ko'rish uchun tizimga kiring.</p>`;
+            return;
+        }
+
+        const { data: tasks, error } = await _supabase
+            .from('tasks')
+            .select('*')
+            .eq('poster_id', user.id)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            stack.innerHTML = `<p class="tasks-empty-state">Topshiriqlarni yuklab bo'lmadi: ${error.message}</p>`;
+            return;
+        }
+
+        if (!tasks || tasks.length === 0) {
+            stack.innerHTML = `<p class="tasks-empty-state">Hozircha topshiriq e'lon qilmadingiz.</p>`;
+            if (countPill) countPill.textContent = "0 faol";
+            return;
+        }
+
         if (countPill) {
-            const activeCount = 2 + customTasks.length;
+            const activeCount = tasks.filter(t => POSTER_ACTIVE_STATUSES.includes(t.status)).length;
             countPill.textContent = `${activeCount} faol`;
         }
+
+        const publishedTaskIds = tasks.filter(t => t.status === 'published').map(t => t.id);
+        let bids = [];
+        if (publishedTaskIds.length > 0) {
+            const { data: bidRows } = await _supabase
+                .from('task_bids')
+                .select('*')
+                .in('task_id', publishedTaskIds)
+                .eq('status', 'pending')
+                .order('created_at', { ascending: true });
+            bids = bidRows || [];
+        }
+
+        const helperIds = [...new Set([
+            ...bids.map(b => b.helper_id),
+            ...tasks.filter(t => t.helper_id).map(t => t.helper_id)
+        ])];
+
+        let profileMap = {};
+        if (helperIds.length > 0) {
+            const { data: profiles } = await _supabase
+                .from('profiles')
+                .select('id, first_name, last_name, rating, reviews_count')
+                .in('id', helperIds);
+            (profiles || []).forEach(p => { profileMap[p.id] = p; });
+        }
+
+        stack.innerHTML = tasks.map(t => renderTaskCard(t, bids.filter(b => b.task_id === t.id), profileMap)).join('');
 
         bindTaskCardActions();
     }
 
     function bindTaskCardActions() {
-        // Complete triggers
-        document.querySelectorAll(".btn-complete-trigger").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const confirmed = confirm("Jasur haqiqatdan ham dorilarni yetkazib berdimi? To'lov uning hamyoniga o'tkaziladi.");
-                if (confirmed) {
-                    showToast("Muvaffaqiyatli bajarildi! Jasurga pul o'tkazildi. Rahmat! 🎉");
-                    const taskCard = btn.closest(".client-task-card");
-                    taskCard.style.opacity = "0.5";
-                    btn.textContent = "Bajarildi";
-                    btn.disabled = true;
-                    btn.style.background = "#718096";
+        // Accept bid
+        document.querySelectorAll(".btn-accept-bid").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const bidId = btn.dataset.bidId;
+                const helperId = btn.dataset.helperId;
+                const taskId = btn.dataset.taskId;
+                if (!confirm("Ushbu yordamchining taklifini qabul qilmoqchimisiz?")) return;
+
+                btn.disabled = true;
+
+                const { error: taskErr } = await _supabase.from('tasks')
+                    .update({ status: 'assigned', helper_id: helperId })
+                    .eq('id', taskId);
+                if (taskErr) {
+                    showToast(taskErr.message, "error");
+                    btn.disabled = false;
+                    return;
                 }
+
+                await _supabase.from('task_bids').update({ status: 'accepted' }).eq('id', bidId);
+                await _supabase.from('task_bids').update({ status: 'rejected' }).eq('task_id', taskId).neq('id', bidId);
+
+                await _supabase.from('notifications').insert({
+                    user_id: helperId,
+                    title: 'Taklifingiz qabul qilindi!',
+                    text: "Buyurtmachi taklifingizni qabul qildi. Vazifani bajarishni boshlashingiz mumkin.",
+                    type: 'offer',
+                    related_id: taskId
+                });
+
+                showToast("Taklif qabul qilindi. Yordamchiga xabar berildi.");
+                loadTasks();
             });
         });
 
-        // Cancel triggers
-        document.querySelectorAll(".btn-cancel-trigger").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const confirmed = confirm("Ushbu topshiriqni haqiqatan ham bekor qilmoqchimisiz?");
-                if (confirmed) {
-                    const taskCard = btn.closest(".client-task-card");
-                    const taskId = taskCard.dataset.taskId;
-                    
-                    if (taskId.startsWith("default_")) {
-                        taskCard.remove();
-                    } else {
-                        let customTasks = JSON.parse(localStorage.getItem('poster_tasks_' + user.id) || '[]');
-                        customTasks = customTasks.filter(t => t.id !== taskId);
-                        localStorage.setItem('poster_tasks_' + user.id, JSON.stringify(customTasks));
-                        renderTasks();
-                    }
-                    showToast("Topshiriq muvaffaqiyatli bekor qilindi.", "success");
+        // Reject bid
+        document.querySelectorAll(".btn-reject-bid").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const bidId = btn.dataset.bidId;
+                btn.disabled = true;
+                const { error } = await _supabase.from('task_bids').update({ status: 'rejected' }).eq('id', bidId);
+                if (error) {
+                    showToast(error.message, "error");
+                    btn.disabled = false;
+                    return;
                 }
+                showToast("Taklif rad etildi.");
+                loadTasks();
+            });
+        });
+
+        // Cancel task
+        document.querySelectorAll(".btn-cancel-trigger").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                if (!confirm("Ushbu topshiriqni haqiqatan ham bekor qilmoqchimisiz?")) return;
+                const taskId = btn.dataset.taskId;
+                const { error } = await _supabase.from('tasks').update({ status: 'cancelled' }).eq('id', taskId);
+                if (error) {
+                    showToast(error.message, "error");
+                    return;
+                }
+                showToast("Topshiriq muvaffaqiyatli bekor qilindi.");
+                loadTasks();
             });
         });
 
         // Chat triggers
         document.querySelectorAll(".btn-chat-trigger").forEach(btn => {
             btn.addEventListener("click", () => {
-                const name = btn.dataset.helper || "Jasur";
-                openChatWithHelper(name);
+                const helperId = btn.dataset.helperId;
+                const taskId = btn.dataset.taskId;
+                if (helperId && typeof openChatWith === "function") {
+                    openChatWith(helperId, taskId);
+                } else {
+                    window.location.href = "chatlar.html";
+                }
             });
         });
     }
 
-    function addNotificationForHelper(helperName, title, text) {
-        const list = JSON.parse(localStorage.getItem(`notifications_${helperName}`) || '[]');
-        const newNotif = {
-            id: 'notif_' + Date.now(),
-            title: title,
-            text: text,
-            time: new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' }),
-            type: 'tasks',
-            unread: true
-        };
-        list.unshift(newNotif);
-        localStorage.setItem(`notifications_${helperName}`, JSON.stringify(list));
-    }
-
-    // Sidebar quick offer buttons (paper plane icon)
+    // Sidebar quick offer buttons (paper plane icon) — invite a specific helper to chat
     const sendOfferButtons = document.querySelectorAll(".btn-circle-send-offer");
     sendOfferButtons.forEach(button => {
         button.addEventListener("click", (e) => {
@@ -367,8 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const helperName = helperRow.querySelector("h5").textContent.trim();
 
             showToast(`${helperName}ga topshiriq taklifi yuborildi! ✉️`);
-            addNotificationForHelper(helperName, "Ishga taklif", `Sizni yangi topshiriqqa taklif qilishdi. Haq: 30,000 so'm.`);
-            
+
             button.innerHTML = "<i class='fas fa-check'></i>";
             button.style.background = "#00796b";
             button.style.color = "white";
@@ -387,7 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Initial load
-    renderTasks();
+    loadTasks();
 });
 
 // Global Chat function (for fallback inline call)

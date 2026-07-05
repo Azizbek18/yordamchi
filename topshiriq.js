@@ -111,6 +111,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        const helperName = typeof getUserFullName === "function"
+            ? getUserFullName(user)
+            : [user.first_name, user.last_name].filter(Boolean).join(' ') || 'Yordamchi';
+
+        const offeredPrice = Math.round(parseFloat(priceInput.value) || 0).toLocaleString('uz-UZ');
+        await _supabase.from('notifications').insert({
+            user_id: task.poster_id,
+            title: 'Yangi taklif!',
+            text: `${helperName} "${task.title}" vazifasi uchun ${offeredPrice} so'mga taklif yubordi.`,
+            type: 'offer',
+            related_id: task.id
+        });
+
         showToast("Taklifingiz yuborildi! ✅");
         sendBtn.textContent = "Yuborildi";
         setTimeout(() => { window.location.href = 'vazifa.html'; }, 1500);
