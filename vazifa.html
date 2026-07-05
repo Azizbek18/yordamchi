@@ -395,35 +395,11 @@
             <p>${t.description || ''}</p>
             <div class="task-card-bottom">
               <span class="location-text">${t.location || 'Manzil ko\'rsatilmagan'} &bull; ${timeAgo}</span>
-              <a href="kuzatish.html?id=${t.id}" class="bajar-btn" data-job-id="${t.id}" data-price="${t.price || 0}">Bajaraman</a>
+              <a href="topshiriq.html?id=${t.id}" class="bajar-btn">Bajaraman</a>
             </div>
           </div>
         `;
       }).join('');
-
-      container.querySelectorAll('.bajar-btn').forEach(btn => {
-        btn.addEventListener('click', async (event) => {
-          event.preventDefault();
-          const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
-          if (!user || user.role !== 'helper') {
-            showToast('Bu amal faqat Yordamchi roli uchun.', 'error');
-            return;
-          }
-          const { error } = await _supabase.from('task_bids').insert({
-            task_id: btn.dataset.jobId,
-            helper_id: user.id,
-            price: parseFloat(btn.dataset.price) || 0,
-            proposal: 'Topshiriqni bajarishga tayyorman',
-            status: 'pending'
-          });
-          if (error && !String(error.message).includes('duplicate')) {
-            showToast(error.message, 'error');
-            return;
-          }
-          showToast('Arizangiz yuborildi.');
-          window.location.href = btn.getAttribute('href');
-        });
-      });
 
       renderPagination(totalPages);
     }

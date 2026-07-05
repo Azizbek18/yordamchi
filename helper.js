@@ -47,7 +47,7 @@ function renderHelperTaskCard(t) {
             <p>${t.description || ''}</p>
             <div class="card-footer">
                 <span><i class="fas fa-map-marker-alt"></i> ${t.district || t.location || 'Manzil noma\'lum'}</span>
-                <button class="accept-btn ${isUrgent ? '' : 'green-btn'}" data-task-id="${t.id}" data-price="${t.price || 0}" data-title="${t.title}">Qabul qilish</button>
+                <button class="accept-btn ${isUrgent ? '' : 'green-btn'}" data-task-id="${t.id}">Qabul qilish</button>
             </div>
         </div>
     `;
@@ -117,12 +117,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("mStatRating").textContent = `${ratingLabel} ⭐`;
 
     // ── Mavjud topshiriqlar ──
-    const { data: availableTasks, error } = await _supabase
+    let { data: availableTasks, error } = await _supabase
         .from('tasks')
         .select('*')
         .eq('status', 'published')
         .order('created_at', { ascending: false })
         .limit(12);
+
+    if (error && isTaskSchemaMismatch(error)) {
+        const fallback = await _supabase
+            .from('tasks')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(12);
+        availableTasks = fallback.data;
+        error = fallback.error;
+    }
 
     function renderCards(tasks) {
         if (!tasks || tasks.length === 0) {
@@ -132,22 +142,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         cardsGrid.innerHTML = tasks.map(renderHelperTaskCard).join('');
 
         cardsGrid.querySelectorAll('.accept-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                btn.disabled = true;
-                const { error: bidError } = await _supabase.from('task_bids').insert({
-                    task_id: btn.dataset.taskId,
-                    helper_id: user.id,
-                    price: parseFloat(btn.dataset.price) || 0,
-                    proposal: 'Topshiriqni bajarishga tayyorman',
-                    status: 'pending'
-                });
-                if (bidError && !String(bidError.message).includes('duplicate')) {
-                    showToast(bidError.message, "error");
-                    btn.disabled = false;
-                    return;
-                }
-                showToast(`"${btn.dataset.title}" uchun arizangiz yuborildi.`);
-                btn.textContent = "Ariza yuborildi";
+            btn.addEventListener('click', () => {
+                window.location.href = `topshiriq.html?id=${btn.dataset.taskId}`;
             });
         });
     }
@@ -156,7 +152,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (error) {
         cardsGrid.innerHTML = `<p class="tasks-empty-state">Topshiriqlarni yuklab bo'lmadi: ${error.message}</p>`;
     } else {
-        allTasks = availableTasks || [];
+        allTasks = (availableTasks || []).filter(t => {
+            const notMine = !t.poster_id || t.poster_id !== user.id;
+            const openStatus = !t.status || t.status === 'published';
+            return notMine && openStatus;
+        });
         renderCards(allTasks);
     }
 
@@ -200,4 +200,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.querySelector(".view-all-offers")?.addEventListener("click", () => {
         window.location.href = "vazifa.html";
     });
+
+    function isTaskSchemaMismatch(error) {
+        const message = String(error?.message || '').toLowerCase();
+        return error?.code === '42703' || message.includes('column') || message.includes('schema cache');
+    }
 });

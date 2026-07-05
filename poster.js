@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Task submit trigger
     if (submitCreateTaskBtn) {
-        submitCreateTaskBtn.addEventListener("click", () => {
+        submitCreateTaskBtn.addEventListener("click", async () => {
             clearErrors();
 
             const title = taskTitleInput.value.trim();
@@ -154,8 +154,9 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem('poster_tasks_' + user.id, JSON.stringify(customTasks));
 
             // Save to Supabase tasks table
+            let savedToSupabase = false;
             if (_supabase) {
-                _supabase.from('tasks').insert([{
+                const fullTaskPayload = {
                     poster_id: user.id,
                     title: title,
                     description: desc,
@@ -164,19 +165,44 @@ document.addEventListener("DOMContentLoaded", () => {
                     location: user.city || user.district || user.mahalla || "Yunusobod",
                     district: user.district || user.city || user.mahalla || "Yunusobod",
                     status: "published"
-                }]).then(({ error }) => {
-                    if (error) {
-                        console.error("Supabase'ga e'lon yozishda xatolik:", error);
-                    } else {
-                        console.log("E'lon Supabase'ga muvaffaqiyatli yozildi.");
-                    }
-                });
+                };
+                const minimalTaskPayload = {
+                    title: fullTaskPayload.title,
+                    description: fullTaskPayload.description,
+                    category: fullTaskPayload.category,
+                    price: fullTaskPayload.price,
+                    location: fullTaskPayload.location,
+                    distance: 0
+                };
+
+                const { error } = await _supabase.from('tasks').insert([fullTaskPayload]);
+                if (!error) {
+                    savedToSupabase = true;
+                } else if (isTaskSchemaMismatch(error)) {
+                    const fallback = await _supabase.from('tasks').insert([minimalTaskPayload]);
+                    savedToSupabase = !fallback.error;
+                    if (fallback.error) console.error("Supabase'ga minimal e'lon yozishda xatolik:", fallback.error);
+                } else {
+                    console.error("Supabase'ga e'lon yozishda xatolik:", error);
+                }
             }
 
             showToast("Yangi topshiriq muvaffaqiyatli e'lon qilindi! 🎉");
+            if (!savedToSupabase) {
+                showToast("Topshiriq saqlandi, lekin Supabase'ga yozilmadi. SQL jadval ustunlarini tekshiring.", "error");
+                closeTaskModal();
+                renderTasks();
+                return;
+            }
+
             closeTaskModal();
             renderTasks();
         });
+    }
+
+    function isTaskSchemaMismatch(error) {
+        const message = String(error?.message || '').toLowerCase();
+        return error?.code === '42703' || message.includes('column') || message.includes('schema cache');
     }
 
     function getEmojiForCategory(category) {

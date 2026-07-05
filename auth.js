@@ -17,8 +17,8 @@ const ROLE_HOME = {
 };
 
 const PAGE_ACCESS = {
-    employer: ['poster.html', 'mahallam.html', 'map.html', 'profil.html', 'bildirishnoma.html', 'chatlar.html', 'kuzatish.html', 'baholash.html', 'muammo.html', 'yordam.html', 'index.html'],
-    helper: ['vazifa.html', 'helper.html', 'daromad.html', 'mahallam.html', 'map.html', 'profil.html', 'bildirishnoma.html', 'chatlar.html', 'kuzatish.html', 'baholash.html', 'muammo.html', 'yordam.html', 'index.html']
+    employer: ['poster.html', 'mahallam.html', 'map.html', 'profil.html', 'bildirishnoma.html', 'chatlar.html', 'kuzatish.html', 'baholash.html', 'muammo.html', 'yordam.html', 'index.html', 'topshiriq.html'],
+    helper: ['vazifa.html', 'helper.html', 'daromad.html', 'mahallam.html', 'map.html', 'profil.html', 'bildirishnoma.html', 'chatlar.html', 'kuzatish.html', 'baholash.html', 'muammo.html', 'yordam.html', 'index.html', 'topshiriq.html']
 };
 
 const LANG_META = {
