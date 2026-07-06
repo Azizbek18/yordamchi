@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Topshiriq.uz - Chat</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="chatlar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -17,22 +18,30 @@
 <!-- Дополнительные стили для loading / empty / fallback аватаров -->
 <style>
     .chat-list-state {
-        padding: 40px 20px;
+        padding: 48px 24px;
         text-align: center;
         color: var(--text-muted);
         font-size: 14px;
     }
     .chat-list-state i {
-        font-size: 28px;
-        margin-bottom: 10px;
-        display: block;
+        font-size: 26px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 50%;
+        background: var(--primary-light);
         color: var(--primary-color);
-        opacity: 0.6;
+        opacity: 1;
     }
     .chat-list-state .spinner {
         display: inline-block;
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         border: 3px solid var(--primary-light);
         border-top-color: var(--primary-color);
         border-radius: 50%;
@@ -52,13 +61,20 @@
         padding: 20px;
     }
     .empty-chat-window i {
-        font-size: 56px;
+        font-size: 42px;
         color: var(--primary-color);
-        opacity: 0.25;
-        margin-bottom: 16px;
+        width: 108px;
+        height: 108px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--primary-light);
+        margin-bottom: 20px;
     }
     .empty-chat-window h3 {
-        font-size: 18px;
+        font-size: 19px;
+        font-weight: 700;
         color: var(--text-dark);
         margin-bottom: 6px;
     }
@@ -78,7 +94,7 @@
         border-radius: 50%;
         margin-right: 12px;
         flex-shrink: 0;
-        background: var(--primary-color);
+        background: var(--accent-gradient);
         color: #fff;
         display: flex;
         align-items: center;
@@ -87,14 +103,15 @@
         font-size: 16px;
         text-transform: uppercase;
         object-fit: cover;
+        box-shadow: 0 2px 6px rgba(0, 102, 83, 0.25);
     }
     .msg-avatar-fallback {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         margin-right: 8px;
         flex-shrink: 0;
-        background: var(--primary-color);
+        background: var(--accent-gradient);
         color: #fff;
         display: flex;
         align-items: center;
@@ -212,6 +229,7 @@
 
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="chatlar.js"></script>
 <script src="enhancements.js"></script>
 </body>

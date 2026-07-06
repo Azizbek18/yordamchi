@@ -12,13 +12,35 @@
 }
 
 :root {
-    --bg-main: #eef7f4;
+    --bg-main: #f4f8f7;
     --primary-color: #006653;
+    --primary-dark: #004d3d;
     --primary-light: #e6f4f0;
-    --text-dark: #2d3748;
+    --accent-gradient: linear-gradient(135deg, #007a63 0%, #004d3d 100%);
+    --text-dark: #1f2937;
     --text-muted: #718096;
     --white: #ffffff;
-    --border-color: #e2e8f0;
+    --border-color: #e6e9ec;
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+    --shadow-md: 0 4px 16px rgba(16, 24, 40, 0.08);
+    --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.12);
+}
+
+/* Ingichka, professional scrollbar */
+.chat-list::-webkit-scrollbar,
+.messages-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-list::-webkit-scrollbar-thumb,
+.messages-container::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 10px;
+}
+
+.chat-list::-webkit-scrollbar-track,
+.messages-container::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 ::selection {
@@ -139,43 +161,57 @@ body {
 
 /* ===== SUHBATLAR PANELI ===== */
 .chat-panel {
-    width: 350px;
+    width: 360px;
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     background: var(--white);
     flex-shrink: 0;
     transition: transform 0.3s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .chat-panel-title {
-    padding: 20px 20px 10px 20px;
-    font-size: 22px;
-    font-weight: 600;
+    padding: 22px 20px 14px 20px;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-dark);
 }
 
 .search-box {
-    margin: 10px 20px 20px 20px;
+    margin: 0 20px 16px 20px;
     position: relative;
 }
 
 .search-box i {
     position: absolute;
-    left: 12px;
+    left: 14px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-muted);
+    font-size: 13px;
 }
 
 .search-box input {
     width: 100%;
-    padding: 10px 10px 10px 36px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    background-color: #f7fafc;
+    padding: 11px 12px 11px 38px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background-color: var(--bg-main);
     outline: none;
     font-size: 14px;
+    color: var(--text-dark);
+    transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.search-box input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-box input:focus {
+    background-color: var(--white);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 102, 83, 0.1);
 }
 
 .chat-list {
@@ -187,21 +223,23 @@ body {
 .chat-item {
     display: flex;
     align-items: center;
-    padding: 14px 20px;
+    padding: 12px 20px;
+    margin: 0 8px;
+    border-radius: 14px;
+    width: calc(100% - 16px);
     cursor: pointer;
-    border-left: 4px solid transparent;
-    transition: background 0.15s, transform 0.15s;
+    border-left: none;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
     position: relative;
 }
 
 .chat-item:hover {
-    background-color: rgba(0,102,83,0.04);
-    transform: translateX(2px);
+    background-color: var(--bg-main);
 }
 
 .chat-item.active {
     background-color: var(--primary-light);
-    border-left-color: var(--primary-color);
+    box-shadow: inset 0 0 0 1px rgba(0, 102, 83, 0.12);
 }
 
 .avatar {
@@ -221,11 +259,15 @@ body {
 .chat-name-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
 }
 
 .chat-name-row .name {
     font-weight: 600;
+    color: var(--text-dark);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .chat-name-row .time {
@@ -233,12 +275,13 @@ body {
     color: var(--text-muted);
     white-space: nowrap;
     margin-left: 8px;
+    flex-shrink: 0;
 }
 
 .last-msg {
     font-size: 13px;
     color: var(--text-muted);
-    margin-bottom: 6px;
+    margin-bottom: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -269,18 +312,20 @@ body {
 }
 
 .unread-count {
-    background-color: var(--primary-color);
+    background: var(--accent-gradient);
     color: var(--white);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     min-width: 20px;
     height: 20px;
-    border-radius: 50%;
+    padding: 0 5px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-left: 8px;
     flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0, 102, 83, 0.35);
 }
 
 /* ===== CHAT OYNASI ===== */
@@ -289,28 +334,31 @@ body {
     display: flex;
     flex-direction: column;
     background-color: var(--bg-main);
+    background-image:
+        radial-gradient(circle at 0% 0%, rgba(0, 102, 83, 0.035) 0%, transparent 45%),
+        radial-gradient(circle at 100% 100%, rgba(0, 102, 83, 0.035) 0%, transparent 45%);
     min-width: 0;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 /* ===== TOPSHIRIQ BANNERI ===== */
 .task-banner {
     display: flex;
     align-items: center;
-    background-color: #d1ebd9;
-    margin: 15px 20px 5px 20px;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    margin: 16px 20px 4px 20px;
     padding: 12px 18px;
-    border-radius: 12px;
+    border-radius: 14px;
     gap: 12px;
     flex-shrink: 0;
     transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    box-shadow: var(--shadow-sm);
 }
 
 .task-banner:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.06);
+    box-shadow: var(--shadow-md);
 }
 
 .task-icon {
@@ -369,7 +417,7 @@ body {
 }
 
 .btn-complete {
-    background-color: var(--primary-color);
+    background: var(--accent-gradient);
     color: var(--white);
     border: none;
     padding: 8px 18px;
@@ -379,10 +427,12 @@ body {
     white-space: nowrap;
     transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 102, 83, 0.25);
 }
 
 .btn-complete:hover {
-    background-color: #004d3d;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 102, 83, 0.35);
 }
 
 .btn-complete:active {
@@ -394,8 +444,10 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 24px;
+    padding: 14px 24px;
     flex-shrink: 0;
+    background: var(--white);
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* Orqaga tugma — faqat mobilda ko'rinadi */
@@ -484,71 +536,88 @@ body {
 }
 
 .date-divider span {
-    background-color: #cbd5e0;
-    color: #4a5568;
+    background-color: var(--white);
+    color: var(--text-muted);
     font-size: 11px;
-    padding: 4px 12px;
+    font-weight: 600;
+    padding: 5px 14px;
     border-radius: 12px;
+    box-shadow: var(--shadow-sm);
 }
 
+/* Xabar pufakchasi — chatlar.js quyidagi markupni yaratadi:
+   <div class="message sent|received"><div class="message-bubble">...</div></div> */
 .message {
     display: flex;
-    max-width: 70%;
+    max-width: 68%;
     align-items: flex-end;
+    animation: message-in 0.2s ease;
 }
 
-.msg-avatar {
-    width: 32px;
-    height: 32px;
+@keyframes message-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-avatar,
+.msg-avatar-fallback {
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 8px;
     flex-shrink: 0;
 }
 
-.msg-bubble {
-    padding: 12px 16px;
+.message-bubble {
+    padding: 11px 16px;
     font-size: 14px;
     line-height: 1.5;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-sm);
     word-break: break-word;
     transition: transform 0.15s;
 }
 
+.message-bubble p {
+    white-space: pre-wrap;
+}
+
 .msg-time {
-    font-size: 10px;
+    font-size: 10.5px;
     color: var(--text-muted);
     display: block;
     text-align: right;
     margin-top: 4px;
 }
 
-.incoming {
+.message.received {
     align-self: flex-start;
 }
 
-.incoming .msg-bubble {
+.message.received .message-bubble {
     background-color: var(--white);
     color: var(--text-dark);
-    border-radius: 16px 16px 16px 0;
+    border-radius: 4px 16px 16px 16px;
+    border: 1px solid var(--border-color);
 }
 
-.outgoing {
+.message.sent {
     align-self: flex-end;
 }
 
-.outgoing .msg-bubble {
-    background-color: var(--primary-color);
+.message.sent .message-bubble {
+    background: var(--accent-gradient);
     color: var(--white);
-    border-radius: 16px 16px 0 16px;
+    border-radius: 16px 4px 16px 16px;
+    box-shadow: 0 3px 10px rgba(0, 102, 83, 0.22);
 }
 
-.outgoing .msg-bubble:hover {
+.message.sent .message-bubble:hover {
     transform: scale(1.01);
 }
 
-.outgoing .msg-time {
-    color: #b2f5ea;
+.message.sent .msg-time {
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .msg-meta {
@@ -560,20 +629,30 @@ body {
 }
 
 .read-status {
-    font-size: 11px;
-    color: #b2f5ea;
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, 0.75);
+    display: block;
+    text-align: right;
+    margin-top: 2px;
 }
 
 /* ===== XABAR KIRITISH QISMI ===== */
 .chat-input-area {
     display: flex;
     align-items: center;
-    background-color: #e6f4f0;
-    margin: 10px 20px 20px 20px;
-    padding: 8px 12px;
-    border-radius: 14px;
-    border: 1px solid #cbe7df;
+    background-color: var(--white);
+    margin: 12px 20px 20px 20px;
+    padding: 8px 10px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
     flex-shrink: 0;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.chat-input-area:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 102, 83, 0.1);
 }
 
 .input-action-btn {
@@ -612,7 +691,7 @@ body {
 }
 
 .send-btn {
-    background-color: var(--primary-color);
+    background: var(--accent-gradient);
     color: var(--white);
     border: none;
     width: 38px;
@@ -622,15 +701,14 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     transition: all 0.2s;
     flex-shrink: 0;
 }
 
 .send-btn:hover {
-    background-color: #004d3d;
     transform: scale(1.05);
-    box-shadow: 0 2px 8px rgba(0,102,83,0.3);
+    box-shadow: 0 4px 12px rgba(0,102,83,0.35);
 }
 
 .send-btn:active {
@@ -770,7 +848,7 @@ body {
         max-width: 92%;
     }
 
-    .msg-bubble {
+    .message-bubble {
         padding: 10px 13px;
         font-size: 13px;
     }
