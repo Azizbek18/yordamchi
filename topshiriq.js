@@ -90,14 +90,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const messageInput = document.getElementById("offerMessageInput");
     const sendBtn = document.getElementById("btnSendOffer");
 
-    const BID_STATUS_LABEL = { pending: 'Yuborilgan ✓', accepted: 'Qabul qilingan ✅', rejected: 'Rad etilgan' };
+    const BID_STATUS_LABEL = { pending: 'Kutilmoqda ⏳', accepted: 'Qabul qilingan ✅', rejected: 'Rad etilgan ✗' };
+    const BID_STATUS_COLOR = { pending: '#dd6b20', accepted: '#38a169', rejected: '#e53e3e' };
 
     function applySentState(bid) {
         priceInput.value = bid.price;
         priceInput.disabled = true;
         messageInput.value = bid.proposal || '';
         messageInput.disabled = true;
-        sendBtn.textContent = BID_STATUS_LABEL[bid.status] || 'Yuborilgan ✓';
+        sendBtn.textContent = BID_STATUS_LABEL[bid.status] || 'Kutilmoqda ⏳';
+        sendBtn.style.background = BID_STATUS_COLOR[bid.status] || BID_STATUS_COLOR.pending;
         sendBtn.disabled = true;
     }
 

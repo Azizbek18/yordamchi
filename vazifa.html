@@ -331,9 +331,15 @@
     }
 
     let allTasksLoaded = [];
-    let myBidTaskIds = new Set();
+    let myBidStatusByTask = new Map();
     let currentPage = 1;
     const PAGE_SIZE = 12;
+
+    const BID_STATUS_META = {
+      pending: { label: 'Kutilmoqda ⏳', color: '#dd6b20' },
+      accepted: { label: 'Qabul qilingan ✅', color: '#38a169' },
+      rejected: { label: 'Rad etilgan ✗', color: '#e53e3e' }
+    };
 
     const categoryStyles = {
       xarid: { label: 'Xarid', class: 'type-chip type-xarid', style: '' },
@@ -396,9 +402,13 @@
             <p>${t.description || ''}</p>
             <div class="task-card-bottom">
               <span class="location-text">${t.location || 'Manzil ko\'rsatilmagan'} &bull; ${timeAgo}</span>
-              ${myBidTaskIds.has(t.id)
-                ? `<a href="topshiriq.html?id=${t.id}" class="bajar-btn" style="background:#a0aec0;pointer-events:none;">Yuborilgan ✓</a>`
-                : `<a href="topshiriq.html?id=${t.id}" class="bajar-btn">Bajaraman</a>`}
+              ${(() => {
+                const bidStatus = myBidStatusByTask.get(t.id);
+                const statusMeta = bidStatus ? (BID_STATUS_META[bidStatus] || BID_STATUS_META.pending) : null;
+                return statusMeta
+                  ? `<a href="topshiriq.html?id=${t.id}" class="bajar-btn" style="background:${statusMeta.color};pointer-events:none;">${statusMeta.label}</a>`
+                  : `<a href="topshiriq.html?id=${t.id}" class="bajar-btn">Bajaraman</a>`;
+              })()}
             </div>
           </div>
         `;
@@ -623,9 +633,9 @@
       if (user) {
         const { data: myBids } = await _supabase
           .from('task_bids')
-          .select('task_id')
+          .select('task_id, status')
           .eq('helper_id', user.id);
-        myBidTaskIds = new Set((myBids || []).map(b => b.task_id));
+        myBidStatusByTask = new Map((myBids || []).map(b => [b.task_id, b.status]));
       }
 
       updateCategoryCounts();

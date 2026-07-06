@@ -14,8 +14,8 @@ function showNotifToast(text, type = "success") {
 }
 
 const NOTIF_TYPE_META = {
-    offer: { icon: 'fa-handshake', badge: 'bg-teal', actionLabel: "Ko'rish", actionClass: 'btn-filled' },
-    status: { icon: 'fa-circle-check', badge: 'bg-green', actionLabel: 'Tafsilotlar', actionClass: 'btn-light-gray' },
+    offer: { icon: 'fa-handshake', badge: 'bg-teal', actionLabel: "Ko'rish", actionClass: 'btn-filled', hrefBase: 'topshiriq.html?id=' },
+    status: { icon: 'fa-circle-check', badge: 'bg-green', actionLabel: 'Tafsilotlar', actionClass: 'btn-light-gray', hrefBase: 'topshiriq.html?id=' },
     chat: { icon: 'fa-comment-dots', badge: 'bg-teal', actionLabel: "Suhbatga o'tish", actionClass: 'btn-light-teal', href: 'chatlar.html' },
     system: { icon: 'fa-shield-halved', badge: 'bg-light-red', actionLabel: "Batafsil", actionClass: 'btn-red' }
 };
@@ -46,7 +46,8 @@ function groupNotificationsByDay(items) {
 
 function renderNotificationCard(n) {
     const meta = NOTIF_TYPE_META[n.type] || NOTIF_TYPE_META.system;
-    const hrefAttr = meta.href ? ` data-href="${meta.href}"` : '';
+    const href = meta.href || (meta.hrefBase && n.related_id ? `${meta.hrefBase}${n.related_id}` : null);
+    const hrefAttr = href ? ` data-href="${href}"` : '';
     return `
         <div class="notification-card ${n.is_read ? '' : 'unread'}" data-type="${n.type}" data-id="${n.id}">
             <div class="notif-icon-box ${meta.badge}"><i class="fa-solid ${meta.icon}"></i></div>

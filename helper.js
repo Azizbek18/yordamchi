@@ -34,9 +34,18 @@ function helperTimeAgo(dateStr) {
     return `${Math.floor(hours / 24)} kun oldin`;
 }
 
-function renderHelperTaskCard(t, alreadyApplied) {
+const HELPER_BID_STATUS_META = {
+    pending: { label: 'Kutilmoqda ⏳', color: '#dd6b20' },
+    accepted: { label: 'Qabul qilingan ✅', color: '#38a169' },
+    rejected: { label: 'Rad etilgan ✗', color: '#e53e3e' }
+};
+
+function renderHelperTaskCard(t, bidStatus) {
     const meta = HELPER_CATEGORY_META[t.category] || HELPER_CATEGORY_META.boshqa;
     const isUrgent = meta.tag === 'urgent';
+    const statusMeta = bidStatus ? (HELPER_BID_STATUS_META[bidStatus] || HELPER_BID_STATUS_META.pending) : null;
+    const btnLabel = statusMeta ? statusMeta.label : 'Qabul qilish';
+    const btnStyle = statusMeta ? `style="background:${statusMeta.color};"` : '';
     return `
         <div class="task-card ${isUrgent ? 'border-red' : 'border-green'}" data-category="${t.category}" data-task-id="${t.id}">
             <div class="card-header">
@@ -47,7 +56,7 @@ function renderHelperTaskCard(t, alreadyApplied) {
             <p>${t.description || ''}</p>
             <div class="card-footer">
                 <span><i class="fas fa-map-marker-alt"></i> ${t.district || t.location || 'Manzil noma\'lum'}</span>
-                <button class="accept-btn ${isUrgent ? '' : 'green-btn'}" data-task-id="${t.id}" ${alreadyApplied ? 'style="background:#a0aec0;"' : ''}>${alreadyApplied ? 'Yuborilgan ✓' : 'Qabul qilish'}</button>
+                <button class="accept-btn ${isUrgent ? '' : 'green-btn'}" data-task-id="${t.id}" ${btnStyle}>${btnLabel}</button>
             </div>
         </div>
     `;
@@ -134,15 +143,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         error = fallback.error;
     }
 
-    const { data: myBids } = await _supabase.from('task_bids').select('task_id').eq('helper_id', user.id);
-    const myBidTaskIds = new Set((myBids || []).map(b => b.task_id));
+    const { data: myBids } = await _supabase.from('task_bids').select('task_id, status').eq('helper_id', user.id);
+    const myBidStatusByTask = new Map((myBids || []).map(b => [b.task_id, b.status]));
 
     function renderCards(tasks) {
         if (!tasks || tasks.length === 0) {
             cardsGrid.innerHTML = `<p class="tasks-empty-state">Hozircha mos topshiriqlar topilmadi.</p>`;
             return;
         }
-        cardsGrid.innerHTML = tasks.map(t => renderHelperTaskCard(t, myBidTaskIds.has(t.id))).join('');
+        cardsGrid.innerHTML = tasks.map(t => renderHelperTaskCard(t, myBidStatusByTask.get(t.id))).join('');
 
         cardsGrid.querySelectorAll('.accept-btn').forEach(btn => {
             btn.addEventListener('click', () => {
