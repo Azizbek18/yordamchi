@@ -131,11 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const profile = buildProfile(data.user, profileData);
-        saveCurrentUser(profile);
-        showRegisterToast('Hisob yaratildi. Xush kelibsiz!', 'success');
+        await _supabase.auth.signOut();
+        saveCurrentUser(null);
+        showRegisterToast('Hisob yaratildi. Endi tizimga kiring.', 'success');
         setTimeout(() => {
-            window.location.href = getRoleHome(profile.role);
+            window.location.href = `kirish.html?role=${encodeURIComponent(selectedRole)}`;
         }, 700);
 
         function resetButton() {

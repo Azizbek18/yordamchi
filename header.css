@@ -952,3 +952,126 @@
     grid-template-columns: 1fr;
   }
 }
+
+.app-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(15, 23, 42, 0.38);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.app-confirm-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.app-confirm-dialog {
+  width: min(420px, 100%);
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.24);
+  padding: 22px;
+  transform: translateY(10px) scale(0.98);
+  transition: transform 160ms ease;
+}
+
+.app-confirm-overlay.visible .app-confirm-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.app-confirm-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #006653;
+  background: #ecfdf5;
+  border: 1px solid #d1fae5;
+  margin-bottom: 14px;
+}
+
+.app-confirm-content h3 {
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 850;
+}
+
+.app-confirm-content p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.app-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.app-confirm-btn {
+  min-height: 42px;
+  border-radius: 12px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.app-confirm-btn:active {
+  transform: translateY(1px);
+}
+
+.app-confirm-btn.secondary {
+  background: #ffffff;
+  color: #334155;
+  border-color: #e2e8f0;
+}
+
+.app-confirm-btn.secondary:hover {
+  background: #f8fafc;
+}
+
+.app-confirm-btn.primary {
+  background: #006653;
+  color: #ffffff;
+  border-color: #006653;
+}
+
+.app-confirm-btn.primary:hover {
+  background: #005447;
+}
+
+@media (max-width: 460px) {
+  .app-confirm-overlay {
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  .app-confirm-dialog {
+    border-radius: 18px 18px 14px 14px;
+    padding: 20px;
+  }
+
+  .app-confirm-actions {
+    flex-direction: column-reverse;
+  }
+
+  .app-confirm-btn {
+    width: 100%;
+  }
+}

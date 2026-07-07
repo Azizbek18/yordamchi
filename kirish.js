@@ -19,13 +19,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnText = document.querySelector('.btn-text');
     let selectedRole = 'employer';
 
-    document.querySelectorAll('.role-card').forEach(card => {
+    const roleCards = document.querySelectorAll('.role-card');
+    roleCards.forEach(card => {
         card.addEventListener('click', () => {
-            document.querySelectorAll('.role-card').forEach(item => item.classList.remove('active'));
+            roleCards.forEach(item => item.classList.remove('active'));
             card.classList.add('active');
             selectedRole = normalizeRole(card.dataset.role);
         });
     });
+
+    const requestedRole = new URLSearchParams(window.location.search).get('role');
+    if (requestedRole) {
+        selectedRole = normalizeRole(requestedRole);
+        roleCards.forEach(card => card.classList.toggle('active', normalizeRole(card.dataset.role) === selectedRole));
+    }
 
     eyeBtn?.addEventListener('click', () => {
         const isHidden = passwordInput.getAttribute('type') === 'password';
@@ -81,6 +88,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        const errCode = error?.code || error?.error_code || '';
+        if (error && errCode !== 'invalid_credentials') {
+            setLoading(false);
+            const friendly = {
+                email_not_confirmed: 'Emailingiz hali tasdiqlanmagan. Pochtangizga (spam papkasini ham tekshiring) yuborilgan havolani bosing.',
+                over_email_send_rate_limit: 'Juda ko\'p urinish qilindi. Bir necha daqiqadan so\'ng qayta urinib ko\'ring.',
+                user_banned: 'Bu hisob bloklangan.'
+            };
+
+            if (errCode === 'email_not_confirmed' && emailErr) {
+                emailErr.innerHTML = `${friendly[errCode]} <a href="#" id="resendConfirmLink" style="text-decoration:underline;">Qayta yuborish</a>`;
+                document.getElementById('resendConfirmLink')?.addEventListener('click', async ev => {
+                    ev.preventDefault();
+                    const { error: resendError } = await _supabase.auth.resend({ type: 'signup', email });
+                    showToast(resendError ? resendError.message : 'Tasdiqlash xati qayta yuborildi.', resendError ? 'error' : 'success');
+                });
+            } else if (emailErr) {
+                emailErr.textContent = friendly[errCode] || '';
+            }
+
+            showToast(friendly[errCode] || error.message, 'error');
+            return;
+        }
+
         if (!profile) {
             const { data: profileRow, error: profileError } = await _supabase
                 .from('profiles')
@@ -96,7 +127,44 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (profileRow) {
-                profile = buildProfile(null, profileRow);
+                const fullName = profileRow.full_name || [profileRow.first_name, profileRow.last_name].filter(Boolean).join(' ');
+                const { data: signupData, error: signupError } = await _supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            role: normalizeRole(profileRow.role),
+                            first_name: profileRow.first_name || '',
+                            last_name: profileRow.last_name || '',
+                            full_name: fullName,
+                            phone: profileRow.phone || '',
+                            district: profileRow.district || profileRow.city || '',
+                            preferred_language: profileRow.preferred_language || getCurrentLanguage()
+                        }
+                    }
+                });
+
+                if (signupError) {
+                    setLoading(false);
+                    showToast('Bu profil Supabase Auth bilan bog\'lanmagan. Iltimos, parolni tiklang yoki qayta ro\'yxatdan o\'ting.', 'error');
+                    return;
+                }
+
+                if (signupData?.user?.identities?.length === 0) {
+                    // Supabase returns a userless "success" instead of an error when the email
+                    // is already registered (anti-enumeration) -- treat it as wrong credentials.
+                    setLoading(false);
+                    if (emailErr) emailErr.textContent = 'Email yoki parol noto\'g\'ri';
+                    return;
+                }
+
+                if (!signupData?.session) {
+                    setLoading(false);
+                    showToast('Auth hisob yaratildi. Email tasdiqlash yoqilgan bo\'lsa, emailingizni tasdiqlab qayta kiring.', 'info');
+                    return;
+                }
+
+                profile = buildProfile(signupData.user, profileRow);
             }
         }
 

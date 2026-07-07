@@ -529,6 +529,7 @@ function buildProfile(authUser, profile = {}) {
     const fullName = profile.full_name || meta.full_name || [profile.first_name, profile.last_name].filter(Boolean).join(' ');
     return {
         id: profile.id || authUser?.id,
+        auth_id: authUser?.id || profile.auth_id || profile.user_id || profile.id,
         email: authUser?.email || profile.email || '',
         full_name: fullName || '',
         ...splitFullName(fullName),
@@ -1022,6 +1023,82 @@ function startCustomSelectObserver() {
     });
     observer.observe(document.body, { childList: true, subtree: true });
 }
+
+function appToast(text, type = 'success') {
+    const colors = {
+        success: '#006653',
+        error: '#e53e3e',
+        warning: '#d97706',
+        info: '#2563eb'
+    };
+
+    if (typeof Toastify !== 'undefined') {
+        Toastify({
+            text,
+            duration: 3200,
+            gravity: 'top',
+            position: 'right',
+            close: true,
+            style: { background: colors[type] || colors.success }
+        }).showToast();
+        return;
+    }
+
+    console[type === 'error' ? 'error' : 'log'](text);
+}
+
+if (typeof window.showToast !== 'function') {
+    window.showToast = appToast;
+}
+
+function showConfirm(message, options = {}) {
+    return new Promise(resolve => {
+        const existing = document.querySelector('.app-confirm-overlay');
+        if (existing) existing._appConfirmClose?.(false);
+
+        const overlay = document.createElement('div');
+        overlay.className = 'app-confirm-overlay';
+        overlay.innerHTML = `
+            <div class="app-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="appConfirmTitle">
+                <div class="app-confirm-icon"><i class="fa-solid fa-circle-question"></i></div>
+                <div class="app-confirm-content">
+                    <h3 id="appConfirmTitle">${escapeAttr(options.title || 'Tasdiqlang')}</h3>
+                    <p>${escapeAttr(message || 'Davom etasizmi?')}</p>
+                </div>
+                <div class="app-confirm-actions">
+                    <button type="button" class="app-confirm-btn secondary" data-confirm="false">${escapeAttr(options.cancelText || 'Bekor qilish')}</button>
+                    <button type="button" class="app-confirm-btn primary" data-confirm="true">${escapeAttr(options.confirmText || 'Tasdiqlash')}</button>
+                </div>
+            </div>
+        `;
+
+        const close = value => {
+            overlay.classList.remove('visible');
+            setTimeout(() => overlay.remove(), 160);
+            document.removeEventListener('keydown', onKeydown);
+            overlay._appConfirmClose = null;
+            resolve(value);
+        };
+        overlay._appConfirmClose = close;
+
+        const onKeydown = event => {
+            if (event.key === 'Escape') close(false);
+        };
+
+        overlay.addEventListener('click', event => {
+            if (event.target === overlay) close(false);
+            const button = event.target.closest('[data-confirm]');
+            if (button) close(button.dataset.confirm === 'true');
+        });
+
+        document.body.appendChild(overlay);
+        document.addEventListener('keydown', onKeydown);
+        requestAnimationFrame(() => overlay.classList.add('visible'));
+        overlay.querySelector('[data-confirm="true"]')?.focus();
+    });
+}
+
+window.showConfirm = showConfirm;
 
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {

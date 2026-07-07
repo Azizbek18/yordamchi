@@ -47,8 +47,28 @@ function isTaskSchemaMismatch(error) {
     return error?.code === '42703' || message.includes('column') || message.includes('schema cache');
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function getLocalCancelledTaskIds(userId) {
+    try {
+        return JSON.parse(localStorage.getItem(`poster_cancelled_tasks_${userId}`) || "[]").map(String);
+    } catch (_) {
+        return [];
+    }
+}
+
+function saveLocalCancelledTaskId(userId, taskId) {
+    if (!userId || !taskId) return;
+    const ids = new Set(getLocalCancelledTaskIds(userId));
+    ids.add(String(taskId));
+    localStorage.setItem(`poster_cancelled_tasks_${userId}`, JSON.stringify([...ids]));
+}
+
+function getPosterOwnerId(user) {
+    return user?.id || null;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
     const user = typeof getCurrentUser === "function" ? getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const posterOwnerId = getPosterOwnerId(user);
 
     const greetingEl = document.getElementById("posterGreeting");
     if (greetingEl) {
@@ -175,8 +195,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // Save to Supabase tasks table
             let savedToSupabase = false;
             if (_supabase) {
+                if (!posterOwnerId) {
+                    showToast("Supabase Auth sessiya topilmadi. Qayta login qiling.", "error");
+                    return;
+                }
+
                 const fullTaskPayload = {
-                    poster_id: user.id,
+                    poster_id: posterOwnerId,
                     title: title,
                     description: desc,
                     category: mapCategoryToDb(category),
@@ -312,11 +337,15 @@ document.addEventListener("DOMContentLoaded", () => {
             stack.innerHTML = `<p class="tasks-empty-state">Topshiriqlarni ko'rish uchun tizimga kiring.</p>`;
             return;
         }
+        if (!posterOwnerId) {
+            stack.innerHTML = `<p class="tasks-empty-state">Supabase Auth sessiya topilmadi. Qayta login qiling.</p>`;
+            return;
+        }
 
         const { data: tasks, error } = await _supabase
             .from('tasks')
             .select('*')
-            .eq('poster_id', user.id)
+            .eq('poster_id', posterOwnerId)
             .order('created_at', { ascending: false });
 
         if (error) {
@@ -330,13 +359,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Bekor qilingan topshiriqlar ro'yxatdan butunlay yashiriladi
+        const localCancelledIds = getLocalCancelledTaskIds(posterOwnerId);
+        const visibleTasks = tasks.filter(t => t.status !== 'cancelled' && !localCancelledIds.includes(String(t.id)));
         if (countPill) {
-            const activeCount = tasks.filter(t => POSTER_ACTIVE_STATUSES.includes(t.status)).length;
+            const activeCount = visibleTasks.filter(t => POSTER_ACTIVE_STATUSES.includes(t.status)).length;
             countPill.textContent = `${activeCount} faol`;
         }
-
-        // Bekor qilingan topshiriqlar ro'yxatdan butunlay yashiriladi
-        const visibleTasks = tasks.filter(t => t.status !== 'cancelled');
         if (visibleTasks.length === 0) {
             stack.innerHTML = `<p class="tasks-empty-state">Hozircha faol topshiriq yo'q.</p>`;
             return;
@@ -373,14 +402,58 @@ document.addEventListener("DOMContentLoaded", () => {
         bindTaskCardActions();
     }
 
+    async function softDeleteTask(taskId) {
+        const { data, error } = await _supabase
+            .from('tasks')
+            .update({ status: 'cancelled' })
+            .eq('id', taskId)
+            .select('id, status')
+            .maybeSingle();
+
+        if (error) return { ok: false, error };
+        if (!data) {
+            return {
+                ok: false,
+                error: { message: "Supabase bu topshiriqni yangilamadi. RLS UPDATE policy va poster_id/auth.uid mosligini tekshiring." }
+            };
+        }
+        return { ok: true, data };
+    }
+
+    async function notifyTaskCancelled(taskId, helperId) {
+        await _supabase.from('task_bids').update({ status: 'rejected' }).eq('task_id', taskId).eq('status', 'pending');
+
+        if (helperId) {
+            await _supabase.from('notifications').insert({
+                user_id: helperId,
+                title: 'Topshiriq bekor qilindi',
+                text: 'Buyurtmachi vazifani bekor qildi.',
+                type: 'status',
+                related_id: taskId
+            });
+        }
+    }
+
     function bindTaskCardActions() {
         // Accept bid
-        document.querySelectorAll(".btn-accept-bid").forEach(btn => {
-            btn.addEventListener("click", async () => {
+        const stack = document.querySelector(".client-tasks-vertical-stack");
+        if (!stack || stack.dataset.actionsBound === "true") return;
+        stack.dataset.actionsBound = "true";
+
+        stack.addEventListener("click", async event => {
+            const acceptBtn = event.target.closest(".btn-accept-bid");
+            if (acceptBtn) {
+                const btn = acceptBtn;
                 const bidId = btn.dataset.bidId;
                 const helperId = btn.dataset.helperId;
                 const taskId = btn.dataset.taskId;
-                if (!confirm("Ushbu yordamchining taklifini qabul qilmoqchimisiz?")) return;
+                const confirmed = typeof showConfirm === 'function'
+                    ? await showConfirm("Ushbu yordamchining taklifini qabul qilmoqchimisiz?", {
+                        title: "Taklifni qabul qilish",
+                        confirmText: "Qabul qilish"
+                    })
+                    : true;
+                if (!confirmed) return;
 
                 btn.disabled = true;
 
@@ -406,12 +479,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 showToast("Taklif qabul qilindi. Yordamchiga xabar berildi.");
                 loadTasks();
-            });
-        });
+                return;
+            }
 
-        // Reject bid
-        document.querySelectorAll(".btn-reject-bid").forEach(btn => {
-            btn.addEventListener("click", async () => {
+            const rejectBtn = event.target.closest(".btn-reject-bid");
+            if (rejectBtn) {
+                const btn = rejectBtn;
                 const bidId = btn.dataset.bidId;
                 btn.disabled = true;
                 const { error } = await _supabase.from('task_bids').update({ status: 'rejected' }).eq('id', bidId);
@@ -422,43 +495,49 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 showToast("Taklif rad etildi.");
                 loadTasks();
-            });
-        });
+                return;
+            }
 
-        // Cancel task
-        document.querySelectorAll(".btn-cancel-trigger").forEach(btn => {
-            btn.addEventListener("click", async () => {
-                if (!confirm("Ushbu topshiriqni haqiqatan ham bekor qilmoqchimisiz?")) return;
+            const cancelBtn = event.target.closest(".btn-cancel-trigger");
+            if (cancelBtn) {
+                const btn = cancelBtn;
+                const confirmed = typeof showConfirm === 'function'
+                    ? await showConfirm("Ushbu topshiriqni haqiqatan ham bekor qilmoqchimisiz?", {
+                        title: "Topshiriqni bekor qilish",
+                        confirmText: "Bekor qilish"
+                    })
+                    : true;
+                if (!confirmed) return;
                 btn.disabled = true;
                 const taskId = btn.dataset.taskId;
                 const helperId = btn.dataset.helperId;
-                const { error } = await _supabase.from('tasks').update({ status: 'cancelled' }).eq('id', taskId);
+                const { error } = await softDeleteTask(taskId);
                 if (error) {
-                    showToast(error.message, "error");
-                    btn.disabled = false;
+                    if (!isTaskSchemaMismatch(error)) {
+                        showToast(error.message, "error");
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    saveLocalCancelledTaskId(posterOwnerId, taskId);
+                    await notifyTaskCancelled(taskId, helperId);
+                    btn.closest(".client-task-card")?.remove();
+                    showToast("Supabase tasks jadvalida status ustuni yo'q. Ekrandan yashirildi, SQL fixni ishlating.", "error");
+                    loadTasks();
                     return;
                 }
 
-                await _supabase.from('task_bids').update({ status: 'rejected' }).eq('task_id', taskId).eq('status', 'pending');
-
-                if (helperId) {
-                    await _supabase.from('notifications').insert({
-                        user_id: helperId,
-                        title: 'Topshiriq bekor qilindi',
-                        text: 'Buyurtmachi vazifani bekor qildi.',
-                        type: 'status',
-                        related_id: taskId
-                    });
-                }
+                await notifyTaskCancelled(taskId, helperId);
 
                 showToast("Topshiriq muvaffaqiyatli bekor qilindi.");
+                btn.closest(".client-task-card")?.remove();
                 loadTasks();
-            });
-        });
+                return;
+            }
 
-        // Chat triggers
-        document.querySelectorAll(".btn-chat-trigger").forEach(btn => {
-            btn.addEventListener("click", () => {
+            const chatBtn = event.target.closest(".btn-chat-trigger");
+            if (chatBtn) {
+                const btn = chatBtn;
                 const helperId = btn.dataset.helperId;
                 const taskId = btn.dataset.taskId;
                 if (helperId && typeof openChatWith === "function") {
@@ -466,7 +545,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     window.location.href = "chatlar.html";
                 }
-            });
+            }
         });
     }
 
