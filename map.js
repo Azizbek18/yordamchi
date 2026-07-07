@@ -29,15 +29,6 @@ function getDistrictCoords(district) {
     return [base[0] + jitter(), base[1] + jitter()];
 }
 
-function escapeHtml(str) {
-    if (str === null || str === undefined) return '';
-    return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-}
-
 function timeAgoText(dateStr) {
     if (!dateStr) return '';
     const then = new Date(dateStr).getTime();
@@ -61,23 +52,6 @@ function getCategoryVisual(cat) {
         case 'hujjat': return { emoji: '\u{1F4C4}', bg: 'bg-teal', icon: 'fas fa-file-invoice text-dark-teal' };
         case 'raqamli': return { emoji: '\u2728', bg: 'bg-teal', icon: 'fas fa-laptop-code text-dark-teal' };
         default: return { emoji: '\u{1F4CD}', bg: 'bg-teal', icon: 'fas fa-ellipsis text-dark-teal' };
-    }
-}
-
-function showToast(text, type) {
-    type = type || "success";
-    if (typeof Toastify !== 'undefined') {
-        Toastify({
-            text: text,
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            style: {
-                background: type === "success" ? "#006653" : "#e53e3e",
-                borderRadius: "12px",
-                padding: "12px 20px"
-            }
-        }).showToast();
     }
 }
 
@@ -250,12 +224,12 @@ function debounce(fn, ms) {
     function buildTaskCardHtml(task) {
         var vis = getCategoryVisual(task.category);
         var coords = getDistrictCoords(task.district || task.location);
-        return '<div class="wide-task-card" data-type="' + escapeHtml(task.category) + '" data-lat="' + coords[0] + '" data-lng="' + coords[1] + '" data-task-id="' + task.id + '">' +
+        return '<div class="wide-task-card" data-type="' + escapeAttr(task.category) + '" data-lat="' + coords[0] + '" data-lng="' + coords[1] + '" data-task-id="' + task.id + '">' +
             '<div class="icon-frame ' + vis.bg + '"><i class="' + vis.icon + '"></i></div>' +
             '<div class="task-mid">' +
-                '<h4>' + escapeHtml(task.title) + '</h4>' +
-                '<p>' + escapeHtml(task.description || task.location || '') + '</p>' +
-                '<span class="meta-data"><i class="fas fa-location-dot"></i> ' + escapeHtml(task.district || task.location || 'Toshkent') + ' &bull; <i class="far fa-clock"></i> ' + timeAgoText(task.created_at) + '</span>' +
+                '<h4>' + escapeAttr(task.title) + '</h4>' +
+                '<p>' + escapeAttr(task.description || task.location || '') + '</p>' +
+                '<span class="meta-data"><i class="fas fa-location-dot"></i> ' + escapeAttr(task.district || task.location || 'Toshkent') + ' &bull; <i class="far fa-clock"></i> ' + timeAgoText(task.created_at) + '</span>' +
             '</div>' +
             '<div class="task-price-wrapper">' +
                 '<div class="task-price-tag">' + parseInt(task.price || 0).toLocaleString() + " so'm</div>" +
@@ -271,20 +245,20 @@ function debounce(fn, ms) {
         var coords = getDistrictCoords(helper.district);
         var avatarHtml;
         if (helper.avatar_url) {
-            avatarHtml = '<img class="helper-map-avatar" src="' + escapeHtml(helper.avatar_url) + '" loading="lazy" alt="' + escapeHtml(name) + '">';
+            avatarHtml = '<img class="helper-map-avatar" src="' + escapeAttr(helper.avatar_url) + '" loading="lazy" alt="' + escapeAttr(name) + '">';
         } else {
-            avatarHtml = '<div class="helper-map-avatar helper-map-avatar-fallback">' + escapeHtml(name.charAt(0).toUpperCase()) + '</div>';
+            avatarHtml = '<div class="helper-map-avatar helper-map-avatar-fallback">' + escapeAttr(name.charAt(0).toUpperCase()) + '</div>';
         }
 
         return '<div class="wide-task-card" data-type="helper" data-lat="' + coords[0] + '" data-lng="' + coords[1] + '" data-helper-id="' + helper.id + '">' +
             avatarHtml +
             '<div class="task-mid">' +
-                '<h4>' + escapeHtml(name) + '</h4>' +
-                '<p>' + escapeHtml(helper.bio || "Ishonchli mahalladosh yordamchi.") + '</p>' +
-                '<span class="meta-data"><i class="fas fa-star" style="color:#d69e2e;"></i> ' + rating + ' &bull; <i class="fas fa-location-dot"></i> ' + escapeHtml(helper.district || 'Toshkent') + '</span>' +
+                '<h4>' + escapeAttr(name) + '</h4>' +
+                '<p>' + escapeAttr(helper.bio || "Ishonchli mahalladosh yordamchi.") + '</p>' +
+                '<span class="meta-data"><i class="fas fa-star" style="color:#d69e2e;"></i> ' + rating + ' &bull; <i class="fas fa-location-dot"></i> ' + escapeAttr(helper.district || 'Toshkent') + '</span>' +
             '</div>' +
             '<div class="task-price-wrapper">' +
-                '<button class="apply-task-btn btn-invite-helper" data-helper="' + escapeHtml(name) + '" data-helper-id="' + helper.id + '">Taklif</button>' +
+                '<button class="apply-task-btn btn-invite-helper" data-helper="' + escapeAttr(name) + '" data-helper-id="' + helper.id + '">Taklif</button>' +
             '</div>' +
         '</div>';
     }
@@ -326,7 +300,7 @@ function debounce(fn, ms) {
 
             var marker = L.marker([lat, lng], { icon: makePinIcon(emoji) }).addTo(map);
             marker.bindPopup(
-                '<b>' + escapeHtml(title) + '</b><br>' +
+                '<b>' + escapeAttr(title) + '</b><br>' +
                 (isEmployer ? "Yordamchi faol" : "Haq ko'rsatilgan")
             );
 
