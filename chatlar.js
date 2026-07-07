@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const chatPanel = document.getElementById('chatPanel');
     const chatWindow = document.getElementById('chatWindow');
     const backBtn = document.getElementById('backBtn');
+    const panelBackBtn = document.getElementById('panelBackBtn');
 
     if (!_supabase) {
         chatList.innerHTML = `<div class="chat-list-state"><i class="fa-solid fa-wifi"></i>Supabase ulanishi yuklanmadi. Internet yoki CDN ulanishini tekshiring.</div>`;
@@ -264,7 +265,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (error) {
             messageInput.value = body;
             showToast(error.message, 'error');
+            return;
         }
+
+        await notifyPeerAboutMessage(state.activePeerId, body, state.activeConversationId);
+    }
+
+    async function notifyPeerAboutMessage(peerId, body, conversationId) {
+        const senderName = me.full_name || 'Foydalanuvchi';
+        const preview = body.length > 80 ? `${body.slice(0, 80)}…` : body;
+        await _supabase.from('notifications').insert({
+            user_id: peerId,
+            title: `${senderName} sizga xabar yubordi`,
+            text: preview,
+            type: 'chat',
+            related_id: conversationId || null
+        });
     }
 
     async function markAsRead() {
@@ -380,6 +396,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         messageInput?.addEventListener('focus', () => {
             setTimeout(() => messageInput.scrollIntoView({ block: 'end', behavior: 'smooth' }), 300);
+        });
+        panelBackBtn?.addEventListener('click', () => {
+            if (document.referrer && new URL(document.referrer).origin === window.location.origin) {
+                window.history.back();
+            } else {
+                window.location.href = getRoleHome(me.role);
+            }
         });
     }
 
