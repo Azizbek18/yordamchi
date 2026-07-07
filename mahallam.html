@@ -1487,13 +1487,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
-        function showToast(text, type = "success") {
-            Toastify({
-                text, duration: 3000, gravity: "top", position: "right",
-                style: { background: type === "success" ? "#006653" : "#e53e3e" }
-            }).showToast();
-        }
-
         document.addEventListener("DOMContentLoaded", () => {
             // Supabase client
             const SUPABASE_URL = 'https://sqfxrscrgtgkxkoxlhus.supabase.co';

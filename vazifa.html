@@ -323,13 +323,6 @@
   <script>
     // Supabase client (_supabase уже создан в auth.js, повторно не объявляем)
 
-    function showToast(text, type = "success") {
-      Toastify({
-        text, duration: 2500, gravity: "top", position: "right",
-        style: { background: type === "success" ? "#006653" : "#e53e3e" }
-      }).showToast();
-    }
-
     let allTasksLoaded = [];
     let myBidStatusByTask = new Map();
     let currentPage = 1;

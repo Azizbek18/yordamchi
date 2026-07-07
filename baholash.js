@@ -1,16 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
 
-    function showToast(text, type = "success") {
-        Toastify({
-            text: text,
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            style: { background: type === "success" ? "#006653" : "#e53e3e" }
-        }).showToast();
-    }
-
     const loadingState = document.getElementById('ratingLoadingState');
     const content = document.getElementById('ratingContent');
     const user = typeof getCurrentUser === "function" ? getCurrentUser() : null;

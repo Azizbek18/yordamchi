@@ -1,16 +1,4 @@
 
-function showToast(text, type = "success") {
-    Toastify({
-        text: text,
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        style: {
-            background: type === "success" ? "#006653" : "#e53e3e",
-        }
-    }).showToast();
-}
-
 const TX_TYPE_META = {
     payment_release: { icon: 'fa-sack-dollar', badge: 'bg-light-teal', label: 'Topshiriq to\'lovi' },
     deposit: { icon: 'fa-plus', badge: 'bg-light-teal', label: 'Hisobni to\'ldirish' },

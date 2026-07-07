@@ -1,16 +1,4 @@
 
-function showToast(text, type = "success") {
-    Toastify({
-        text: text,
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        style: {
-            background: type === "success" ? "#006653" : "#e53e3e",
-        }
-    }).showToast();
-}
-
 const HELPER_CATEGORY_META = {
     xarid: { tag: 'shopping', icon: 'fa-basket-shopping', label: 'Xarid' },
     tamirlash: { tag: 'urgent', icon: 'fa-wrench', label: "Ta'mirlash" },

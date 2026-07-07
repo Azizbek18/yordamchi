@@ -1,17 +1,5 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-    function showToast(text, type = "success") {
-        Toastify({
-            text: text,
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            style: {
-                background: type === "success" ? "#006653" : "#e53e3e",
-            }
-        }).showToast();
-    }
-
   // DOM elementlarini tanlab olish
   const mapWrap = document.getElementById('mapWrap');
   const mapBg = document.getElementById('mapBg');
