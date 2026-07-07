@@ -53,10 +53,10 @@ function renderNotificationCard(n) {
             <div class="notif-icon-box ${meta.badge}"><i class="fa-solid ${meta.icon}"></i></div>
             <div class="notif-content">
                 <div class="notif-header">
-                    <h3>${n.title}</h3>
+                    <h3>${escapeAttr(n.title)}</h3>
                     <span class="notif-time">${formatNotifTime(n.created_at)}</span>
                 </div>
-                <p class="notif-text">${n.text}</p>
+                <p class="notif-text">${escapeAttr(n.text)}</p>
                 <div class="notif-actions">
                     <button class="btn-action ${meta.actionClass}" data-id="${n.id}"${hrefAttr}>${meta.actionLabel}</button>
                 </div>

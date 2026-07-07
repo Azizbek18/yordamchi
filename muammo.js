@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (taskSelect) {
         if (myTasks && myTasks.length > 0) {
-            taskSelect.innerHTML = myTasks.map(t => `<option value="${t.id}">${t.title}</option>`).join('');
+            taskSelect.innerHTML = myTasks.map(t => `<option value="${t.id}">${escapeAttr(t.title)}</option>`).join('');
         } else {
             taskSelect.innerHTML = `<option value="">Sizda vazifalar mavjud emas</option>`;
         }
@@ -162,10 +162,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         historyList.innerHTML = disputes.map(d => `
             <div class="history-item">
                 <div class="history-item-header">
-                    <h4>${d.title}</h4>
+                    <h4>${escapeAttr(d.title)}</h4>
                     <span class="history-status ${d.status}">${DISPUTE_STATUS_LABELS[d.status] || d.status}</span>
                 </div>
-                <p>${d.description}</p>
+                <p>${escapeAttr(d.description)}</p>
                 <span class="history-item-date">${new Date(d.created_at).toLocaleDateString('uz-UZ')}</span>
             </div>
         `).join('');
