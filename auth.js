@@ -16,6 +16,8 @@ const ROLE_HOME = {
     helper: 'vazifa.html'
 };
 
+const TRACKING_ACTIVE_STATUSES = ['assigned', 'on_the_way', 'arrived', 'started'];
+
 const PAGE_ACCESS = {
     employer: ['poster.html', 'mahallam.html', 'map.html', 'profil.html', 'bildirishnoma.html', 'chatlar.html', 'kuzatish.html', 'baholash.html', 'muammo.html', 'yordam.html', 'index.html', 'topshiriq.html'],
     helper: ['vazifa.html', 'helper.html', 'daromad.html', 'mahallam.html', 'map.html', 'profil.html', 'bildirishnoma.html', 'chatlar.html', 'kuzatish.html', 'baholash.html', 'muammo.html', 'yordam.html', 'index.html', 'topshiriq.html']
@@ -34,6 +36,7 @@ const I18N = {
         'nav.postJob': 'E\'lon berish',
         'nav.helpers': 'Yordamchilar',
         'nav.chat': 'Chat',
+        'nav.activeTask': 'Faol vazifa',
         'nav.notifications': 'Bildirishnomalar',
         'nav.profile': 'Profil',
         'nav.login': 'Kirish',
@@ -53,6 +56,7 @@ const I18N = {
         'nav.postJob': 'Создать объявление',
         'nav.helpers': 'Помощники',
         'nav.chat': 'Чат',
+        'nav.activeTask': 'Активная задача',
         'nav.notifications': 'Уведомления',
         'nav.profile': 'Профиль',
         'nav.login': 'Войти',
@@ -72,6 +76,7 @@ const I18N = {
         'nav.postJob': 'Post job',
         'nav.helpers': 'Helpers',
         'nav.chat': 'Chat',
+        'nav.activeTask': 'Active task',
         'nav.notifications': 'Notifications',
         'nav.profile': 'Profile',
         'nav.login': 'Log in',
@@ -683,6 +688,44 @@ function renderUnifiedHeader(user = getCurrentUser()) {
     applyI18n(existing);
 
     renderMobileDrawer(user, role, roleNav);
+    injectActiveTaskNavLink(user, role);
+}
+
+async function injectActiveTaskNavLink(user, role) {
+    if (!user || !_supabase) return;
+
+    const filterCol = role === 'employer' ? 'poster_id' : 'helper_id';
+    const { data } = await _supabase
+        .from('tasks')
+        .select('id')
+        .eq(filterCol, user.id)
+        .in('status', TRACKING_ACTIVE_STATUSES)
+        .limit(1)
+        .maybeSingle();
+
+    if (!data) return;
+
+    const path = currentPageName();
+    const label = t('nav.activeTask');
+    const isActive = path === 'kuzatish.html';
+
+    const navMenu = document.querySelector('.navbar .nav-menu');
+    if (navMenu && !navMenu.querySelector('.nav-live-task-link')) {
+        const link = document.createElement('a');
+        link.href = 'kuzatish.html';
+        link.className = `nav-live-task-link${isActive ? ' active' : ''}`;
+        link.innerHTML = `<span class="nav-live-dot"></span>${label}`;
+        navMenu.appendChild(link);
+    }
+
+    const drawerMenu = document.querySelector('.mobile-drawer .drawer-menu');
+    if (drawerMenu && !drawerMenu.querySelector('.nav-live-task-link')) {
+        const drawerLink = document.createElement('a');
+        drawerLink.href = 'kuzatish.html';
+        drawerLink.className = `drawer-menu-link nav-live-task-link${isActive ? ' active' : ''}`;
+        drawerLink.innerHTML = `<i class="fas fa-location-arrow"></i><span><span class="nav-live-dot"></span>${label}</span>`;
+        drawerMenu.appendChild(drawerLink);
+    }
 }
 
 function renderLangSwitcherMarkup(lang) {
