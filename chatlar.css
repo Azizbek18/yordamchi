@@ -56,8 +56,7 @@ a:focus-visible {
 body {
     background-color: var(--white);
     color: var(--text-dark);
-    height: 100vh;
-    min-height: 100dvh;
+    height: var(--app-height, 100dvh);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -152,7 +151,6 @@ body {
 .chat-container {
     display: flex;
     flex: 1;
-    height: calc(100dvh - 64px);
     min-height: 0;
     overflow: hidden;
     position: relative;

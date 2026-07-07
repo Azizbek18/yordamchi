@@ -1,3 +1,21 @@
+// Mobil klaviatura ochilganda pastdagi xabar yozish maydoni ekran ortida
+// qolib ko'rinmay qolmasligi uchun haqiqiy (klaviaturani hisobga olgan) balandlikni
+// --app-height CSS o'zgaruvchisiga yozib turamiz.
+(function syncAppHeight() {
+    const root = document.documentElement;
+    const viewport = window.visualViewport;
+
+    function update() {
+        const height = viewport ? viewport.height : window.innerHeight;
+        root.style.setProperty('--app-height', `${height}px`);
+    }
+
+    update();
+    viewport?.addEventListener('resize', update);
+    window.addEventListener('resize', update);
+    window.addEventListener('orientationchange', update);
+})();
+
 document.addEventListener('DOMContentLoaded', async () => {
     const me = await requireAuth();
     if (!me) return;
@@ -245,7 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (error) {
             messageInput.value = body;
-            alert(error.message);
+            showToast(error.message, 'error');
         }
     }
 
@@ -359,6 +377,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         backBtn?.addEventListener('click', () => {
             chatPanel?.classList.remove('hidden');
             chatWindow?.classList.remove('active');
+        });
+        messageInput?.addEventListener('focus', () => {
+            setTimeout(() => messageInput.scrollIntoView({ block: 'end', behavior: 'smooth' }), 300);
         });
     }
 
