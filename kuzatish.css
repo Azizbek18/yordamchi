@@ -335,94 +335,36 @@
             border-radius: 20px;
         }
 
+        .map-address-row {
+            padding: 9px 18px;
+            font-size: .78rem;
+            color: var(--text-sub);
+            background: var(--green-pale);
+            border-bottom: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .map-address-row.visible {
+            display: flex;
+        }
+
+        .map-address-row b {
+            color: var(--text-main);
+        }
+
         .map-body {
-            height: 220px;
+            height: 260px;
             background: #e8f0ea;
             position: relative;
             overflow: hidden;
         }
 
-        .map-svg {
+        .map-body .leaflet-container {
             width: 100%;
             height: 100%;
-        }
-
-        .map-pin {
-            position: absolute;
-        }
-
-        .pin-home {
-            top: 38%;
-            left: 62%;
-            background: var(--green-dark);
-            color: white;
-            border-radius: 50%;
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
-        }
-
-        .pin-home::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: var(--green-dark);
-        }
-
-        .pin-label-home {
-            position: absolute;
-            top: 28%;
-            left: 65%;
-            background: white;
-            border-radius: 8px;
-            padding: 3px 8px;
-            font-size: .72rem;
-            font-weight: 600;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
-        }
-
-        .pin-person {
-            top: 60%;
-            left: 35%;
-        }
-
-        .pin-person img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2px solid var(--green-mid);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
-            background: #ccc;
-        }
-
-        .pin-person-label {
-            position: absolute;
-            top: 52%;
-            left: 36%;
-            background: white;
-            border-radius: 8px;
-            padding: 3px 8px;
-            font-size: .72rem;
-            font-weight: 600;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
-        }
-
-        .dashed-path {
-            stroke-dasharray: 8 5;
-            animation: dash 1.5s linear infinite;
-        }
-
-        @keyframes dash {
-            to {
-                stroke-dashoffset: -40;
-            }
+            font-family: inherit;
         }
 
         /* ── LIVE FEED ── */
